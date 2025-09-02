@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/assets/css/variables.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body class="admin-body">
+  
+  <!-- Admin Sidebar -->
+  <nav class="admin-sidebar">
+    <div class="admin-sidebar-header">
+      <h2 class="admin-logo">VIB Music</h2>
+      <span class="admin-badge">Admin</span>
+    </div>
+    
+    <ul class="admin-nav">
+      <li><a href="/admin" class="admin-nav-link">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+        </svg>
+        Dashboard
+      </a></li>
+      <li><a href="/admin/musicas" class="admin-nav-link active">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+        Músicas
+      </a></li>
+      <li><a href="/admin/artistas" class="admin-nav-link">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A3 3 0 0 0 16.76 6h-2.52A3 3 0 0 0 11.04 8.37L8.5 16H11v6h9z"/>
+        </svg>
+        Artistas
+      </a></li>
+      <li><a href="/admin/categorias" class="admin-nav-link">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+        Categorias
+      </a></li>
+    </ul>
+    
+    <div class="admin-sidebar-footer">
+      <a href="/" class="admin-nav-link">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+        </svg>
+        Voltar ao site
+      </a>
+    </div>
+  </nav>
+
+  <!-- Admin Main Content -->
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1 class="admin-title">Gerir Músicas</h1>
+      <button class="btn btn-primary" onclick="openAddModal()">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </svg>
+        Adicionar Música
+      </button>
+    </header>
+
+    <!-- Filters -->
+    <section class="admin-filters">
+      <div class="admin-filter-group">
+        <input type="text" placeholder="Pesquisar músicas..." class="admin-search-input">
+        <select class="admin-filter-select">
+          <option value="">Todas as categorias</option>
+          <option value="kuduro">Kuduro</option>
+          <option value="rap">Rap/Hip-Hop</option>
+          <option value="kizomba">Kizomba</option>
+          <option value="semba">Semba</option>
+          <option value="afrohouse">Afro House</option>
+          <option value="gheto-zouk">Gheto Zouk</option>
+        </select>
+        <select class="admin-filter-select">
+          <option value="">Todos os status</option>
+          <option value="ativa">Ativa</option>
+          <option value="inativa">Inativa</option>
+          <option value="pendente">Pendente</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Music Table -->
+    <section class="admin-content">
+      <div class="admin-card">
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Artista</th>
+                <th>Categoria</th>
+                <th>Duração</th>
+                <th>Reproduções</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% musicas.forEach(musica => { %>
+                <tr>
+                  <td>#<%= musica.id %></td>
+                  <td>
+                    <div class="admin-music-info">
+                      <strong><%= musica.titulo %></strong>
+                    </div>
+                  </td>
+                  <td><%= musica.artista %></td>
+                  <td>
+                    <span class="admin-category-badge admin-category-<%= musica.categoria.toLowerCase().replace(/[^a-z]/g, '') %>">
+                      <%= musica.categoria %>
+                    </span>
+                  </td>
+                  <td><%= musica.duracao %></td>
+                  <td><%= musica.plays %></td>
+                  <td>
+                    <span class="admin-status-badge admin-status-<%= musica.status.toLowerCase() %>">
+                      <%= musica.status %>
+                    </span>
+                  </td>
+                  <td>
+                    <div class="admin-action-buttons">
+                      <button class="admin-btn-small admin-btn-play" title="Reproduzir">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                      </button>
+                      <button class="admin-btn-small admin-btn-edit" title="Editar" onclick="editMusic(<%= musica.id %>)">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                        </svg>
+                      </button>
+                      <button class="admin-btn-small admin-btn-delete" title="Remover" onclick="deleteMusic(<%= musica.id %>, '<%= musica.titulo %>')">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Add Music Modal -->
+  <div id="addMusicModal" class="admin-modal" style="display: none;">
+    <div class="admin-modal-content">
+      <div class="admin-modal-header">
+        <h2>Adicionar Nova Música</h2>
+        <button class="admin-modal-close" onclick="closeAddModal()">&times;</button>
+      </div>
+      
+      <form id="addMusicForm" class="admin-form">
+        <div class="admin-form-row">
+          <div class="admin-form-group">
+            <label>Título da Música</label>
+            <input type="text" name="titulo" required placeholder="Ex: Bem Estar">
+          </div>
+          <div class="admin-form-group">
+            <label>Artista</label>
+            <select name="artista" required>
+              <option value="">Selecionar artista</option>
+              <option value="mck">MCK</option>
+              <option value="c4pedro">C4 Pedro</option>
+              <option value="puto">Puto Português</option>
+              <option value="bonga">Bonga</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="admin-form-row">
+          <div class="admin-form-group">
+            <label>Categoria</label>
+            <select name="categoria" required>
+              <option value="">Selecionar categoria</option>
+              <option value="kuduro">Kuduro</option>
+              <option value="rap">Rap/Hip-Hop</option>
+              <option value="kizomba">Kizomba</option>
+              <option value="semba">Semba</option>
+              <option value="afrohouse">Afro House</option>
+              <option value="gheto-zouk">Gheto Zouk</option>
+            </select>
+          </div>
+          <div class="admin-form-group">
+            <label>Duração</label>
+            <input type="text" name="duracao" required placeholder="Ex: 4:23">
+          </div>
+        </div>
+        
+        <div class="admin-form-row">
+          <div class="admin-form-group">
+            <label>Álbum</label>
+            <input type="text" name="album" placeholder="Ex: Nha Vida">
+          </div>
+          <div class="admin-form-group">
+            <label>Arquivo de Música</label>
+            <input type="file" name="musicFile" accept="audio/*" required>
+          </div>
+        </div>
+        
+        <div class="admin-form-group">
+          <label>Imagem da Capa</label>
+          <input type="file" name="coverImage" accept="image/*">
+        </div>
+        
+        <div class="admin-form-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeAddModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Adicionar Música</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openAddModal() {
+      document.getElementById('addMusicModal').style.display = 'block';
+    }
+    
+    function closeAddModal() {
+      document.getElementById('addMusicModal').style.display = 'none';
+      document.getElementById('addMusicForm').reset();
+    }
+    
+    function editMusic(id) {
+      alert('Funcionalidade de edição será implementada para música ID: ' + id);
+    }
+    
+    function deleteMusic(id, title) {
+      if (confirm('Tem certeza que deseja remover a música "' + title + '"?')) {
+        fetch('/admin/musicas/' + id, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert(data.message);
+            location.reload();
+          }
+        })
+        .catch(error => {
+          console.error('Erro:', error);
+          alert('Erro ao remover música');
+        });
+      }
+    }
+    
+    document.getElementById('addMusicForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      
+      fetch('/admin/musicas/add', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert(data.message);
+          closeAddModal();
+          location.reload();
+        }
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao adicionar música');
+      });
+    });
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+      const modal = document.getElementById('addMusicModal');
+      if (event.target === modal) {
+        closeAddModal();
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -186,6 +186,96 @@ module.exports = {
       title: categoria.nome,
       categoria: categoria
     });
+  },
+  
+  // Admin Controllers
+  adminDashboard: (req, res) => {
+    const stats = {
+      totalMusicas: 156,
+      totalArtistas: 48,
+      totalCategorias: 6,
+      totalPlays: '2.4M',
+      musicasRecentes: [
+        { titulo: 'Bem Estar', artista: 'MCK', data: '2025-01-15', plays: '125K' },
+        { titulo: 'African Beauty', artista: 'C4 Pedro', data: '2025-01-12', plays: '98K' },
+        { titulo: 'Kuduro Dance', artista: 'Puto Português', data: '2025-01-10', plays: '87K' }
+      ]
+    };
+    
+    res.render('admin/dashboard', {
+      title: 'Painel Admin - VIB Music',
+      stats: stats
+    });
+  },
+  
+  adminMusicas: (req, res) => {
+    const musicas = [
+      { id: 1, titulo: 'Bem Estar', artista: 'MCK', categoria: 'Rap', duracao: '4:23', plays: '125K', status: 'Ativa' },
+      { id: 2, titulo: 'African Beauty', artista: 'C4 Pedro', categoria: 'Kizomba', duracao: '4:15', plays: '98K', status: 'Ativa' },
+      { id: 3, titulo: 'Kuduro Dance', artista: 'Puto Português', categoria: 'Kuduro', duracao: '3:45', plays: '87K', status: 'Ativa' },
+      { id: 4, titulo: 'Mona Ki Ngi Xica', artista: 'Bonga', categoria: 'Semba', duracao: '4:56', plays: '76K', status: 'Ativa' },
+      { id: 5, titulo: 'Luanda Nights', artista: 'DJ Vado Poster', categoria: 'Afro House', duracao: '5:12', plays: '65K', status: 'Ativa' }
+    ];
+    
+    res.render('admin/musicas', {
+      title: 'Gerir Músicas - Admin',
+      musicas: musicas
+    });
+  },
+  
+  adminArtistas: (req, res) => {
+    const artistas = [
+      { id: 1, nome: 'MCK', email: 'mck@example.com', musicas: 28, categoria: 'Rap', status: 'Ativo' },
+      { id: 2, nome: 'C4 Pedro', email: 'c4pedro@example.com', musicas: 31, categoria: 'Kizomba', status: 'Ativo' },
+      { id: 3, nome: 'Puto Português', email: 'puto@example.com', musicas: 15, categoria: 'Kuduro', status: 'Ativo' },
+      { id: 4, nome: 'Bonga', email: 'bonga@example.com', musicas: 45, categoria: 'Semba', status: 'Ativo' },
+      { id: 5, nome: 'DJ Vado Poster', email: 'vado@example.com', musicas: 26, categoria: 'Afro House', status: 'Ativo' }
+    ];
+    
+    res.render('admin/artistas', {
+      title: 'Gerir Artistas - Admin',
+      artistas: artistas
+    });
+  },
+  
+  adminCategorias: (req, res) => {
+    const categorias = [
+      { id: 1, nome: 'Kuduro', musicas: 45, artistas: 12, cor: '#e17d18', status: 'Ativa' },
+      { id: 2, nome: 'Rap/Hip-Hop', musicas: 38, artistas: 15, cor: '#ff0000', status: 'Ativa' },
+      { id: 3, nome: 'Kizomba', musicas: 42, artistas: 18, cor: '#8b5cf6', status: 'Ativa' },
+      { id: 4, nome: 'Semba', musicas: 35, artistas: 8, cor: '#ff8900', status: 'Ativa' },
+      { id: 5, nome: 'Afro House', musicas: 28, artistas: 10, cor: '#0051ff', status: 'Ativa' },
+      { id: 6, nome: 'Gheto Zouk', musicas: 22, artistas: 7, cor: '#10b981', status: 'Ativa' }
+    ];
+    
+    res.render('admin/categorias', {
+      title: 'Gerir Categorias - Admin',
+      categorias: categorias
+    });
+  },
+  
+  addMusica: (req, res) => {
+    // Simulação de adição de música
+    console.log('Nova música adicionada:', req.body);
+    res.json({ success: true, message: 'Música adicionada com sucesso!' });
+  },
+  
+  addArtista: (req, res) => {
+    // Simulação de adição de artista
+    console.log('Novo artista adicionado:', req.body);
+    res.json({ success: true, message: 'Artista adicionado com sucesso!' });
+  },
+  
+  deleteMusica: (req, res) => {
+    const musicaId = req.params.id;
+    console.log('Música removida:', musicaId);
+    res.json({ success: true, message: 'Música removida com sucesso!' });
+  },
+  
+  deleteArtista: (req, res) => {
+    const artistaId = req.params.id;
+    console.log('Artista removido:', artistaId);
+    res.json({ success: true, message: 'Artista removido com sucesso!' });
   }
 };
 

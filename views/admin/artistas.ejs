@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/assets/css/variables.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body class="admin-body">
+  
+  <!-- Admin Sidebar -->
+  <nav class="admin-sidebar">
+    <div class="admin-sidebar-header">
+      <h2 class="admin-logo">VIB Music</h2>
+      <span class="admin-badge">Admin</span>
+    </div>
+    
+    <ul class="admin-nav">
+      <li><a href="/admin" class="admin-nav-link">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+        </svg>
+        Dashboard
+      </a></li>
+      <li><a href="/admin/musicas" class="admin-nav-link">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+        Músicas
+      </a></li>
+      <li><a href="/admin/artistas" class="admin-nav-link active">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A3 3 0 0 0 16.76 6h-2.52A3 3 0 0 0 11.04 8.37L8.5 16H11v6h9z"/>
+        </svg>
+        Artistas
+      </a></li>
+      <li><a href="/admin/categorias" class="admin-nav-link">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+        Categorias
+      </a></li>
+    </ul>
+    
+    <div class="admin-sidebar-footer">
+      <a href="/" class="admin-nav-link">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+        </svg>
+        Voltar ao site
+      </a>
+    </div>
+  </nav>
+
+  <!-- Admin Main Content -->
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1 class="admin-title">Gerir Artistas</h1>
+      <button class="btn btn-primary" onclick="openAddModal()">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </svg>
+        Adicionar Artista
+      </button>
+    </header>
+
+    <!-- Filters -->
+    <section class="admin-filters">
+      <div class="admin-filter-group">
+        <input type="text" placeholder="Pesquisar artistas..." class="admin-search-input">
+        <select class="admin-filter-select">
+          <option value="">Todas as categorias</option>
+          <option value="kuduro">Kuduro</option>
+          <option value="rap">Rap/Hip-Hop</option>
+          <option value="kizomba">Kizomba</option>
+          <option value="semba">Semba</option>
+          <option value="afrohouse">Afro House</option>
+          <option value="gheto-zouk">Gheto Zouk</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Artists Table -->
+    <section class="admin-content">
+      <div class="admin-card">
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Músicas</th>
+                <th>Categoria Principal</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% artistas.forEach(artista => { %>
+                <tr>
+                  <td>#<%= artista.id %></td>
+                  <td>
+                    <div class="admin-artist-info">
+                      <div class="admin-artist-avatar">
+                        <%= artista.nome.charAt(0).toUpperCase() %>
+                      </div>
+                      <strong><%= artista.nome %></strong>
+                    </div>
+                  </td>
+                  <td><%= artista.email %></td>
+                  <td><%= artista.musicas %> músicas</td>
+                  <td>
+                    <span class="admin-category-badge admin-category-<%= artista.categoria.toLowerCase().replace(/[^a-z]/g, '') %>">
+                      <%= artista.categoria %>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="admin-status-badge admin-status-<%= artista.status.toLowerCase() %>">
+                      <%= artista.status %>
+                    </span>
+                  </td>
+                  <td>
+                    <div class="admin-action-buttons">
+                      <button class="admin-btn-small admin-btn-view" title="Ver Perfil">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                        </svg>
+                      </button>
+                      <button class="admin-btn-small admin-btn-edit" title="Editar" onclick="editArtist(<%= artista.id %>)">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                        </svg>
+                      </button>
+                      <button class="admin-btn-small admin-btn-delete" title="Remover" onclick="deleteArtist(<%= artista.id %>, '<%= artista.nome %>')">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Add Artist Modal -->
+  <div id="addArtistModal" class="admin-modal" style="display: none;">
+    <div class="admin-modal-content">
+      <div class="admin-modal-header">
+        <h2>Adicionar Novo Artista</h2>
+        <button class="admin-modal-close" onclick="closeAddModal()">&times;</button>
+      </div>
+      
+      <form id="addArtistForm" class="admin-form">
+        <div class="admin-form-row">
+          <div class="admin-form-group">
+            <label>Nome do Artista</label>
+            <input type="text" name="nome" required placeholder="Ex: MCK">
+          </div>
+          <div class="admin-form-group">
+            <label>Email</label>
+            <input type="email" name="email" required placeholder="artista@example.com">
+          </div>
+        </div>
+        
+        <div class="admin-form-row">
+          <div class="admin-form-group">
+            <label>Categoria Principal</label>
+            <select name="categoria" required>
+              <option value="">Selecionar categoria</option>
+              <option value="kuduro">Kuduro</option>
+              <option value="rap">Rap/Hip-Hop</option>
+              <option value="kizomba">Kizomba</option>
+              <option value="semba">Semba</option>
+              <option value="afrohouse">Afro House</option>
+              <option value="gheto-zouk">Gheto Zouk</option>
+            </select>
+          </div>
+          <div class="admin-form-group">
+            <label>Telefone</label>
+            <input type="tel" name="telefone" placeholder="+244 xxx xxx xxx">
+          </div>
+        </div>
+        
+        <div class="admin-form-group">
+          <label>Biografia</label>
+          <textarea name="biografia" rows="4" placeholder="Breve biografia do artista..."></textarea>
+        </div>
+        
+        <div class="admin-form-group">
+          <label>Foto do Perfil</label>
+          <input type="file" name="profileImage" accept="image/*">
+        </div>
+        
+        <div class="admin-form-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeAddModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Adicionar Artista</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openAddModal() {
+      document.getElementById('addArtistModal').style.display = 'block';
+    }
+    
+    function closeAddModal() {
+      document.getElementById('addArtistModal').style.display = 'none';
+      document.getElementById('addArtistForm').reset();
+    }
+    
+    function editArtist(id) {
+      alert('Funcionalidade de edição será implementada para artista ID: ' + id);
+    }
+    
+    function deleteArtist(id, name) {
+      if (confirm('Tem certeza que deseja remover o artista "' + name + '"?')) {
+        fetch('/admin/artistas/' + id, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert(data.message);
+            location.reload();
+          }
+        })
+        .catch(error => {
+          console.error('Erro:', error);
+          alert('Erro ao remover artista');
+        });
+      }
+    }
+    
+    document.getElementById('addArtistForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      
+      fetch('/admin/artistas/add', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert(data.message);
+          closeAddModal();
+          location.reload();
+        }
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao adicionar artista');
+      });
+    });
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+      const modal = document.getElementById('addArtistModal');
+      if (event.target === modal) {
+        closeAddModal();
+      }
+    });
+  </script>
+
+</body>
+</html>
