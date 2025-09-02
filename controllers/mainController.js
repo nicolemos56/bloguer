@@ -1,17 +1,13 @@
 
 //logica das rotas
 
-// Array global para armazenar músicas
-let musicasGlobal = [
-  { id: 1, titulo: 'Bem Estar', artista: 'MCK', categoria: 'Rap', duracao: '4:23', link: '/musicas/bem-estar.mp3', cover: 'https://i.scdn.co/image/ab67616d0000b27351f3c1edc9b0b0b2b8b2b0b2' },
-  { id: 2, titulo: 'African Beauty', artista: 'C4 Pedro', categoria: 'Kizomba', duracao: '4:15', link: '/musicas/african-beauty.mp3', cover: 'https://i.scdn.co/image/ab67616d0000b27351f3c1edc9b0b0b2b8b2b0b3' },
-  { id: 3, titulo: 'Kuduro Dance', artista: 'Puto Português', categoria: 'Kuduro', duracao: '3:45', link: '/musicas/kuduro-dance.mp3', cover: 'https://i.scdn.co/image/ab67616d0000b27351f3c1edc9b0b0b2b8b2b0b4' },
-  { id: 4, titulo: 'Mona Ki Ngi Xica', artista: 'Bonga', categoria: 'Semba', duracao: '4:56', link: '/musicas/mona-ki-ngi-xica.mp3', cover: 'https://i.scdn.co/image/ab67616d0000b27351f3c1edc9b0b0b2b8b2b0b5' },
-  { id: 5, titulo: 'Luanda Nights', artista: 'DJ Vado Poster', categoria: 'Afro House', duracao: '5:12', link: '/musicas/luanda-nights.mp3', cover: 'https://i.scdn.co/image/ab67616d0000b27351f3c1edc9b0b0b2b8b2b0b6' }
-];
+// Array global para armazenar músicas (inicialmente vazio - só músicas do admin)
+let musicasGlobal = [];
 
 module.exports = {
   home: (req, res) => {
+    console.log('Total de músicas no sistema:', musicasGlobal.length);
+    
     // Função para obter músicas em destaque (3 mais recentes)
     const musicasEmDestaque = [...musicasGlobal]
       .sort((a, b) => b.id - a.id)
@@ -36,20 +32,14 @@ module.exports = {
         };
       });
     
-    // Músicas populares por categoria (1 por categoria)
-    const categorias = ['Kuduro', 'Rap', 'Kizomba', 'Semba', 'Afro House', 'Gheto Zouk'];
-    const musicasPorCategoria = categorias.map(categoria => {
-      const musicaCategoria = musicasGlobal.find(m => 
-        m.categoria.toLowerCase().replace(/[^a-z]/g, '') === categoria.toLowerCase().replace(/[^a-z]/g, '')
-      );
-      return musicaCategoria;
-    }).filter(Boolean);
+    console.log('Músicas em destaque:', musicasEmDestaque.length);
+    console.log('Artistas do mês:', artistasDoMes.length);
     
     res.render('pages/home', { 
       title: 'VIB Music - Página Inicial',
-      musicasEmDestaque: musicasEmDestaque,
-      artistasDoMes: artistasDoMes,
-      musicasPorCategoria: musicasPorCategoria
+      musicasEmDestaque: musicasEmDestaque || [],
+      artistasDoMes: artistasDoMes || [],
+      musicasPorCategoria: []
     });
   },
   artistas: (req, res) => res.render('pages/artistas'),

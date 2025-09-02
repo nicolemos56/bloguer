@@ -30,13 +30,8 @@
     </div>
     
     <div class="artists-grid">
-      <% // Usando dados dinâmicos do controller
-      const artistas = (typeof artistasDoMes !== 'undefined' && artistasDoMes.length > 0) ? artistasDoMes : [
-        { nome: "Tio Edson ft Kelson monst wanted", imagem: "paulelson.jpg", musicas: 3, categoria: "Semba" },
-        { nome: "Preto Show", imagem: "IMG-20250209-WA0012.jpg", musicas: 2, categoria: "Rap" },
-        { nome: "12 Furos", imagem: "IMG-20250209-WA0010.jpg", musicas: 1, categoria: "Kuduro" },
-        { nome: "Emana Cheezy", imagem: "12furos.jpg", musicas: 4, categoria: "Kizomba" },
-      ]; %>
+      <% // Usando APENAS dados dinâmicos do controller - SEM fallback estático
+      const artistas = (typeof artistasDoMes !== 'undefined') ? artistasDoMes : []; %>
       
       <% artistas.forEach(artista => { %>
         <article class="artist-card">
@@ -66,63 +61,8 @@
     </div>
     
     <div class="popular-tracks-grid">
-      <% // Usando dados dinâmicos do controller
-      const musicasPopulares = (typeof musicasEmDestaque !== 'undefined' && musicasEmDestaque.length > 0) ? musicasEmDestaque : [
-        { 
-          titulo: "Bem Estar", 
-          artista: "MCK", 
-          album: "Nha Vida",
-          imagem: "baixar.png", 
-          duracao: "4:23",
-          plays: "125K",
-          categoria: "Rap"
-        },
-        { 
-          titulo: "African Beauty", 
-          artista: "C4 Pedro", 
-          album: "King Ckwa",
-          imagem: "IMG-20250209-WA0014.jpg", 
-          duracao: "4:15",
-          plays: "98K",
-          categoria: "Kizomba"
-        },
-        { 
-          titulo: "Kuduro Dance", 
-          artista: "Puto Português", 
-          album: "Energia Pura",
-          imagem: "preto_show.jpg", 
-          duracao: "3:45",
-          plays: "87K",
-          categoria: "Kuduro"
-        },
-        { 
-          titulo: "Mona Ki Ngi Xica", 
-          artista: "Bonga", 
-          album: "Classics",
-          imagem: "paulelson.jpg", 
-          duracao: "4:56",
-          plays: "76K",
-          categoria: "Semba"
-        },
-        { 
-          titulo: "Luanda Nights", 
-          artista: "DJ Vado Poster", 
-          album: "Electronic Angola",
-          imagem: "xuxu.jpg", 
-          duracao: "5:12",
-          plays: "65K",
-          categoria: "Afro House"
-        },
-        { 
-          titulo: "Seduções", 
-          artista: "Pérola", 
-          album: "Romantic Vibes",
-          imagem: "emana.jpg", 
-          duracao: "3:52",
-          plays: "54K",
-          categoria: "Gheto Zouk"
-        }
-      ]; %>
+      <% // Usando APENAS dados dinâmicos do controller - SEM fallback estático
+      const musicasPopulares = (typeof musicasEmDestaque !== 'undefined') ? musicasEmDestaque : []; %>
       
       <% musicasPopulares.forEach((musica, index) => { %>
         <article class="popular-track-card" data-rank="<%= index + 1 %>">
