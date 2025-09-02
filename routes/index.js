@@ -22,4 +22,7 @@ router.post('/admin/artistas/add', mainController.addArtista);
 router.delete('/admin/musicas/:id', mainController.deleteMusica);
 router.delete('/admin/artistas/:id', mainController.deleteArtista);
 
+// Rota para download com nome original
+router.get('/download/:id', mainController.downloadMusica);
+
 module.exports = router;

@@ -303,7 +303,9 @@ module.exports = {
         duracao: duracao,
         album: album || '',
         link: musicFilePath,
-        cover: coverImagePath
+        cover: coverImagePath,
+        nomeOriginal: musicFile.originalname, // Guardar nome original
+        nomeArquivo: musicFile.filename // Nome do arquivo no servidor
       };
       
       // Adicionar ao array global
@@ -344,6 +346,34 @@ module.exports = {
     const artistaId = req.params.id;
     console.log('Artista removido:', artistaId);
     res.json({ success: true, message: 'Artista removido com sucesso!' });
+  },
+
+  downloadMusica: (req, res) => {
+    const musicaId = parseInt(req.params.id);
+    const musica = musicasGlobal.find(m => m.id === musicaId);
+    
+    if (!musica) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Música não encontrada!' 
+      });
+    }
+    
+    const path = require('path');
+    const caminhoArquivo = path.join(__dirname, '..', 'public', 'uploads', musica.nomeArquivo);
+    
+    // Definir nome original para download
+    const nomeDownload = musica.nomeOriginal || `${musica.titulo} - ${musica.artista}.mp3`;
+    
+    res.download(caminhoArquivo, nomeDownload, (err) => {
+      if (err) {
+        console.error('Erro no download:', err);
+        res.status(404).json({ 
+          success: false, 
+          message: 'Arquivo não encontrado!' 
+        });
+      }
+    });
   }
 };
 
