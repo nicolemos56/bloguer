@@ -277,7 +277,7 @@ module.exports = {
   
   addMusica: (req, res) => {
     try {
-      const { titulo, artista, categoria, duracao, album, coverUrl } = req.body;
+      const { titulo, artista, categoria, duracao, album } = req.body;
       
       // Verificar se os dados necessários estão presentes
       if (!titulo || !artista || !categoria || !duracao) {
@@ -287,10 +287,27 @@ module.exports = {
         });
       }
       
+      // Verificar se o arquivo de música foi enviado
+      if (!req.files || !req.files.musicFile || !req.files.musicFile[0]) {
+        return res.status(400).json({
+          success: false,
+          message: 'Arquivo de música é obrigatório!'
+        });
+      }
+      
       // Gerar novo ID
       const novoId = musicasGlobal.length > 0 ? Math.max(...musicasGlobal.map(m => m.id)) + 1 : 1;
       
-      // Criar nova música com dados simples (sem uploads)
+      // Processar arquivos de upload
+      const musicFile = req.files.musicFile[0];
+      const musicFilePath = `/uploads/${musicFile.filename}`;
+      
+      let coverImagePath = '/assets/images/default-cover.jpg'; // imagem padrão
+      if (req.files.coverImage && req.files.coverImage[0]) {
+        coverImagePath = `/uploads/${req.files.coverImage[0].filename}`;
+      }
+      
+      // Criar nova música
       const novaMusica = {
         id: novoId,
         titulo: titulo,
@@ -298,8 +315,8 @@ module.exports = {
         categoria: categoria,
         duracao: duracao,
         album: album || '',
-        link: `/musicas/${titulo.toLowerCase().replace(/\s+/g, '-')}.mp3`,
-        cover: coverUrl || 'https://via.placeholder.com/300x300?text=Sem+Capa'
+        link: musicFilePath,
+        cover: coverImagePath
       };
       
       // Adicionar ao array global

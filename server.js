@@ -5,8 +5,23 @@ const multer = require('multer');
 const app = express();
 const expressLayouts = require('express-ejs-layouts');
 
-// Multer simples para casos futuros (agora não sendo usado)
-const upload = multer();
+// Configuração do Multer para upload de arquivos
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
+  }
+});
+
+const upload = multer({ 
+  storage: storage,
+  limits: {
+    fileSize: 50 * 1024 * 1024 // 50MB limite
+  }
+});
 
 // Middleware
 app.use(expressLayouts);
@@ -21,7 +36,11 @@ app.use(express.urlencoded({ extended: true }));
 // Arquivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Middleware simples para formularios (sem uploads de arquivo)
+// Configurar multer para uploads
+app.use('/admin/musicas/add', upload.fields([
+  { name: 'musicFile', maxCount: 1 },
+  { name: 'coverImage', maxCount: 1 }
+]));
 
 // Rotas
 const indexRoutes = require('./routes/index');

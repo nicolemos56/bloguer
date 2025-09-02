@@ -205,9 +205,14 @@
             <input type="text" name="album" placeholder="Ex: Nha Vida">
           </div>
           <div class="admin-form-group">
-            <label>URL da Imagem de Capa</label>
-            <input type="url" name="coverUrl" placeholder="https://exemplo.com/imagem.jpg">
+            <label>Arquivo de Música</label>
+            <input type="file" name="musicFile" accept="audio/*" required>
           </div>
+        </div>
+        
+        <div class="admin-form-group">
+          <label>Imagem da Capa</label>
+          <input type="file" name="coverImage" accept="image/*">
         </div>
         
         <div class="admin-form-actions">
