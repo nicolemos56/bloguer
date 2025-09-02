@@ -43,7 +43,7 @@
             <p class="artist-description"><%= artista.musicas %> músicas • <%= artista.categoria %></p>
             <div class="artist-actions">
               <button class="btn btn-secondary play-artist-btn" data-artist="<%= artista.nome %>">Ouvir agora</button>
-              <a href="/download/<%= musica.id %>" class="btn btn-accent">Baixar</a>
+              <button class="btn btn-accent follow-btn" data-artist="<%= artista.nome %>">Seguir</button>
             </div>
           </div>
         </article>

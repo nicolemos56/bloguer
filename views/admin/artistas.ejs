@@ -91,15 +91,28 @@
               <tr>
                 <th>ID</th>
                 <th>Nome</th>
-                <th>Email</th>
-                <th>Músicas</th>
+                <th>Biografia</th>
+                <th>Seguidores</th>
                 <th>Categoria Principal</th>
                 <th>Status</th>
                 <th>Ações</th>
               </tr>
             </thead>
             <tbody>
-              <% artistas.forEach(artista => { %>
+              <% if (artistas.length === 0) { %>
+                <tr>
+                  <td colspan="7" class="admin-empty-state">
+                    <div class="empty-message">
+                      <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A3 3 0 0 0 16.76 6h-2.52A3 3 0 0 0 11.04 8.37L8.5 16H11v6h9z"/>
+                      </svg>
+                      <h3>Nenhum artista encontrado</h3>
+                      <p>Adicione artistas para começar a gerir o seu catálogo</p>
+                    </div>
+                  </td>
+                </tr>
+              <% } else { %>
+                <% artistas.forEach(artista => { %>
                 <tr>
                   <td>#<%= artista.id %></td>
                   <td>
@@ -110,16 +123,16 @@
                       <strong><%= artista.nome %></strong>
                     </div>
                   </td>
-                  <td><%= artista.email %></td>
-                  <td><%= artista.musicas %> músicas</td>
+                  <td><%= artista.biografia || 'Sem biografia' %></td>
+                  <td><%= artista.seguidores || 0 %> seguidores</td>
                   <td>
                     <span class="admin-category-badge admin-category-<%= artista.categoria.toLowerCase().replace(/[^a-z]/g, '') %>">
                       <%= artista.categoria %>
                     </span>
                   </td>
                   <td>
-                    <span class="admin-status-badge admin-status-<%= artista.status.toLowerCase() %>">
-                      <%= artista.status %>
+                    <span class="admin-status-badge admin-status-ativo">
+                      Ativo
                     </span>
                   </td>
                   <td>
@@ -142,7 +155,8 @@
                     </div>
                   </td>
                 </tr>
-              <% }) %>
+                <% }) %>
+              <% } %>
             </tbody>
           </table>
         </div>
@@ -165,29 +179,19 @@
             <input type="text" name="nome" required placeholder="Ex: MCK">
           </div>
           <div class="admin-form-group">
-            <label>Email</label>
-            <input type="email" name="email" required placeholder="artista@example.com">
-          </div>
-        </div>
-        
-        <div class="admin-form-row">
-          <div class="admin-form-group">
             <label>Categoria Principal</label>
             <select name="categoria" required>
               <option value="">Selecionar categoria</option>
-              <option value="kuduro">Kuduro</option>
-              <option value="rap">Rap/Hip-Hop</option>
-              <option value="kizomba">Kizomba</option>
-              <option value="semba">Semba</option>
-              <option value="afrohouse">Afro House</option>
-              <option value="gheto-zouk">Gheto Zouk</option>
+              <option value="Kuduro">Kuduro</option>
+              <option value="Rap">Rap/Hip-Hop</option>
+              <option value="Kizomba">Kizomba</option>
+              <option value="Semba">Semba</option>
+              <option value="Afro House">Afro House</option>
+              <option value="Gheto Zouk">Gheto Zouk</option>
             </select>
           </div>
-          <div class="admin-form-group">
-            <label>Telefone</label>
-            <input type="tel" name="telefone" placeholder="+244 xxx xxx xxx">
-          </div>
         </div>
+        
         
         <div class="admin-form-group">
           <label>Biografia</label>
@@ -196,7 +200,7 @@
         
         <div class="admin-form-group">
           <label>Foto do Perfil</label>
-          <input type="file" name="profileImage" accept="image/*">
+          <input type="file" name="artistImage" accept="image/*">
         </div>
         
         <div class="admin-form-actions">

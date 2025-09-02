@@ -42,6 +42,10 @@ app.use('/admin/musicas/add', upload.fields([
   { name: 'coverImage', maxCount: 1 }
 ]));
 
+app.use('/admin/artistas/add', upload.fields([
+  { name: 'artistImage', maxCount: 1 }
+]));
+
 // Rotas
 const indexRoutes = require('./routes/index');
 app.use('/', indexRoutes);

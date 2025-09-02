@@ -1,8 +1,9 @@
 
 //logica das rotas
 
-// Array global para armazenar músicas (inicialmente vazio - só músicas do admin)
+// Arrays globais para armazenar dados (inicialmente vazios - só dados do admin)
 let musicasGlobal = [];
+let artistasGlobal = [];
 
 module.exports = {
   home: (req, res) => {
@@ -38,13 +39,15 @@ module.exports = {
       .map(([artista, quantidade]) => {
         const musicaArtista = musicasGlobal.find(m => m.artista === artista);
         const engajamento = engajamentoArtistas[artista] || 0;
+        // Buscar dados do artista se existir no array de artistas
+        const artistaDados = artistasGlobal.find(a => a.nome === artista);
         return {
           nome: artista,
           musicas: quantidade,
-          categoria: musicaArtista?.categoria || 'Vários',
-          imagem: musicaArtista?.cover || '/assets/images/default-artist.jpg',
+          categoria: artistaDados?.categoria || musicaArtista?.categoria || 'Vários',
+          imagem: artistaDados?.imagem || musicaArtista?.cover || '/assets/images/default-artist.jpg',
           engajamento: engajamento,
-          seguidas: 0 // Campo para futura implementação
+          seguidas: artistaDados?.seguidores || 0
         };
       })
       .sort((a, b) => b.engajamento - a.engajamento || b.musicas - a.musicas)
@@ -285,18 +288,71 @@ module.exports = {
   },
   
   adminArtistas: (req, res) => {
-    const artistas = [
-      { id: 1, nome: 'MCK', email: 'mck@example.com', musicas: 28, categoria: 'Rap', status: 'Ativo' },
-      { id: 2, nome: 'C4 Pedro', email: 'c4pedro@example.com', musicas: 31, categoria: 'Kizomba', status: 'Ativo' },
-      { id: 3, nome: 'Puto Português', email: 'puto@example.com', musicas: 15, categoria: 'Kuduro', status: 'Ativo' },
-      { id: 4, nome: 'Bonga', email: 'bonga@example.com', musicas: 45, categoria: 'Semba', status: 'Ativo' },
-      { id: 5, nome: 'DJ Vado Poster', email: 'vado@example.com', musicas: 26, categoria: 'Afro House', status: 'Ativo' }
-    ];
-    
+    // Usar apenas dados reais do array global
     res.render('admin/artistas', {
       title: 'Gerir Artistas - Admin',
-      artistas: artistas
+      artistas: artistasGlobal
     });
+  },
+
+  addArtista: (req, res) => {
+    try {
+      const { nome, categoria, biografia } = req.body;
+      
+      if (!nome || !categoria) {
+        return res.status(400).json({ 
+          success: false, 
+          message: 'Nome e categoria são obrigatórios!' 
+        });
+      }
+      
+      // Gerar novo ID
+      const novoId = artistasGlobal.length > 0 ? Math.max(...artistasGlobal.map(a => a.id)) + 1 : 1;
+      
+      // Processar imagem de upload se houver
+      let imagemPath = '/assets/imagens/imagens_artistas/default.jpg';
+      if (req.files && req.files.artistImage && req.files.artistImage[0]) {
+        imagemPath = `/uploads/${req.files.artistImage[0].filename}`;
+      }
+      
+      const novoArtista = {
+        id: novoId,
+        nome: nome,
+        categoria: categoria,
+        biografia: biografia || '',
+        imagem: imagemPath,
+        seguidores: 0,
+        dataAdicao: new Date().toISOString()
+      };
+      
+      artistasGlobal.push(novoArtista);
+      
+      console.log('Novo artista adicionado:', novoArtista);
+      res.json({ success: true, message: 'Artista adicionado com sucesso!' });
+      
+    } catch (error) {
+      console.error('Erro ao adicionar artista:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: 'Erro interno do servidor!' 
+      });
+    }
+  },
+
+  deleteArtista: (req, res) => {
+    const artistaId = parseInt(req.params.id);
+    const index = artistasGlobal.findIndex(a => a.id === artistaId);
+    
+    if (index === -1) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Artista não encontrado!' 
+      });
+    }
+    
+    artistasGlobal.splice(index, 1);
+    console.log('Artista removido:', artistaId);
+    res.json({ success: true, message: 'Artista removido com sucesso!' });
   },
   
   adminCategorias: (req, res) => {
