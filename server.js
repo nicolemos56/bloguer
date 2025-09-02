@@ -10,6 +10,10 @@ app.set('view engine', 'ejs');
 app.set('layout', './layout');
 app.set('views', path.join(__dirname, 'views'));
 
+// Middleware para parsing de formulários
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Arquivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
