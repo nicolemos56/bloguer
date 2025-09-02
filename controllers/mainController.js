@@ -3,11 +3,11 @@
 
 // Array global para armazenar músicas
 let musicasGlobal = [
-  { id: 1, titulo: 'Bem Estar', artista: 'MCK', categoria: 'Rap', duracao: '4:23', plays: '125K', link: '/musicas/bem-estar.mp3' },
-  { id: 2, titulo: 'African Beauty', artista: 'C4 Pedro', categoria: 'Kizomba', duracao: '4:15', plays: '98K', link: '/musicas/african-beauty.mp3' },
-  { id: 3, titulo: 'Kuduro Dance', artista: 'Puto Português', categoria: 'Kuduro', duracao: '3:45', plays: '87K', link: '/musicas/kuduro-dance.mp3' },
-  { id: 4, titulo: 'Mona Ki Ngi Xica', artista: 'Bonga', categoria: 'Semba', duracao: '4:56', plays: '76K', link: '/musicas/mona-ki-ngi-xica.mp3' },
-  { id: 5, titulo: 'Luanda Nights', artista: 'DJ Vado Poster', categoria: 'Afro House', duracao: '5:12', plays: '65K', link: '/musicas/luanda-nights.mp3' }
+  { id: 1, titulo: 'Bem Estar', artista: 'MCK', categoria: 'Rap', duracao: '4:23', link: '/musicas/bem-estar.mp3', cover: 'https://i.scdn.co/image/ab67616d0000b27351f3c1edc9b0b0b2b8b2b0b2' },
+  { id: 2, titulo: 'African Beauty', artista: 'C4 Pedro', categoria: 'Kizomba', duracao: '4:15', link: '/musicas/african-beauty.mp3', cover: 'https://i.scdn.co/image/ab67616d0000b27351f3c1edc9b0b0b2b8b2b0b3' },
+  { id: 3, titulo: 'Kuduro Dance', artista: 'Puto Português', categoria: 'Kuduro', duracao: '3:45', link: '/musicas/kuduro-dance.mp3', cover: 'https://i.scdn.co/image/ab67616d0000b27351f3c1edc9b0b0b2b8b2b0b4' },
+  { id: 4, titulo: 'Mona Ki Ngi Xica', artista: 'Bonga', categoria: 'Semba', duracao: '4:56', link: '/musicas/mona-ki-ngi-xica.mp3', cover: 'https://i.scdn.co/image/ab67616d0000b27351f3c1edc9b0b0b2b8b2b0b5' },
+  { id: 5, titulo: 'Luanda Nights', artista: 'DJ Vado Poster', categoria: 'Afro House', duracao: '5:12', link: '/musicas/luanda-nights.mp3', cover: 'https://i.scdn.co/image/ab67616d0000b27351f3c1edc9b0b0b2b8b2b0b6' }
 ];
 
 module.exports = {
@@ -277,7 +277,7 @@ module.exports = {
   
   addMusica: (req, res) => {
     try {
-      const { titulo, artista, categoria, duracao, album } = req.body;
+      const { titulo, artista, categoria, duracao, album, coverUrl } = req.body;
       
       // Verificar se os dados necessários estão presentes
       if (!titulo || !artista || !categoria || !duracao) {
@@ -290,20 +290,7 @@ module.exports = {
       // Gerar novo ID
       const novoId = musicasGlobal.length > 0 ? Math.max(...musicasGlobal.map(m => m.id)) + 1 : 1;
       
-      // Processar arquivos de upload
-      let musicFilePath = `/musicas/${titulo.toLowerCase().replace(/\s+/g, '-')}.mp3`;
-      let coverImagePath = `/images/default-cover.jpg`;
-      
-      if (req.files) {
-        if (req.files.musicFile && req.files.musicFile[0]) {
-          musicFilePath = `/uploads/${req.files.musicFile[0].filename}`;
-        }
-        if (req.files.coverImage && req.files.coverImage[0]) {
-          coverImagePath = `/uploads/${req.files.coverImage[0].filename}`;
-        }
-      }
-      
-      // Criar nova música
+      // Criar nova música com dados simples (sem uploads)
       const novaMusica = {
         id: novoId,
         titulo: titulo,
@@ -311,9 +298,8 @@ module.exports = {
         categoria: categoria,
         duracao: duracao,
         album: album || '',
-        plays: '0',
-        link: musicFilePath,
-        cover: coverImagePath
+        link: `/musicas/${titulo.toLowerCase().replace(/\s+/g, '-')}.mp3`,
+        cover: coverUrl || 'https://via.placeholder.com/300x300?text=Sem+Capa'
       };
       
       // Adicionar ao array global

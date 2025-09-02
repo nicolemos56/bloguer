@@ -719,6 +719,27 @@
   font-size: 1.1rem;
 }
 
+/* Cover Image Styles */
+.admin-cover-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cover-thumbnail {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border-color);
+  transition: all var(--transition-base);
+}
+
+.cover-thumbnail:hover {
+  transform: scale(1.1);
+  border-color: var(--accent-primary);
+}
+
 /* Action Buttons Enhanced */
 .admin-action-buttons {
   display: flex;
