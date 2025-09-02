@@ -946,6 +946,19 @@
   opacity: 0;
 }
 
+.track-cover {
+  margin-right: var(--space-lg);
+  flex-shrink: 0;
+}
+
+.cover-image {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+}
+
 .track-info {
   flex: 1;
   margin-right: var(--space-lg);

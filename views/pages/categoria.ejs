@@ -88,6 +88,9 @@
               </button>
             <% } %>
           </div>
+          <div class="track-cover">
+            <img src="<%= musica.cover || '/assets/images/default-cover.jpg' %>" alt="<%= musica.titulo %>" class="cover-image">
+          </div>
           <div class="track-info">
             <h4 class="track-title"><%= musica.titulo %></h4>
             <p class="track-artist"><%= musica.artista %></p>
