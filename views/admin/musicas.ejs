@@ -103,6 +103,7 @@
                 <th>Artista</th>
                 <th>Categoria</th>
                 <th>Duração</th>
+                <th>Ano</th>
                 <th>Capa</th>
                 <th>Música/Link</th>
                 <th>Ações</th>
@@ -124,6 +125,7 @@
                     </span>
                   </td>
                   <td><%= musica.duracao %></td>
+                  <td><%= musica.ano || 'N/A' %></td>
                   <td>
                     <div class="admin-cover-image">
                       <img src="<%= musica.cover || '/assets/images/default-cover.jpg' %>" alt="Capa de <%= musica.titulo %>" class="cover-thumbnail">
@@ -204,6 +206,13 @@
             <label>Álbum</label>
             <input type="text" name="album" placeholder="Ex: Nha Vida">
           </div>
+          <div class="admin-form-group">
+            <label>Ano de Lançamento</label>
+            <input type="number" name="ano" placeholder="Ex: 2024" min="1900" max="2050">
+          </div>
+        </div>
+        
+        <div class="admin-form-row">
           <div class="admin-form-group">
             <label>Arquivo de Música</label>
             <input type="file" name="musicFile" accept="audio/*" required>

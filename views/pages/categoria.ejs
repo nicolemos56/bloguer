@@ -97,10 +97,11 @@
           </div>
           <div class="track-duration"><%= musica.duracao %></div>
           <div class="track-actions">
-            <button class="action-btn" title="Adicionar aos favoritos">
+            <button class="action-btn like-btn" data-music-id="<%= musica.id %>" title="Curtir música">
               <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
+              <span class="like-count"><%= musica.likes || 0 %></span>
             </button>
             <button class="action-btn" title="Mais opções">
               <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
@@ -139,7 +140,7 @@
             <h3 class="artist-name"><%= artista.nome %></h3>
             <p class="artist-stats"><%= artista.musicas %> músicas</p>
             <div class="artist-actions">
-              <button class="btn btn-secondary btn-small">Seguir</button>
+              <button class="btn btn-secondary btn-small follow-btn" data-artist="<%= artista.nome %>">Seguir</button>
               <button class="btn btn-ghost btn-small">Ver perfil</button>
             </div>
           </div>
@@ -176,3 +177,65 @@
     </div>
   </div>
 </section>
+
+<script>
+// Sistema de curtidas nas páginas de categoria
+document.querySelectorAll('.like-btn').forEach(btn => {
+  btn.addEventListener('click', async function() {
+    const musicId = this.dataset.musicId;
+    
+    try {
+      const response = await fetch(`/like/${musicId}`, { method: 'POST' });
+      const data = await response.json();
+      
+      if (data.needLogin) {
+        alert(data.message);
+      } else if (data.success) {
+        // Atualizar contador de likes na interface
+        const likeCount = this.querySelector('.like-count');
+        likeCount.textContent = parseInt(likeCount.textContent) + 1;
+        this.classList.add('liked');
+      }
+    } catch (error) {
+      console.error('Erro ao curtir música:', error);
+    }
+  });
+});
+
+// Sistema de seguir artista nas páginas de categoria
+document.querySelectorAll('.follow-btn').forEach(btn => {
+  btn.addEventListener('click', async function() {
+    const artist = this.dataset.artist;
+    
+    try {
+      const response = await fetch(`/follow/${encodeURIComponent(artist)}`, { method: 'POST' });
+      const data = await response.json();
+      
+      if (data.needLogin) {
+        alert(data.message);
+      } else if (data.success) {
+        this.textContent = 'Seguindo';
+        this.classList.add('following');
+      }
+    } catch (error) {
+      console.error('Erro ao seguir artista:', error);
+    }
+  });
+});
+
+// Registrar plays quando clicar em reproduzir
+document.querySelectorAll('.play-btn').forEach(btn => {
+  btn.addEventListener('click', async function() {
+    const trackRow = this.closest('.track-row');
+    const musicId = trackRow?.querySelector('.like-btn')?.dataset.musicId;
+    
+    if (musicId) {
+      try {
+        await fetch(`/play/${musicId}`, { method: 'POST' });
+      } catch (error) {
+        console.error('Erro ao registrar play:', error);
+      }
+    }
+  });
+});
+</script>

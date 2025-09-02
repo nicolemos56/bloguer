@@ -43,7 +43,7 @@
             <p class="artist-description"><%= artista.musicas %> músicas • <%= artista.categoria %></p>
             <div class="artist-actions">
               <button class="btn btn-secondary play-artist-btn" data-artist="<%= artista.nome %>">Ouvir agora</button>
-              <button class="btn btn-accent follow-btn" data-artist="<%= artista.nome %>">Seguir</button>
+              <a href="/download/<%= musica.id %>" class="btn btn-accent">Baixar</a>
             </div>
           </div>
         </article>
@@ -102,9 +102,9 @@
           
           <div class="track-details">
             <div class="track-main-info">
-              <h3 class="track-title-main"><%= musica.titulo %></h3>
               <a href="#" class="track-artist-link"><%= musica.artista %></a>
-              <p class="track-album"><%= musica.album || 'Single' %></p>
+              <h3 class="track-title-main"><%= musica.titulo %></h3>
+              <p class="track-year"><%= musica.ano || new Date().getFullYear() %></p>
             </div>
             
             <div class="track-meta">

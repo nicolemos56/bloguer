@@ -317,7 +317,7 @@ module.exports = {
   
   addMusica: (req, res) => {
     try {
-      const { titulo, artista, categoria, duracao, album } = req.body;
+      const { titulo, artista, categoria, duracao, album, ano } = req.body;
       
       // Verificar se os dados necessários estão presentes
       if (!titulo || !artista || !categoria || !duracao) {
@@ -355,6 +355,7 @@ module.exports = {
         categoria: categoria,
         duracao: duracao,
         album: album || '',
+        ano: ano || new Date().getFullYear(),
         link: musicFilePath,
         cover: coverImagePath,
         nomeOriginal: musicFile.originalname, // Guardar nome original
