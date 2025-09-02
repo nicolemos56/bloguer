@@ -230,12 +230,56 @@ class VibMusic {
         rootMargin: '0px 0px -50px 0px'
       });
 
-      const animatedElements = document.querySelectorAll('.artist-card, .track-item, .hero-content');
+      const animatedElements = document.querySelectorAll('.artist-card, .track-item, .hero-content, .category-card, .playlist-card');
       animatedElements.forEach(el => {
         el.classList.add('animate-on-scroll');
         animationObserver.observe(el);
       });
     }
+    
+    // Setup category favorites
+    this.setupCategoryFavorites();
+  }
+  
+  setupCategoryFavorites() {
+    const favoriteButtons = document.querySelectorAll('.category-favorite');
+    
+    favoriteButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        button.classList.toggle('favorited');
+        
+        const categoryId = button.dataset.category;
+        const isFavorited = button.classList.contains('favorited');
+        
+        // Update button text and icon
+        const svg = button.querySelector('svg path');
+        if (isFavorited) {
+          svg.setAttribute('d', 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z');
+        }
+        
+        // Store in localStorage
+        const favorites = JSON.parse(localStorage.getItem('categoryFavorites') || '[]');
+        if (isFavorited) {
+          if (!favorites.includes(categoryId)) {
+            favorites.push(categoryId);
+          }
+        } else {
+          const index = favorites.indexOf(categoryId);
+          if (index > -1) {
+            favorites.splice(index, 1);
+          }
+        }
+        localStorage.setItem('categoryFavorites', JSON.stringify(favorites));
+      });
+      
+      // Load favorites from localStorage
+      const favorites = JSON.parse(localStorage.getItem('categoryFavorites') || '[]');
+      const categoryId = button.dataset.category;
+      if (favorites.includes(categoryId)) {
+        button.classList.add('favorited');
+      }
+    });
   }
 
   // Utility method for debouncing

@@ -1,0 +1,131 @@
+<!-- Categories Hero Section -->
+<section class="categories-hero">
+  <div class="container">
+    <div class="categories-hero-content">
+      <h1 class="hero-title">Categorias Musicais</h1>
+      <p class="hero-description">Explore os diferentes géneros musicais e descubra novos artistas</p>
+    </div>
+  </div>
+</section>
+
+<!-- Categories Grid Section -->
+<section class="categories-section">
+  <div class="container">
+    <div class="categories-grid">
+      <% categorias.forEach(categoria => { %>
+        <article class="category-card" data-category="<%= categoria.id %>">
+          <div class="category-image-wrapper">
+            <div class="category-image">
+              <img src="/assets/imagens/imagen_categorias/<%= categoria.imagem %>" alt="<%= categoria.nome %>">
+              <div class="category-overlay" style="background: linear-gradient(135deg, <%= categoria.cor %>66, <%= categoria.cor %>99);">
+                <div class="category-icon">
+                  <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="category-info">
+            <div class="category-header">
+              <h2 class="category-name" style="color: <%= categoria.cor %>"><%= categoria.nome %></h2>
+              <div class="category-badge" style="background-color: <%= categoria.cor %>;">Popular</div>
+            </div>
+            <p class="category-description"><%= categoria.descricao %></p>
+            
+            <div class="category-stats">
+              <div class="stat-item">
+                <span class="stat-number">24</span>
+                <span class="stat-label">Artistas</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">156</span>
+                <span class="stat-label">Músicas</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">2.1K</span>
+                <span class="stat-label">Plays</span>
+              </div>
+            </div>
+            
+            <div class="category-actions">
+              <a href="/categoria/<%= categoria.id %>" class="btn btn-primary">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+                Explorar
+              </a>
+              <button class="btn btn-secondary category-favorite" data-category="<%= categoria.id %>">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                Favoritar
+              </button>
+            </div>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Playlists Section -->
+<section class="featured-playlists">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Playlists em Destaque</h2>
+      <p class="section-subtitle">Playlists curadas com o melhor de cada categoria</p>
+    </div>
+    
+    <div class="playlists-grid">
+      <div class="playlist-card">
+        <div class="playlist-image">
+          <img src="/assets/imagens/imagen_categorias/pessoas_dancando.jpg" alt="Kuduro Hits">
+          <div class="play-button">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
+        </div>
+        <div class="playlist-info">
+          <h3>Kuduro Hits</h3>
+          <p>As melhores do kuduro angolano</p>
+          <span class="playlist-count">32 músicas</span>
+        </div>
+      </div>
+      
+      <div class="playlist-card">
+        <div class="playlist-image">
+          <img src="/assets/imagens/imagen_categorias/pesso_com_micro.jpg" alt="Rap Nacional">
+          <div class="play-button">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
+        </div>
+        <div class="playlist-info">
+          <h3>Rap Nacional</h3>
+          <p>O melhor do hip-hop angolano</p>
+          <span class="playlist-count">28 músicas</span>
+        </div>
+      </div>
+      
+      <div class="playlist-card">
+        <div class="playlist-image">
+          <img src="/assets/imagens/imagen_categorias/plutonio.jpg" alt="Kizomba Love">
+          <div class="play-button">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
+        </div>
+        <div class="playlist-info">
+          <h3>Kizomba Love</h3>
+          <p>Românticas para dançar</p>
+          <span class="playlist-count">45 músicas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

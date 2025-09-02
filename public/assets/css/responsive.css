@@ -207,6 +207,43 @@
   .divulgar-image img {
     max-width: 100%;
   }
+  
+  /* Categories Page Responsive */
+  .categories-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+  
+  .category-card {
+    margin: 0 var(--space-sm);
+  }
+  
+  .category-actions {
+    flex-direction: column;
+  }
+  
+  .category-actions .btn {
+    width: 100%;
+  }
+  
+  .playlists-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+  
+  .category-stats {
+    gap: var(--space-md);
+  }
+  
+  .category-name {
+    font-size: 2rem;
+  }
+  
+  .category-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
 }
 
 /* Small Mobile Phones */

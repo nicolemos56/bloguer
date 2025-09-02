@@ -9,5 +9,7 @@ router.get('/divulgar', function(req, res) {
   res.render('pages/divulgar', { title: 'Divulgar' });//exemplo de renderização da página divulgar
 });
 
+router.get('/categorias', mainController.categorias);
+
 
 module.exports = router;
