@@ -55,9 +55,10 @@ font-size: 20px;
 
 
 section.meio div.card_meio{
-    max-width:430px;
-    height:250px;
-
+    max-width: 430px;
+    height: auto;
+    min-height: 250px;
+    padding: 25px 15px;
 }
 section.meio div.card_meio h1{
 margin: 5px 0px;
@@ -78,11 +79,11 @@ font-weight: 500;
 }
 
 section.meio div.card_meio div.btns a{
-margin: 8px 5px;
+margin: 8px 4px;
 text-decoration: none;
 font-size: 16px;
 color: white;
-padding: 10px 25px;
+padding: 10px 20px;
 border-radius: 10px;
 display: inline-block;
 } 
@@ -530,9 +531,10 @@ section.tudo{
 
 
 section.meio div.card_meio{
-    width:320px;
-    height:220px;
-
+    width: 320px;
+    height: auto;
+    min-height: 220px;
+    padding: 20px 15px;
 } 
 section.all_category div.divisao_das_categorias div.pernas div.card_two{
   width:150px;
@@ -655,9 +657,10 @@ section.all_category div.divisao_das_categorias div.cabeca div.card_one{
     margin-left:240px;
     }
 section.meio div.card_meio{
-    max-width:430px;
-    height:250px;
-
+    max-width: 430px;
+    height: auto;
+    min-height: 250px;
+    padding: 25px 15px;
 }
 
 section.tudo{
