@@ -1,81 +1,69 @@
-
-
-    <section class="category">
-
-        <div class="novas">
-
-            <div class="imagems">
-                <img src="/assets/imagens/imagen_categorias/ouvindo_musica.png" alt="">
-            </div>
-
-
-            <div class="formulario">
-                <div class="mate">
-                    <h2>Bem-vindo\a</h2>
-                    <p>Divulgue a tua musica hoje e ve la a tocar</p>
-                </div>
-
-                <form action="">
-                    <label for="">Nome artistico</label>
-                    <input type="text" placeholder="Seu nome artisitco">
-
-                    <label for="">Titulo da Musica</label>
-                    <input type="text" placeholder="Titulo da música">
-
-                    <label for="">Data de lançamento</label>
-                    <input type="date">
-
-                    <label for="">Numero de telefone</label>
-                    <input type="tel" placeholder="exemplo +244">
-
-                    <label for="">Email</label>
-                    <input type="email" placeholder="@exemplo.com">
-
-                    <label for="">Foto de capa</label>
-                    <input type="file">
-
-                    <label for="">upload da musica</label>
-                    <input type="file">
-
-                    <select name="">
-                        <option value="">Selecione o seu género musical</option>
-                        <option value="">Kuduro</option>
-                        <option value="">Rap</option>
-                        <option value="">Afro House</option>
-                        <option value="">Semba</option>
-                        <option value="">Kizomba</option>
-                        <option value="">Gheto Zouk</option>
-
-                    </select>
-
-                    <input type="submit" value="Enviar">
-
-
-
-
-                </form>
-
-
-
-
-
-            </div>
-
-
-
-
+<!-- Divulgar Section -->
+<section class="divulgar-section">
+  <div class="container">
+    <div class="divulgar-content">
+      <div class="divulgar-image">
+        <img src="/assets/imagens/imagen_categorias/ouvindo_musica.png" alt="Divulgar Música">
+      </div>
+      
+      <div class="divulgar-form">
+        <div class="form-header">
+          <h1>Bem-vindo/a</h1>
+          <p>Divulgue a tua música hoje e vê-la a tocar</p>
         </div>
-
-
-
-    </section>
-
-
-
-
-
-
-
-    
-
-
+        
+        <form class="submission-form" action="#" method="POST">
+          <div class="form-group">
+            <label for="artistName">Nome artístico</label>
+            <input type="text" id="artistName" name="artistName" placeholder="Seu nome artístico" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="songTitle">Título da Música</label>
+            <input type="text" id="songTitle" name="songTitle" placeholder="Título da música" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="releaseDate">Data de lançamento</label>
+            <input type="date" id="releaseDate" name="releaseDate" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="phone">Número de telefone</label>
+            <input type="tel" id="phone" name="phone" placeholder="+244" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="exemplo@email.com" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="coverPhoto">Foto de capa</label>
+            <input type="file" id="coverPhoto" name="coverPhoto" accept="image/*" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="musicFile">Upload da música</label>
+            <input type="file" id="musicFile" name="musicFile" accept="audio/*" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="genre">Género musical</label>
+            <select id="genre" name="genre" required>
+              <option value="">Selecione o seu género musical</option>
+              <option value="kuduro">Kuduro</option>
+              <option value="rap">Rap</option>
+              <option value="afrohouse">Afro House</option>
+              <option value="semba">Semba</option>
+              <option value="kizomba">Kizomba</option>
+              <option value="gheto-zouk">Gheto Zouk</option>
+            </select>
+          </div>
+          
+          <button type="submit" class="btn btn-primary btn-full">Enviar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

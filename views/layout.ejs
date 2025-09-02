@@ -1,29 +1,28 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= title %></title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/assets/css/reset.css"/>
-  <link rel="stylesheet" href="/assets/css/navbar.css">
-  <link rel="stylesheet" href="/assets/css/footer.css">
-  <link rel="stylesheet" href="/assets/css/categoria.css">
-  <link rel="stylesheet" href="/assets/css/artistas.css">
-  <link rel="stylesheet" href="/assets/css/home.css">
+  <title><%= title %> - VIB Music</title>
+  
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="/assets/css/reset.css">
+  <link rel="stylesheet" href="/assets/css/variables.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/pages.css">
   <link rel="stylesheet" href="/assets/css/responsive.css">
-<script src="/assets/js/accao.js" defer></script>
-
+  
+  <!-- JavaScript -->
+  <script src="/assets/js/main.js" defer></script>
 </head>
 <body>
-
-  <%- include('partials/navbar') %>
-
-  <main>
+  <%- include('partials/header') %>
+  
+  <main class="main-content">
     <%- body %>
   </main>
-
+  
   <%- include('partials/footer') %>
-
 </body>
 </html>

@@ -1,72 +1,88 @@
-
-<section class="meio">
-  <div class="card_meio">
-    <h1>VIB MUSIC</h1>
-    <h2>Ouça e divulgue aqui as suas músicas</h2>
-    <p>Telef: +244 942 424 </p>
-    <div class="btns">
-      <a href="/divulgar" class="divul">Divulgar</a>
-    </div>
-  </div>
-</section>
-
-<section class="explanation">
-    <div class="textos">
-        <h1>Se você é musico ou um artista e desejas ver a tua música no top clique já em divulgar</h1>
-        <h2>E vê a tua música a bater !</h2>
-    </div>
-</section>
-
-<div class="month_artist">
-  <div class="cm">
-    <h2>Artistas do mês</h2>
-  </div>
-</div>
-
-<section class="music_category">
-  <% const artistas = [
-    { nome: "Tio Edson ft Kelson monst wanted", imagem: "paulelson.jpg" },
-    { nome: "Tio Edson ft Kelson monst wanted", imagem: "IMG-20250209-WA0012.jpg" },
-    { nome: "Tio Edson ft Kelson monst wanted", imagem: "IMG-20250209-WA0010.jpg" },
-    { nome: "Tio Edson ft Kelson monst wanted", imagem: "12furos.jpg" },
-  ]; %>
-
-  <% artistas.forEach(artista => { %>
-    <div class="cards_artistas">
-      <a href="#"><img src="/assets/imagens/imagens_artistas/<%= artista.imagem %>" alt=""></a>
-      <a href="#"><h1><%= artista.nome %></h1></a>
-      <h2>Lorem ipsum dolor sit amet</h2>
-      <a href="#" class="dete">Ouvir agora</a>
-      <a href="#" class="detes">Baixar</a>
-    </div>
-  <% }) %>
-</section>
-
-<div class="month_artist">
-  <div class="cm">
-    <h2>Mais curtidas</h2>
-  </div>
-</div>
-
-<section class="good">
-  <div class="all">
-    <div class="card_good">
-      <a href="#"><img src="/assets/imagens/imagens_artistas/preto_show.jpg" alt=""></a>
-      <div>
-        <h3>Lorem ipsum dolor sit</h3>
-        <a href="#">Preto Show</a>
-      </div>
-    </div>
-    <div class="card_good">
-      <a href="#"><img src="/assets/imagens/imagens_artistas/12furos.jpg" alt=""></a>
-      <div>
-        <h3>Lorem ipsum dolor sit</h3>
-        <a href="#">12 Furos</a>
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-container">
+    <div class="hero-content">
+      <h1 class="hero-title">VIB MUSIC</h1>
+      <h2 class="hero-subtitle">Ouça e divulgue aqui as suas músicas</h2>
+      <p class="hero-description">Telefone: +244 942 424</p>
+      <div class="hero-actions">
+        <a href="/divulgar" class="btn btn-primary">Divulgar</a>
       </div>
     </div>
   </div>
+</section>
 
-  <div class="twice">
-    <!-- Repetir estrutura como acima para outros artistas -->
+<!-- Info Section -->
+<section class="info-section">
+  <div class="container">
+    <div class="info-content">
+      <h2>Se você é músico ou artista e deseja ver a sua música no top</h2>
+      <p>Clique já em divulgar e vê a tua música a bater!</p>
+    </div>
+  </div>
+</section>
+
+<!-- Artists Section -->
+<section class="artists-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Artistas do mês</h2>
+    </div>
+    
+    <div class="artists-grid">
+      <% const artistas = [
+        { nome: "Tio Edson ft Kelson monst wanted", imagem: "paulelson.jpg" },
+        { nome: "Preto Show", imagem: "IMG-20250209-WA0012.jpg" },
+        { nome: "12 Furos", imagem: "IMG-20250209-WA0010.jpg" },
+        { nome: "Emana Cheezy", imagem: "12furos.jpg" },
+      ]; %>
+      
+      <% artistas.forEach(artista => { %>
+        <article class="artist-card">
+          <div class="artist-image">
+            <img src="/assets/imagens/imagens_artistas/<%= artista.imagem %>" alt="<%= artista.nome %>">
+          </div>
+          <div class="artist-info">
+            <h3 class="artist-name"><%= artista.nome %></h3>
+            <p class="artist-description">Lorem ipsum dolor sit amet</p>
+            <div class="artist-actions">
+              <a href="#" class="btn btn-secondary">Ouvir agora</a>
+              <a href="#" class="btn btn-accent">Baixar</a>
+            </div>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- Popular Tracks Section -->
+<section class="popular-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Mais curtidas</h2>
+    </div>
+    
+    <div class="tracks-grid">
+      <div class="track-item">
+        <div class="track-image">
+          <img src="/assets/imagens/imagens_artistas/preto_show.jpg" alt="Preto Show">
+        </div>
+        <div class="track-info">
+          <h4 class="track-title">Lorem ipsum dolor sit</h4>
+          <a href="#" class="track-artist">Preto Show</a>
+        </div>
+      </div>
+      
+      <div class="track-item">
+        <div class="track-image">
+          <img src="/assets/imagens/imagens_artistas/12furos.jpg" alt="12 Furos">
+        </div>
+        <div class="track-info">
+          <h4 class="track-title">Lorem ipsum dolor sit</h4>
+          <a href="#" class="track-artist">12 Furos</a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
