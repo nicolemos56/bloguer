@@ -715,9 +715,10 @@
 .track-number {
   display: flex;
   align-items: center;
-  width: 40px;
+  width: 80px;
   margin-right: var(--space-lg);
   position: relative;
+  gap: var(--space-xs);
 }
 
 .track-number .number {
@@ -725,26 +726,44 @@
   font-weight: var(--font-weight-medium);
 }
 
-.play-btn {
+.play-btn, .download-btn {
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   background: var(--accent-primary);
   color: white;
   border: none;
   border-radius: var(--radius-full);
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   transition: all var(--transition-base);
+  cursor: pointer;
 }
 
-.track-row:hover .play-btn {
+.play-btn {
+  transform: translate(-150%, -50%);
+}
+
+.download-btn {
+  transform: translate(-50%, -50%);
+  background: var(--accent-secondary);
+}
+
+.track-row:hover .play-btn,
+.track-row:hover .download-btn {
   opacity: 1;
+}
+
+.download-btn:hover {
+  background: #059669;
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.play-btn:hover {
+  transform: translate(-150%, -50%) scale(1.1);
 }
 
 .track-row:hover .number {
