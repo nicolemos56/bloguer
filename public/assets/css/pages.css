@@ -744,11 +744,13 @@
 }
 
 .play-btn {
-  transform: translate(-150%, -50%);
+  transform: translate(-100%, -50%);
+  left: 25px;
 }
 
 .download-btn {
-  transform: translate(-50%, -50%);
+  transform: translate(0%, -50%);
+  left: 25px;
   background: var(--accent-secondary);
 }
 
@@ -759,11 +761,11 @@
 
 .download-btn:hover {
   background: #059669;
-  transform: translate(-50%, -50%) scale(1.1);
+  transform: translate(0%, -50%) scale(1.1);
 }
 
 .play-btn:hover {
-  transform: translate(-150%, -50%) scale(1.1);
+  transform: translate(-100%, -50%) scale(1.1);
 }
 
 .track-row:hover .number {
