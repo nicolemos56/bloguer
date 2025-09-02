@@ -30,21 +30,22 @@
     </div>
     
     <div class="artists-grid">
-      <% const artistas = [
-        { nome: "Tio Edson ft Kelson monst wanted", imagem: "paulelson.jpg" },
-        { nome: "Preto Show", imagem: "IMG-20250209-WA0012.jpg" },
-        { nome: "12 Furos", imagem: "IMG-20250209-WA0010.jpg" },
-        { nome: "Emana Cheezy", imagem: "12furos.jpg" },
+      <% // Usando dados dinâmicos do controller
+      const artistas = (typeof artistasDoMes !== 'undefined' && artistasDoMes.length > 0) ? artistasDoMes : [
+        { nome: "Tio Edson ft Kelson monst wanted", imagem: "paulelson.jpg", musicas: 3, categoria: "Semba" },
+        { nome: "Preto Show", imagem: "IMG-20250209-WA0012.jpg", musicas: 2, categoria: "Rap" },
+        { nome: "12 Furos", imagem: "IMG-20250209-WA0010.jpg", musicas: 1, categoria: "Kuduro" },
+        { nome: "Emana Cheezy", imagem: "12furos.jpg", musicas: 4, categoria: "Kizomba" },
       ]; %>
       
       <% artistas.forEach(artista => { %>
         <article class="artist-card">
           <div class="artist-image">
-            <img src="/assets/imagens/imagens_artistas/<%= artista.imagem %>" alt="<%= artista.nome %>">
+            <img src="<%= artista.imagem || '/assets/imagens/imagens_artistas/default.jpg' %>" alt="<%= artista.nome %>">
           </div>
           <div class="artist-info">
             <h3 class="artist-name"><%= artista.nome %></h3>
-            <p class="artist-description">Lorem ipsum dolor sit amet</p>
+            <p class="artist-description"><%= artista.musicas %> músicas • <%= artista.categoria %></p>
             <div class="artist-actions">
               <a href="#" class="btn btn-secondary">Ouvir agora</a>
               <a href="#" class="btn btn-accent">Baixar</a>
@@ -65,7 +66,8 @@
     </div>
     
     <div class="popular-tracks-grid">
-      <% const musicasPopulares = [
+      <% // Usando dados dinâmicos do controller
+      const musicasPopulares = (typeof musicasEmDestaque !== 'undefined' && musicasEmDestaque.length > 0) ? musicasEmDestaque : [
         { 
           titulo: "Bem Estar", 
           artista: "MCK", 
@@ -129,18 +131,31 @@
           </div>
           
           <div class="track-image-container">
-            <img src="/assets/imagens/imagens_artistas/<%= musica.imagem %>" alt="<%= musica.titulo %>">
+            <img src="<%= musica.cover || '/assets/imagens/imagens_artistas/' + (musica.imagem || 'default.jpg') %>" alt="<%= musica.titulo %>">
             <div class="track-overlay">
-              <button class="track-play-btn" title="Reproduzir">
+              <% if (musica.link) { %>
+                <a href="<%= musica.link %>" class="track-play-btn" title="Reproduzir" target="_blank">
+              <% } else { %>
+                <button class="track-play-btn" title="Reproduzir">
+              <% } %>
                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z"/>
                 </svg>
-              </button>
-              <button class="track-download-btn" title="Download">
+              <% if (musica.link) { %>
+                </a>
+                <a href="/download/<%= musica.id %>" class="track-download-btn" title="Download">
+              <% } else { %>
+                </button>
+                <button class="track-download-btn" title="Download">
+              <% } %>
                 <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
                 </svg>
-              </button>
+              <% if (musica.link) { %>
+                </a>
+              <% } else { %>
+                </button>
+              <% } %>
             </div>
             <div class="track-category-badge"><%= musica.categoria %></div>
           </div>
@@ -149,7 +164,7 @@
             <div class="track-main-info">
               <h3 class="track-title-main"><%= musica.titulo %></h3>
               <a href="#" class="track-artist-link"><%= musica.artista %></a>
-              <p class="track-album"><%= musica.album %></p>
+              <p class="track-album"><%= musica.album || 'Single' %></p>
             </div>
             
             <div class="track-meta">

@@ -11,7 +11,47 @@ let musicasGlobal = [
 ];
 
 module.exports = {
-  home: (req, res) => res.render('pages/home', { title: 'Página Inicial' }),
+  home: (req, res) => {
+    // Função para obter músicas em destaque (3 mais recentes)
+    const musicasEmDestaque = [...musicasGlobal]
+      .sort((a, b) => b.id - a.id)
+      .slice(0, 3);
+    
+    // Função para obter artistas do mês (baseado em quantidade de músicas)
+    const contagemArtistas = {};
+    musicasGlobal.forEach(musica => {
+      contagemArtistas[musica.artista] = (contagemArtistas[musica.artista] || 0) + 1;
+    });
+    
+    const artistasDoMes = Object.entries(contagemArtistas)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 4)
+      .map(([artista, quantidade]) => {
+        const musicaArtista = musicasGlobal.find(m => m.artista === artista);
+        return {
+          nome: artista,
+          musicas: quantidade,
+          categoria: musicaArtista?.categoria || 'Vários',
+          imagem: musicaArtista?.cover || '/assets/images/default-artist.jpg'
+        };
+      });
+    
+    // Músicas populares por categoria (1 por categoria)
+    const categorias = ['Kuduro', 'Rap', 'Kizomba', 'Semba', 'Afro House', 'Gheto Zouk'];
+    const musicasPorCategoria = categorias.map(categoria => {
+      const musicaCategoria = musicasGlobal.find(m => 
+        m.categoria.toLowerCase().replace(/[^a-z]/g, '') === categoria.toLowerCase().replace(/[^a-z]/g, '')
+      );
+      return musicaCategoria;
+    }).filter(Boolean);
+    
+    res.render('pages/home', { 
+      title: 'VIB Music - Página Inicial',
+      musicasEmDestaque: musicasEmDestaque,
+      artistasDoMes: artistasDoMes,
+      musicasPorCategoria: musicasPorCategoria
+    });
+  },
   artistas: (req, res) => res.render('pages/artistas'),
   categoria: (req, res) => res.render('pages/categoria', { title: 'Categoria' }),
   divulgar: (req, res) => res.render('pages/divulgar', { title: 'Divulgar' }),
@@ -360,7 +400,9 @@ module.exports = {
     }
     
     const path = require('path');
-    const caminhoArquivo = path.join(__dirname, '..', 'public', 'uploads', musica.nomeArquivo);
+    // Extrair nome do arquivo do link (remove /uploads/)
+    const nomeArquivoServidor = musica.nomeArquivo || musica.link.replace('/uploads/', '');
+    const caminhoArquivo = path.join(__dirname, '..', 'public', 'uploads', nomeArquivoServidor);
     
     // Definir nome original para download
     const nomeDownload = musica.nomeOriginal || `${musica.titulo} - ${musica.artista}.mp3`;
