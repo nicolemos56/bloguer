@@ -42,8 +42,8 @@
             <h3 class="artist-name"><%= artista.nome %></h3>
             <p class="artist-description"><%= artista.musicas %> músicas • <%= artista.categoria %></p>
             <div class="artist-actions">
-              <a href="#" class="btn btn-secondary">Ouvir agora</a>
-              <a href="#" class="btn btn-accent">Baixar</a>
+              <button class="btn btn-secondary play-artist-btn" data-artist="<%= artista.nome %>">Ouvir agora</button>
+              <button class="btn btn-accent follow-btn" data-artist="<%= artista.nome %>">Seguir</button>
             </div>
           </div>
         </article>
@@ -119,15 +119,16 @@
                   <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z"/>
                   </svg>
-                  <%= musica.plays %>
+                  <span class="play-count"><%= musica.plays || 0 %></span>
                 </span>
               </div>
               
               <div class="track-actions">
-                <button class="action-btn-small" title="Adicionar aos favoritos">
+                <button class="action-btn-small like-btn" data-music-id="<%= musica.id %>" title="Curtir música">
                   <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                   </svg>
+                  <span class="like-count"><%= musica.likes || 0 %></span>
                 </button>
                 <button class="action-btn-small" title="Compartilhar">
                   <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -151,3 +152,99 @@
     </div>
   </div>
 </section>
+
+<!-- Modal de Login -->
+<div id="loginModal" class="modal-overlay" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Login Necessário</h3>
+      <button class="modal-close" onclick="closeLoginModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p id="loginMessage">Para continuar, precisa fazer login na sua conta VIB Music.</p>
+      <div class="login-actions">
+        <button class="btn btn-primary" onclick="alert('Funcionalidade de login será implementada em breve!')">Fazer Login</button>
+        <button class="btn btn-secondary" onclick="closeLoginModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Sistema de curtidas
+document.querySelectorAll('.like-btn').forEach(btn => {
+  btn.addEventListener('click', async function() {
+    const musicId = this.dataset.musicId;
+    
+    try {
+      const response = await fetch(`/like/${musicId}`, { method: 'POST' });
+      const data = await response.json();
+      
+      if (data.needLogin) {
+        showLoginModal(data.message);
+      } else if (data.success) {
+        // Atualizar contador de likes na interface
+        const likeCount = this.querySelector('.like-count');
+        likeCount.textContent = parseInt(likeCount.textContent) + 1;
+        this.classList.add('liked');
+      }
+    } catch (error) {
+      console.error('Erro ao curtir música:', error);
+    }
+  });
+});
+
+// Sistema de seguir artista
+document.querySelectorAll('.follow-btn').forEach(btn => {
+  btn.addEventListener('click', async function() {
+    const artist = this.dataset.artist;
+    
+    try {
+      const response = await fetch(`/follow/${encodeURIComponent(artist)}`, { method: 'POST' });
+      const data = await response.json();
+      
+      if (data.needLogin) {
+        showLoginModal(data.message);
+      } else if (data.success) {
+        this.textContent = 'Seguindo';
+        this.classList.add('following');
+      }
+    } catch (error) {
+      console.error('Erro ao seguir artista:', error);
+    }
+  });
+});
+
+// Registrar plays quando clicar em reproduzir
+document.querySelectorAll('.track-play-btn').forEach(btn => {
+  if (btn.tagName === 'A') {
+    btn.addEventListener('click', async function() {
+      const musicId = this.closest('.popular-track-card').querySelector('.like-btn')?.dataset.musicId;
+      if (musicId) {
+        try {
+          await fetch(`/play/${musicId}`, { method: 'POST' });
+        } catch (error) {
+          console.error('Erro ao registrar play:', error);
+        }
+      }
+    });
+  }
+});
+
+// Funções do modal
+function showLoginModal(message) {
+  document.getElementById('loginMessage').textContent = message;
+  document.getElementById('loginModal').style.display = 'flex';
+}
+
+function closeLoginModal() {
+  document.getElementById('loginModal').style.display = 'none';
+}
+
+// Fechar modal clicando fora
+document.getElementById('loginModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeLoginModal();
+  }
+});
+</script>

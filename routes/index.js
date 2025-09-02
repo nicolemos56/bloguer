@@ -25,4 +25,9 @@ router.delete('/admin/artistas/:id', mainController.deleteArtista);
 // Rota para download com nome original
 router.get('/download/:id', mainController.downloadMusica);
 
+// Rotas de engajamento
+router.post('/like/:id', mainController.likeMusica);
+router.post('/play/:id', mainController.playMusica);
+router.post('/follow/:artista', mainController.followArtista);
+
 module.exports = router;

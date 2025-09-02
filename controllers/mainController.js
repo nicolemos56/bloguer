@@ -8,29 +8,52 @@ module.exports = {
   home: (req, res) => {
     console.log('Total de músicas no sistema:', musicasGlobal.length);
     
-    // Função para obter músicas em destaque (3 mais recentes)
-    const musicasEmDestaque = [...musicasGlobal]
-      .sort((a, b) => b.id - a.id)
-      .slice(0, 3);
+    // Sistema de ranking baseado em engajamento (likes, downloads, plays)
+    const calcularScore = (musica) => {
+      return (musica.likes * 3) + (musica.downloads * 2) + (musica.plays * 1);
+    };
     
-    // Função para obter artistas do mês (baseado em quantidade de músicas)
+    // Músicas mais curtidas (4 cards) - ranking por engajamento
+    let musicasEmDestaque = [...musicasGlobal]
+      .sort((a, b) => calcularScore(b) - calcularScore(a))
+      .slice(0, 4);
+    
+    // Se não há músicas com engajamento, mostra aleatoriamente
+    if (musicasEmDestaque.every(m => calcularScore(m) === 0)) {
+      musicasEmDestaque = [...musicasGlobal]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 4);
+    }
+    
+    // Artistas do mês (4 cards) - baseado em engajamento + quantidade
     const contagemArtistas = {};
+    const engajamentoArtistas = {};
+    
     musicasGlobal.forEach(musica => {
       contagemArtistas[musica.artista] = (contagemArtistas[musica.artista] || 0) + 1;
+      engajamentoArtistas[musica.artista] = (engajamentoArtistas[musica.artista] || 0) + calcularScore(musica);
     });
     
-    const artistasDoMes = Object.entries(contagemArtistas)
-      .sort(([,a], [,b]) => b - a)
-      .slice(0, 4)
+    let artistasDoMes = Object.entries(contagemArtistas)
       .map(([artista, quantidade]) => {
         const musicaArtista = musicasGlobal.find(m => m.artista === artista);
+        const engajamento = engajamentoArtistas[artista] || 0;
         return {
           nome: artista,
           musicas: quantidade,
           categoria: musicaArtista?.categoria || 'Vários',
-          imagem: musicaArtista?.cover || '/assets/images/default-artist.jpg'
+          imagem: musicaArtista?.cover || '/assets/images/default-artist.jpg',
+          engajamento: engajamento,
+          seguidas: 0 // Campo para futura implementação
         };
-      });
+      })
+      .sort((a, b) => b.engajamento - a.engajamento || b.musicas - a.musicas)
+      .slice(0, 4);
+    
+    // Se não há engajamento, ordena aleatoriamente
+    if (artistasDoMes.every(a => a.engajamento === 0)) {
+      artistasDoMes = artistasDoMes.sort(() => Math.random() - 0.5);
+    }
     
     console.log('Músicas em destaque:', musicasEmDestaque.length);
     console.log('Artistas do mês:', artistasDoMes.length);
@@ -324,7 +347,7 @@ module.exports = {
         coverImagePath = `/uploads/${req.files.coverImage[0].filename}`;
       }
       
-      // Criar nova música
+      // Criar nova música com campos de engajamento
       const novaMusica = {
         id: novoId,
         titulo: titulo,
@@ -335,7 +358,12 @@ module.exports = {
         link: musicFilePath,
         cover: coverImagePath,
         nomeOriginal: musicFile.originalname, // Guardar nome original
-        nomeArquivo: musicFile.filename // Nome do arquivo no servidor
+        nomeArquivo: musicFile.filename, // Nome do arquivo no servidor
+        // Campos de engajamento
+        likes: 0,
+        downloads: 0,
+        plays: 0,
+        dataAdicao: new Date().toISOString()
       };
       
       // Adicionar ao array global
@@ -389,6 +417,10 @@ module.exports = {
       });
     }
     
+    // Incrementar contador de downloads
+    musica.downloads = (musica.downloads || 0) + 1;
+    console.log(`Download da música "${musica.titulo}" - Total: ${musica.downloads}`);
+    
     const path = require('path');
     // Extrair nome do arquivo do link (remove /uploads/)
     const nomeArquivoServidor = musica.nomeArquivo || musica.link.replace('/uploads/', '');
@@ -405,6 +437,63 @@ module.exports = {
           message: 'Arquivo não encontrado!' 
         });
       }
+    });
+  },
+
+  // Sistema de curtidas
+  likeMusica: (req, res) => {
+    const musicaId = parseInt(req.params.id);
+    const musica = musicasGlobal.find(m => m.id === musicaId);
+    
+    if (!musica) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Música não encontrada!' 
+      });
+    }
+    
+    // Por enquanto, simula que precisa login
+    // Futuramente aqui verificaria se o usuário está logado
+    return res.json({ 
+      success: false, 
+      needLogin: true, 
+      message: 'Precisa fazer login para curtir músicas!' 
+    });
+  },
+
+  // Contador de reproduções
+  playMusica: (req, res) => {
+    const musicaId = parseInt(req.params.id);
+    const musica = musicasGlobal.find(m => m.id === musicaId);
+    
+    if (!musica) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Música não encontrada!' 
+      });
+    }
+    
+    // Incrementar contador de plays
+    musica.plays = (musica.plays || 0) + 1;
+    console.log(`Play da música "${musica.titulo}" - Total: ${musica.plays}`);
+    
+    res.json({ 
+      success: true, 
+      message: 'Play registrado!', 
+      totalPlays: musica.plays 
+    });
+  },
+
+  // Sistema de seguir artista
+  followArtista: (req, res) => {
+    const artista = req.params.artista;
+    
+    // Por enquanto, simula que precisa login
+    // Futuramente aqui verificaria se o usuário está logado
+    return res.json({ 
+      success: false, 
+      needLogin: true, 
+      message: `Precisa fazer login para seguir ${artista}!` 
     });
   }
 };
