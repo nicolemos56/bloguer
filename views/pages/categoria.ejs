@@ -64,16 +64,29 @@
         <div class="track-row">
           <div class="track-number">
             <span class="number"><%= index + 1 %></span>
-            <button class="play-btn" title="Reproduzir">
-              <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
-            </button>
-            <button class="download-btn" title="Download">
-              <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-              </svg>
-            </button>
+            <% if (musica.link) { %>
+              <a href="<%= musica.link %>" class="play-btn" title="Reproduzir" target="_blank">
+                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </a>
+              <a href="<%= musica.link %>" class="download-btn" title="Download" download>
+                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                </svg>
+              </a>
+            <% } else { %>
+              <button class="play-btn" title="Reproduzir">
+                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </button>
+              <button class="download-btn" title="Download">
+                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                </svg>
+              </button>
+            <% } %>
           </div>
           <div class="track-info">
             <h4 class="track-title"><%= musica.titulo %></h4>

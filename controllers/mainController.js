@@ -71,7 +71,18 @@ module.exports = {
   categoriaIndividual: (req, res) => {
     const categoriaId = req.params.id;
     
-    // Dados das categorias (duplicado para consistência)
+    // Função para filtrar músicas por categoria
+    const filtrarMusicasPorCategoria = (nomeCategoria) => {
+      return musicasGlobal.filter(musica => {
+        const musicaCategoria = musica.categoria.toLowerCase().replace(/[^a-z]/g, '');
+        const targetCategoria = nomeCategoria.toLowerCase().replace(/[^a-z]/g, '');
+        return musicaCategoria === targetCategoria || 
+               musicaCategoria.includes(targetCategoria) ||
+               targetCategoria.includes(musicaCategoria);
+      });
+    };
+    
+    // Dados das categorias (agora com músicas reais do admin)
     const categorias = {
       'kuduro': {
         id: 'kuduro',
@@ -85,11 +96,7 @@ module.exports = {
           { nome: 'Titica', imagem: 'emana.jpg', musicas: 23 },
           { nome: 'Cabo Snoop', imagem: '12furos.jpg', musicas: 18 }
         ],
-        musicasPopulares: [
-          { titulo: 'Kuduro Dance', artista: 'Puto Português', duracao: '3:45' },
-          { titulo: 'Bom Bom', artista: 'Titica', duracao: '4:12' },
-          { titulo: 'Dança do Kuduro', artista: 'Cabo Snoop', duracao: '3:28' }
-        ]
+        musicasPopulares: filtrarMusicasPorCategoria('Kuduro')
       },
       'rap': {
         id: 'rap',
@@ -103,11 +110,7 @@ module.exports = {
           { nome: 'Prodígio', imagem: 'IMG-20250209-WA0010.jpg', musicas: 34 },
           { nome: 'Boss AC', imagem: 'paulelson.jpg', musicas: 21 }
         ],
-        musicasPopulares: [
-          { titulo: 'Bem Estar', artista: 'MCK', duracao: '4:23' },
-          { titulo: 'Homem do Ano', artista: 'Prodígio', duracao: '3:56' },
-          { titulo: 'Kuzé Kuma', artista: 'Boss AC', duracao: '4:18' }
-        ]
+        musicasPopulares: filtrarMusicasPorCategoria('Rap')
       },
       'afrohouse': {
         id: 'afrohouse',
@@ -121,11 +124,7 @@ module.exports = {
           { nome: 'Dj Vado Poster', imagem: '12furos.jpg', musicas: 26 },
           { nome: 'Kelson Most Wanted', imagem: 'IMG-20250209-WA0012.jpg', musicas: 17 }
         ],
-        musicasPopulares: [
-          { titulo: 'African Vibe', artista: 'Djeff', duracao: '5:34' },
-          { titulo: 'Luanda Nights', artista: 'Dj Vado Poster', duracao: '4:47' },
-          { titulo: 'Tribal House', artista: 'Kelson Most Wanted', duracao: '6:12' }
-        ]
+        musicasPopulares: filtrarMusicasPorCategoria('Afro House')
       },
       'semba': {
         id: 'semba',
@@ -139,11 +138,7 @@ module.exports = {
           { nome: 'Paulo Flores', imagem: 'emana.jpg', musicas: 38 },
           { nome: 'Waldemar Bastos', imagem: 'preto_show.jpg', musicas: 42 }
         ],
-        musicasPopulares: [
-          { titulo: 'Mona Ki Ngi Xica', artista: 'Bonga', duracao: '4:56' },
-          { titulo: 'Geração 90', artista: 'Paulo Flores', duracao: '4:34' },
-          { titulo: 'Estou Cansado', artista: 'Waldemar Bastos', duracao: '5:12' }
-        ]
+        musicasPopulares: filtrarMusicasPorCategoria('Semba')
       },
       'kizomba': {
         id: 'kizomba',
@@ -157,11 +152,7 @@ module.exports = {
           { nome: 'Anselmo Ralph', imagem: 'baixar.png', musicas: 29 },
           { nome: 'Maya Cool', imagem: 'xuxu.jpg', musicas: 22 }
         ],
-        musicasPopulares: [
-          { titulo: 'African Beauty', artista: 'C4 Pedro', duracao: '4:23' },
-          { titulo: 'Não Me Toca', artista: 'Anselmo Ralph', duracao: '3:58' },
-          { titulo: 'Whiskas', artista: 'Maya Cool', duracao: '4:15' }
-        ]
+        musicasPopulares: filtrarMusicasPorCategoria('Kizomba')
       },
       'gheto-zouk': {
         id: 'gheto-zouk',
@@ -175,11 +166,7 @@ module.exports = {
           { nome: 'Gama', imagem: '12furos.jpg', musicas: 19 },
           { nome: 'Pérola', imagem: 'IMG-20250209-WA0010.jpg', musicas: 33 }
         ],
-        musicasPopulares: [
-          { titulo: 'Morena', artista: 'Yola Semedo', duracao: '3:45' },
-          { titulo: 'Zouk Love', artista: 'Gama', duracao: '4:28' },
-          { titulo: 'Sedução', artista: 'Pérola', duracao: '3:52' }
-        ]
+        musicasPopulares: filtrarMusicasPorCategoria('Gheto Zouk')
       }
     };
     
