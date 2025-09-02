@@ -1,5 +1,15 @@
 
 //logica das rotas
+
+// Array global para armazenar músicas
+let musicasGlobal = [
+  { id: 1, titulo: 'Bem Estar', artista: 'MCK', categoria: 'Rap', duracao: '4:23', plays: '125K', link: '/musicas/bem-estar.mp3' },
+  { id: 2, titulo: 'African Beauty', artista: 'C4 Pedro', categoria: 'Kizomba', duracao: '4:15', plays: '98K', link: '/musicas/african-beauty.mp3' },
+  { id: 3, titulo: 'Kuduro Dance', artista: 'Puto Português', categoria: 'Kuduro', duracao: '3:45', plays: '87K', link: '/musicas/kuduro-dance.mp3' },
+  { id: 4, titulo: 'Mona Ki Ngi Xica', artista: 'Bonga', categoria: 'Semba', duracao: '4:56', plays: '76K', link: '/musicas/mona-ki-ngi-xica.mp3' },
+  { id: 5, titulo: 'Luanda Nights', artista: 'DJ Vado Poster', categoria: 'Afro House', duracao: '5:12', plays: '65K', link: '/musicas/luanda-nights.mp3' }
+];
+
 module.exports = {
   home: (req, res) => res.render('pages/home', { title: 'Página Inicial' }),
   artistas: (req, res) => res.render('pages/artistas'),
@@ -209,17 +219,28 @@ module.exports = {
   },
   
   adminMusicas: (req, res) => {
-    const musicas = [
-      { id: 1, titulo: 'Bem Estar', artista: 'MCK', categoria: 'Rap', duracao: '4:23', plays: '125K', status: 'Ativa' },
-      { id: 2, titulo: 'African Beauty', artista: 'C4 Pedro', categoria: 'Kizomba', duracao: '4:15', plays: '98K', status: 'Ativa' },
-      { id: 3, titulo: 'Kuduro Dance', artista: 'Puto Português', categoria: 'Kuduro', duracao: '3:45', plays: '87K', status: 'Ativa' },
-      { id: 4, titulo: 'Mona Ki Ngi Xica', artista: 'Bonga', categoria: 'Semba', duracao: '4:56', plays: '76K', status: 'Ativa' },
-      { id: 5, titulo: 'Luanda Nights', artista: 'DJ Vado Poster', categoria: 'Afro House', duracao: '5:12', plays: '65K', status: 'Ativa' }
-    ];
+    const { search, categoria } = req.query;
+    let musicasFiltradas = [...musicasGlobal];
+    
+    // Filtrar por pesquisa
+    if (search) {
+      musicasFiltradas = musicasFiltradas.filter(musica => 
+        musica.titulo.toLowerCase().includes(search.toLowerCase()) ||
+        musica.artista.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    
+    // Filtrar por categoria
+    if (categoria) {
+      musicasFiltradas = musicasFiltradas.filter(musica => 
+        musica.categoria.toLowerCase().replace(/[^a-z]/g, '') === categoria.toLowerCase()
+      );
+    }
     
     res.render('admin/musicas', {
       title: 'Gerir Músicas - Admin',
-      musicas: musicas
+      musicas: musicasFiltradas,
+      filtros: { search: search || '', categoria: categoria || '' }
     });
   },
   
@@ -255,8 +276,26 @@ module.exports = {
   },
   
   addMusica: (req, res) => {
-    // Simulação de adição de música
-    console.log('Nova música adicionada:', req.body);
+    const { titulo, artista, categoria, duracao, album } = req.body;
+    
+    // Gerar novo ID
+    const novoId = Math.max(...musicasGlobal.map(m => m.id)) + 1;
+    
+    // Criar nova música
+    const novaMusica = {
+      id: novoId,
+      titulo: titulo,
+      artista: artista,
+      categoria: categoria,
+      duracao: duracao,
+      plays: '0',
+      link: `/musicas/${titulo.toLowerCase().replace(/\s+/g, '-')}.mp3`
+    };
+    
+    // Adicionar ao array global
+    musicasGlobal.push(novaMusica);
+    
+    console.log('Nova música adicionada:', novaMusica);
     res.json({ success: true, message: 'Música adicionada com sucesso!' });
   },
   
@@ -267,9 +306,16 @@ module.exports = {
   },
   
   deleteMusica: (req, res) => {
-    const musicaId = req.params.id;
-    console.log('Música removida:', musicaId);
-    res.json({ success: true, message: 'Música removida com sucesso!' });
+    const musicaId = parseInt(req.params.id);
+    const index = musicasGlobal.findIndex(m => m.id === musicaId);
+    
+    if (index !== -1) {
+      musicasGlobal.splice(index, 1);
+      console.log('Música removida:', musicaId);
+      res.json({ success: true, message: 'Música removida com sucesso!' });
+    } else {
+      res.json({ success: false, message: 'Música não encontrada!' });
+    }
   },
   
   deleteArtista: (req, res) => {

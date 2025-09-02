@@ -68,24 +68,27 @@
 
     <!-- Filters -->
     <section class="admin-filters">
-      <div class="admin-filter-group">
-        <input type="text" placeholder="Pesquisar músicas..." class="admin-search-input">
-        <select class="admin-filter-select">
+      <form method="GET" action="/admin/musicas" class="admin-filter-group">
+        <input type="text" name="search" placeholder="Pesquisar músicas..." class="admin-search-input" value="<%= typeof filtros !== 'undefined' && filtros.search ? filtros.search : '' %>">
+        <select name="categoria" class="admin-filter-select" onchange="this.form.submit()">
           <option value="">Todas as categorias</option>
-          <option value="kuduro">Kuduro</option>
-          <option value="rap">Rap/Hip-Hop</option>
-          <option value="kizomba">Kizomba</option>
-          <option value="semba">Semba</option>
-          <option value="afrohouse">Afro House</option>
-          <option value="gheto-zouk">Gheto Zouk</option>
+          <option value="kuduro" <%= typeof filtros !== 'undefined' && filtros.categoria === 'kuduro' ? 'selected' : '' %>>Kuduro</option>
+          <option value="raphiphop" <%= typeof filtros !== 'undefined' && filtros.categoria === 'raphiphop' ? 'selected' : '' %>>Rap/Hip-Hop</option>
+          <option value="kizomba" <%= typeof filtros !== 'undefined' && filtros.categoria === 'kizomba' ? 'selected' : '' %>>Kizomba</option>
+          <option value="semba" <%= typeof filtros !== 'undefined' && filtros.categoria === 'semba' ? 'selected' : '' %>>Semba</option>
+          <option value="afrohouse" <%= typeof filtros !== 'undefined' && filtros.categoria === 'afrohouse' ? 'selected' : '' %>>Afro House</option>
+          <option value="ghetozouk" <%= typeof filtros !== 'undefined' && filtros.categoria === 'ghetozouk' ? 'selected' : '' %>>Gheto Zouk</option>
         </select>
-        <select class="admin-filter-select">
-          <option value="">Todos os status</option>
-          <option value="ativa">Ativa</option>
-          <option value="inativa">Inativa</option>
-          <option value="pendente">Pendente</option>
-        </select>
-      </div>
+        <button type="submit" class="btn btn-secondary btn-small">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+          </svg>
+          Pesquisar
+        </button>
+        <% if (typeof filtros !== 'undefined' && (filtros.search || filtros.categoria)) { %>
+          <a href="/admin/musicas" class="btn btn-outline btn-small">Limpar Filtros</a>
+        <% } %>
+      </form>
     </section>
 
     <!-- Music Table -->
@@ -101,7 +104,7 @@
                 <th>Categoria</th>
                 <th>Duração</th>
                 <th>Reproduções</th>
-                <th>Status</th>
+                <th>Música/Link</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -123,15 +126,18 @@
                   <td><%= musica.duracao %></td>
                   <td><%= musica.plays %></td>
                   <td>
-                    <span class="admin-status-badge admin-status-<%= musica.status.toLowerCase() %>">
-                      <%= musica.status %>
-                    </span>
+                    <a href="<%= musica.link %>" class="admin-music-link" target="_blank">
+                      <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                      </svg>
+                      Reproduzir
+                    </a>
                   </td>
                   <td>
                     <div class="admin-action-buttons">
-                      <button class="admin-btn-small admin-btn-play" title="Reproduzir">
+                      <button class="admin-btn-small admin-btn-view" title="Visualizar" onclick="viewMusic(<%= musica.id %>)">
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M8 5v14l11-7z"/>
+                          <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
                         </svg>
                       </button>
                       <button class="admin-btn-small admin-btn-edit" title="Editar" onclick="editMusic(<%= musica.id %>)">
@@ -171,13 +177,7 @@
           </div>
           <div class="admin-form-group">
             <label>Artista</label>
-            <select name="artista" required>
-              <option value="">Selecionar artista</option>
-              <option value="mck">MCK</option>
-              <option value="c4pedro">C4 Pedro</option>
-              <option value="puto">Puto Português</option>
-              <option value="bonga">Bonga</option>
-            </select>
+            <input type="text" name="artista" required placeholder="Ex: MCK">
           </div>
         </div>
         
@@ -186,12 +186,12 @@
             <label>Categoria</label>
             <select name="categoria" required>
               <option value="">Selecionar categoria</option>
-              <option value="kuduro">Kuduro</option>
-              <option value="rap">Rap/Hip-Hop</option>
-              <option value="kizomba">Kizomba</option>
-              <option value="semba">Semba</option>
-              <option value="afrohouse">Afro House</option>
-              <option value="gheto-zouk">Gheto Zouk</option>
+              <option value="Kuduro">Kuduro</option>
+              <option value="Rap">Rap/Hip-Hop</option>
+              <option value="Kizomba">Kizomba</option>
+              <option value="Semba">Semba</option>
+              <option value="Afro House">Afro House</option>
+              <option value="Gheto Zouk">Gheto Zouk</option>
             </select>
           </div>
           <div class="admin-form-group">
@@ -232,6 +232,10 @@
     function closeAddModal() {
       document.getElementById('addMusicModal').style.display = 'none';
       document.getElementById('addMusicForm').reset();
+    }
+    
+    function viewMusic(id) {
+      alert('Visualizar detalhes da música ID: ' + id);
     }
     
     function editMusic(id) {

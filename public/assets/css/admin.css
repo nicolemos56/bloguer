@@ -341,6 +341,50 @@
 .admin-btn-play:hover { color: #22c55e; border-color: #22c55e; }
 .admin-btn-view:hover { color: #8b5cf6; border-color: #8b5cf6; }
 
+/* Admin Music Link */
+.admin-music-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--accent-primary);
+  color: white;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  font-size: 1.2rem;
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-base);
+}
+
+.admin-music-link:hover {
+  background: #d16815;
+  transform: scale(1.05);
+}
+
+/* Filter Form Improvements */
+.admin-filter-group {
+  display: flex;
+  gap: var(--space-lg);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.admin-filter-group button {
+  white-space: nowrap;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.btn-outline:hover {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border-color: var(--accent-primary);
+}
+
 /* Admin Modals */
 .admin-modal {
   position: fixed;
@@ -666,6 +710,33 @@
   margin-top: var(--space-2xl);
 }
 
+/* Enhanced Table Styles */
+.admin-table td {
+  vertical-align: middle;
+}
+
+.admin-table .admin-music-link {
+  font-size: 1.1rem;
+}
+
+/* Action Buttons Enhanced */
+.admin-action-buttons {
+  display: flex;
+  gap: var(--space-xs);
+  justify-content: center;
+}
+
+.admin-btn-small {
+  min-width: 32px;
+  height: 32px;
+}
+
+/* Form Button Spacing */
+.admin-filter-group .btn {
+  min-width: auto;
+  padding: var(--space-sm) var(--space-md);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .admin-sidebar {
@@ -700,5 +771,16 @@
   
   .admin-search-input {
     min-width: auto;
+  }
+  
+  .admin-filter-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-md);
+  }
+  
+  .admin-filter-group .btn {
+    width: 100%;
+    justify-content: center;
   }
 }
