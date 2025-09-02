@@ -276,27 +276,59 @@ module.exports = {
   },
   
   addMusica: (req, res) => {
-    const { titulo, artista, categoria, duracao, album } = req.body;
-    
-    // Gerar novo ID
-    const novoId = Math.max(...musicasGlobal.map(m => m.id)) + 1;
-    
-    // Criar nova música
-    const novaMusica = {
-      id: novoId,
-      titulo: titulo,
-      artista: artista,
-      categoria: categoria,
-      duracao: duracao,
-      plays: '0',
-      link: `/musicas/${titulo.toLowerCase().replace(/\s+/g, '-')}.mp3`
-    };
-    
-    // Adicionar ao array global
-    musicasGlobal.push(novaMusica);
-    
-    console.log('Nova música adicionada:', novaMusica);
-    res.json({ success: true, message: 'Música adicionada com sucesso!' });
+    try {
+      const { titulo, artista, categoria, duracao, album } = req.body;
+      
+      // Verificar se os dados necessários estão presentes
+      if (!titulo || !artista || !categoria || !duracao) {
+        return res.status(400).json({ 
+          success: false, 
+          message: 'Todos os campos obrigatórios devem ser preenchidos!' 
+        });
+      }
+      
+      // Gerar novo ID
+      const novoId = musicasGlobal.length > 0 ? Math.max(...musicasGlobal.map(m => m.id)) + 1 : 1;
+      
+      // Processar arquivos de upload
+      let musicFilePath = `/musicas/${titulo.toLowerCase().replace(/\s+/g, '-')}.mp3`;
+      let coverImagePath = `/images/default-cover.jpg`;
+      
+      if (req.files) {
+        if (req.files.musicFile && req.files.musicFile[0]) {
+          musicFilePath = `/uploads/${req.files.musicFile[0].filename}`;
+        }
+        if (req.files.coverImage && req.files.coverImage[0]) {
+          coverImagePath = `/uploads/${req.files.coverImage[0].filename}`;
+        }
+      }
+      
+      // Criar nova música
+      const novaMusica = {
+        id: novoId,
+        titulo: titulo,
+        artista: artista,
+        categoria: categoria,
+        duracao: duracao,
+        album: album || '',
+        plays: '0',
+        link: musicFilePath,
+        cover: coverImagePath
+      };
+      
+      // Adicionar ao array global
+      musicasGlobal.push(novaMusica);
+      
+      console.log('Nova música adicionada:', novaMusica);
+      res.json({ success: true, message: 'Música adicionada com sucesso!' });
+      
+    } catch (error) {
+      console.error('Erro ao adicionar música:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: 'Erro interno do servidor ao adicionar música!' 
+      });
+    }
   },
   
   addArtista: (req, res) => {
