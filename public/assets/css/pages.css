@@ -644,7 +644,6 @@
 }
 
 .category-description {
-  padding: var(--space-3xl) 0;
   background-color: var(--bg-secondary);
 }
 
