@@ -3,10 +3,11 @@
 @media(max-width:650px){
 section.tudo{
     width: 100%;
+    padding: 0 20px;
 }
 div.menu_buttom {
     display: block;
-    margin-left:340px;
+    margin-right: 0;
 }
 
  div.menu{
@@ -45,8 +46,7 @@ section.tudo div.menu ul li a:hover{
 }
 
 section.tudo div.logo a img{
- width: 70px;
- margin-left: -90px;
+ width: 60px;
 }
 div.menu_buttom label{
 font-size: 20px;
@@ -78,12 +78,13 @@ font-weight: 500;
 }
 
 section.meio div.card_meio div.btns a{
-margin:10px;
+margin: 8px 5px;
 text-decoration: none;
-font-size: 19px;
+font-size: 16px;
 color: white;
-padding: 6px 30px;
+padding: 10px 25px;
 border-radius: 10px;
+display: inline-block;
 } 
 
 div.month_artist div.cm{

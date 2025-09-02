@@ -2,14 +2,16 @@
 section.tudo{
     width: 100%;
     height: 60px;
-    background-color: rgba(33, 37, 41);
+    background-color: rgba(33, 37, 41, 0.95);
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0px 100px;
-      box-shadow: 0px 0px 7px rgb(225, 125, 24);
-      top: 0;
-      position: fixed;
+    box-shadow: 0px 2px 15px rgba(225, 125, 24, 0.3);
+    top: 0;
+    position: fixed;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
 }
 section.tudo div.logo a img{
  width: 80px;
@@ -30,20 +32,24 @@ section.tudo div.menu ul li a{
 }
 section.tudo div.menu ul li a:hover{
  color: rgb(225, 125, 24);
-  border-left: 1px solid rgb(225, 125, 24);
-  padding-left: 5px;
+  border-bottom: 2px solid rgb(225, 125, 24);
+  padding-bottom: 2px;
+  transform: translateY(-1px);
 }
 div.menu_buttom label{
 color: white;
-transition: ease-in-out 1s;
+transition: all 0.3s ease;
 cursor: pointer;
 font-size: 24px;
-padding: 5px 7px;
+padding: 8px 10px;
 background: rgb(225, 125, 24);
 border-radius: 8px;
+box-shadow: 0 2px 8px rgba(225, 125, 24, 0.3);
 }
 div.menu_buttom label:hover{
 border-radius: 20px;
+transform: scale(1.05);
+box-shadow: 0 4px 15px rgba(225, 125, 24, 0.5);
 }
 
 div.menu_buttom {
