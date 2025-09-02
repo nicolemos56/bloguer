@@ -1,9 +1,184 @@
 
 //logica das rotas
 
-// Arrays globais para armazenar dados (inicialmente vazios - só dados do admin)
-let musicasGlobal = [];
-let artistasGlobal = [];
+const fs = require('fs');
+const path = require('path');
+
+// Arquivo para persistir dados
+const dataDir = path.join(__dirname, '..', 'data');
+const artistasFile = path.join(dataDir, 'artistas.json');
+const musicasFile = path.join(dataDir, 'musicas.json');
+
+// Função para garantir que o diretório data existe
+function ensureDataDir() {
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+  }
+}
+
+// Função para carregar artistas do arquivo
+function loadArtistas() {
+  ensureDataDir();
+  try {
+    if (fs.existsSync(artistasFile)) {
+      const data = fs.readFileSync(artistasFile, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('Erro ao carregar artistas:', error);
+  }
+  return [];
+}
+
+// Função para salvar artistas no arquivo
+function saveArtistas(artistas) {
+  ensureDataDir();
+  try {
+    fs.writeFileSync(artistasFile, JSON.stringify(artistas, null, 2));
+    return true;
+  } catch (error) {
+    console.error('Erro ao salvar artistas:', error);
+    return false;
+  }
+}
+
+// Função para carregar músicas do arquivo
+function loadMusicas() {
+  ensureDataDir();
+  try {
+    if (fs.existsSync(musicasFile)) {
+      const data = fs.readFileSync(musicasFile, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('Erro ao carregar músicas:', error);
+  }
+  return [];
+}
+
+// Função para salvar músicas no arquivo
+function saveMusicas(musicas) {
+  ensureDataDir();
+  try {
+    fs.writeFileSync(musicasFile, JSON.stringify(musicas, null, 2));
+    return true;
+  } catch (error) {
+    console.error('Erro ao salvar músicas:', error);
+    return false;
+  }
+}
+
+// Carregar dados persistidos ou inicializar com dados padrão
+let musicasGlobal = loadMusicas();
+let artistasGlobal = loadArtistas();
+
+// Se os arquivos estão vazios, inicializar com dados padrão
+if (musicasGlobal.length === 0) {
+  musicasGlobal = [
+    {
+      id: 1,
+      nome: 'Kuzola',
+      artista: 'Anselmo Ralph',
+      categoria: 'Kizomba',
+      ano: 2010,
+      arquivo: '/assets/audio/kuzola.mp3',
+      imagem: '/assets/imagens/imagens_musicas/kuzola.jpg',
+      plays: 1200,
+      likes: 45,
+      downloads: 89
+    },
+    {
+      id: 2,
+      nome: 'Windeck',
+      artista: 'Puto Português',
+      categoria: 'Kuduro',
+      ano: 2019,
+      arquivo: '/assets/audio/windeck.mp3',
+      imagem: '/assets/imagens/imagens_musicas/windeck.jpg',
+      plays: 2300,
+      likes: 78,
+      downloads: 156
+    },
+    {
+      id: 3,
+      nome: 'Dança Kuduro',
+      artista: 'Don Omar ft. Lucenzo',
+      categoria: 'Kuduro',
+      ano: 2010,
+      arquivo: '/assets/audio/danca-kuduro.mp3',
+      imagem: '/assets/imagens/imagens_musicas/danca-kuduro.jpg',
+      plays: 5400,
+      likes: 234,
+      downloads: 445
+    },
+    {
+      id: 4,
+      nome: 'Miúda Linda',
+      artista: 'Matias Damásio',
+      categoria: 'Semba',
+      ano: 2015,
+      arquivo: '/assets/audio/miuda-linda.mp3',
+      imagem: '/assets/imagens/imagens_musicas/miuda-linda.jpg',
+      plays: 3200,
+      likes: 145,
+      downloads: 234
+    },
+    {
+      id: 5,
+      nome: 'Lágrimas',
+      artista: 'Yola Semedo',
+      categoria: 'Kizomba',
+      ano: 2018,
+      arquivo: '/assets/audio/lagrimas.mp3',
+      imagem: '/assets/imagens/imagens_musicas/lagrimas.jpg',
+      plays: 1800,
+      likes: 67,
+      downloads: 123
+    }
+  ];
+  saveMusicas(musicasGlobal);
+}
+
+if (artistasGlobal.length === 0) {
+  artistasGlobal = [
+    {
+      id: 1,
+      nome: 'Anselmo Ralph',
+      categoria: 'Kizomba',
+      biografia: 'Cantor angolano de Kizomba e R&B',
+      imagem: '/assets/imagens/imagens_artistas/anselmo-ralph.jpg',
+      seguidores: 1250
+    },
+    {
+      id: 2,
+      nome: 'Puto Português',
+      categoria: 'Kuduro',
+      biografia: 'Pioneiro do Kuduro em Angola',
+      imagem: '/assets/imagens/imagens_artistas/puto-portugues.jpg',
+      seguidores: 890
+    },
+    {
+      id: 3,
+      nome: 'Matias Damásio',
+      categoria: 'Semba',
+      biografia: 'Cantor e compositor angolano',
+      imagem: '/assets/imagens/imagens_artistas/matias-damasio.jpg',
+      seguidores: 2100
+    },
+    {
+      id: 4,
+      nome: 'Yola Semedo',
+      categoria: 'Kizomba',
+      biografia: 'Cantora de Kizomba e Zouk',
+      imagem: '/assets/imagens/imagens_artistas/yola-semedo.jpg',
+      seguidores: 750
+    }
+  ];
+  saveArtistas(artistasGlobal);
+}
+
+console.log('=== CONTROLLER INICIALIZADO ===');
+console.log('Array de artistas inicializado:', artistasGlobal.length);
 
 module.exports = {
   home: (req, res) => {
@@ -289,6 +464,10 @@ module.exports = {
   
   adminArtistas: (req, res) => {
     // Usar apenas dados reais do array global
+    console.log('=== ADMIN ARTISTAS ===');
+    console.log('Total de artistas no array:', artistasGlobal.length);
+    console.log('Artistas no array:', artistasGlobal);
+    
     res.render('admin/artistas', {
       title: 'Gerir Artistas - Admin',
       artistas: artistasGlobal
@@ -296,47 +475,45 @@ module.exports = {
   },
 
   addArtista: (req, res) => {
-    try {
-      const { nome, categoria, biografia } = req.body;
-      
-      if (!nome || !categoria) {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'Nome e categoria são obrigatórios!' 
-        });
-      }
-      
-      // Gerar novo ID
-      const novoId = artistasGlobal.length > 0 ? Math.max(...artistasGlobal.map(a => a.id)) + 1 : 1;
-      
-      // Processar imagem de upload se houver
-      let imagemPath = '/assets/imagens/imagens_artistas/default.jpg';
-      if (req.files && req.files.artistImage && req.files.artistImage[0]) {
-        imagemPath = `/uploads/${req.files.artistImage[0].filename}`;
-      }
-      
-      const novoArtista = {
-        id: novoId,
-        nome: nome,
-        categoria: categoria,
-        biografia: biografia || '',
-        imagem: imagemPath,
-        seguidores: 0,
-        dataAdicao: new Date().toISOString()
-      };
-      
-      artistasGlobal.push(novoArtista);
-      
-      console.log('Novo artista adicionado:', novoArtista);
-      res.json({ success: true, message: 'Artista adicionado com sucesso!' });
-      
-    } catch (error) {
-      console.error('Erro ao adicionar artista:', error);
-      res.status(500).json({ 
+    console.log('=== INÍCIO ADD ARTISTA ===');
+    
+    const nome = req.body.nome;
+    const categoria = req.body.categoria;
+    const biografia = req.body.biografia || '';
+    
+    console.log('Nome:', nome);
+    console.log('Categoria:', categoria);
+    console.log('Biografia:', biografia);
+    
+    if (!nome || !categoria) {
+      return res.status(400).json({ 
         success: false, 
-        message: 'Erro interno do servidor!' 
+        message: 'Nome e categoria são obrigatórios!' 
       });
     }
+    
+    const novoId = artistasGlobal.length + 1;
+    
+    let imagemPath = '/assets/imagens/imagens_artistas/default.jpg';
+    if (req.files && req.files.artistImage && req.files.artistImage[0]) {
+      imagemPath = `/uploads/${req.files.artistImage[0].filename}`;
+    }
+    
+    const novoArtista = {
+      id: novoId,
+      nome: nome,
+      categoria: categoria,
+      biografia: biografia,
+      imagem: imagemPath,
+      seguidores: 0
+    };
+    
+    artistasGlobal.push(novoArtista);
+    
+    console.log('Artista adicionado:', novoArtista);
+    console.log('Total artistas:', artistasGlobal.length);
+    
+    res.json({ success: true, message: 'Artista adicionado com sucesso!' });
   },
 
   deleteArtista: (req, res) => {
@@ -426,8 +603,17 @@ module.exports = {
       // Adicionar ao array global
       musicasGlobal.push(novaMusica);
       
+      // Salvar no arquivo
+      const saved = saveMusicas(musicasGlobal);
+      
       console.log('Nova música adicionada:', novaMusica);
-      res.json({ success: true, message: 'Música adicionada com sucesso!' });
+      console.log('Salvo no arquivo:', saved);
+      
+      if (saved) {
+        res.json({ success: true, message: 'Música adicionada com sucesso!' });
+      } else {
+        res.status(500).json({ success: false, message: 'Erro ao salvar música!' });
+      }
       
     } catch (error) {
       console.error('Erro ao adicionar música:', error);
@@ -438,11 +624,6 @@ module.exports = {
     }
   },
   
-  addArtista: (req, res) => {
-    // Simulação de adição de artista
-    console.log('Novo artista adicionado:', req.body);
-    res.json({ success: true, message: 'Artista adicionado com sucesso!' });
-  },
   
   deleteMusica: (req, res) => {
     const musicaId = parseInt(req.params.id);

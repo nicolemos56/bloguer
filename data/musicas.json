@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "nome": "Kuzola",
+    "artista": "Anselmo Ralph",
+    "categoria": "Kizomba",
+    "ano": 2010,
+    "arquivo": "/assets/audio/kuzola.mp3",
+    "imagem": "/assets/imagens/imagens_musicas/kuzola.jpg",
+    "plays": 1200,
+    "likes": 45,
+    "downloads": 89
+  },
+  {
+    "id": 2,
+    "nome": "Windeck",
+    "artista": "Puto Português",
+    "categoria": "Kuduro",
+    "ano": 2019,
+    "arquivo": "/assets/audio/windeck.mp3",
+    "imagem": "/assets/imagens/imagens_musicas/windeck.jpg",
+    "plays": 2300,
+    "likes": 78,
+    "downloads": 156
+  },
+  {
+    "id": 3,
+    "nome": "Dança Kuduro",
+    "artista": "Don Omar ft. Lucenzo",
+    "categoria": "Kuduro",
+    "ano": 2010,
+    "arquivo": "/assets/audio/danca-kuduro.mp3",
+    "imagem": "/assets/imagens/imagens_musicas/danca-kuduro.jpg",
+    "plays": 5400,
+    "likes": 234,
+    "downloads": 445
+  },
+  {
+    "id": 4,
+    "nome": "Miúda Linda",
+    "artista": "Matias Damásio",
+    "categoria": "Semba",
+    "ano": 2015,
+    "arquivo": "/assets/audio/miuda-linda.mp3",
+    "imagem": "/assets/imagens/imagens_musicas/miuda-linda.jpg",
+    "plays": 3200,
+    "likes": 145,
+    "downloads": 234
+  },
+  {
+    "id": 5,
+    "nome": "Lágrimas",
+    "artista": "Yola Semedo",
+    "categoria": "Kizomba",
+    "ano": 2018,
+    "arquivo": "/assets/audio/lagrimas.mp3",
+    "imagem": "/assets/imagens/imagens_musicas/lagrimas.jpg",
+    "plays": 1800,
+    "likes": 67,
+    "downloads": 123
+  }
+]
