@@ -56,6 +56,136 @@ module.exports = {
       title: 'Categorias Musicais',
       categorias: categorias
     });
+  },
+  
+  categoriaIndividual: (req, res) => {
+    const categoriaId = req.params.id;
+    
+    // Dados das categorias (duplicado para consistência)
+    const categorias = {
+      'kuduro': {
+        id: 'kuduro',
+        nome: 'Kuduro',
+        descricao: 'Ritmo energético e dançante de Angola',
+        descricaoLonga: 'O Kuduro é um género musical e dança que surgiu em Angola na década de 1990. Caracteriza-se pelos seus ritmos acelerados, batidas electrónicas e movimentos de dança energéticos. É uma expressão cultural única que combina influências tradicionais angolanas com elementos modernos.',
+        imagem: 'pessoas_dancando.jpg',
+        cor: '#e17d18',
+        artistas: [
+          { nome: 'Puto Português', imagem: 'baixar.png', musicas: 15 },
+          { nome: 'Titica', imagem: 'emana.jpg', musicas: 23 },
+          { nome: 'Cabo Snoop', imagem: '12furos.jpg', musicas: 18 }
+        ],
+        musicasPopulares: [
+          { titulo: 'Kuduro Dance', artista: 'Puto Português', duracao: '3:45' },
+          { titulo: 'Bom Bom', artista: 'Titica', duracao: '4:12' },
+          { titulo: 'Dança do Kuduro', artista: 'Cabo Snoop', duracao: '3:28' }
+        ]
+      },
+      'rap': {
+        id: 'rap',
+        nome: 'Rap/Hip-Hop',
+        descricao: 'Música urbana com batidas fortes e letras expressivas',
+        descricaoLonga: 'O Rap angolano cresceu significativamente nas últimas décadas, tornando-se uma voz poderosa da juventude urbana. Com letras que abordam questões sociais, políticas e do quotidiano, o hip-hop angolano conquistou um lugar de destaque na música nacional.',
+        imagem: 'pesso_com_micro.jpg',
+        cor: '#ff0000',
+        artistas: [
+          { nome: 'MCK', imagem: 'preto_show.jpg', musicas: 28 },
+          { nome: 'Prodígio', imagem: 'IMG-20250209-WA0010.jpg', musicas: 34 },
+          { nome: 'Boss AC', imagem: 'paulelson.jpg', musicas: 21 }
+        ],
+        musicasPopulares: [
+          { titulo: 'Bem Estar', artista: 'MCK', duracao: '4:23' },
+          { titulo: 'Homem do Ano', artista: 'Prodígio', duracao: '3:56' },
+          { titulo: 'Kuzé Kuma', artista: 'Boss AC', duracao: '4:18' }
+        ]
+      },
+      'afrohouse': {
+        id: 'afrohouse',
+        nome: 'Afro House',
+        descricao: 'Fusão de house music com ritmos africanos',
+        descricaoLonga: 'O Afro House combina a energia da música house electrónica com os ritmos tradicionais africanos, criando uma fusão única que faz dançar. Este género tem ganhado popularidade internacional, com Angola na vanguarda da produção.',
+        imagem: 'forca_suprema.jpg',
+        cor: '#0051ff',
+        artistas: [
+          { nome: 'Djeff', imagem: 'xuxu.jpg', musicas: 19 },
+          { nome: 'Dj Vado Poster', imagem: '12furos.jpg', musicas: 26 },
+          { nome: 'Kelson Most Wanted', imagem: 'IMG-20250209-WA0012.jpg', musicas: 17 }
+        ],
+        musicasPopulares: [
+          { titulo: 'African Vibe', artista: 'Djeff', duracao: '5:34' },
+          { titulo: 'Luanda Nights', artista: 'Dj Vado Poster', duracao: '4:47' },
+          { titulo: 'Tribal House', artista: 'Kelson Most Wanted', duracao: '6:12' }
+        ]
+      },
+      'semba': {
+        id: 'semba',
+        nome: 'Semba',
+        descricao: 'Música tradicional angolana, precursora da samba',
+        descricaoLonga: 'O Semba é um género musical tradicional de Angola, considerado o precursor da samba brasileira. Com ritmos cadenciados e letras que contam histórias do povo angolano, o semba é uma expressão cultural fundamental da identidade nacional.',
+        imagem: 'pessoas_com_roupa_vermelha.jpg',
+        cor: '#ff8900',
+        artistas: [
+          { nome: 'Bonga', imagem: 'paulelson.jpg', musicas: 45 },
+          { nome: 'Paulo Flores', imagem: 'emana.jpg', musicas: 38 },
+          { nome: 'Waldemar Bastos', imagem: 'preto_show.jpg', musicas: 42 }
+        ],
+        musicasPopulares: [
+          { titulo: 'Mona Ki Ngi Xica', artista: 'Bonga', duracao: '4:56' },
+          { titulo: 'Geração 90', artista: 'Paulo Flores', duracao: '4:34' },
+          { titulo: 'Estou Cansado', artista: 'Waldemar Bastos', duracao: '5:12' }
+        ]
+      },
+      'kizomba': {
+        id: 'kizomba',
+        nome: 'Kizomba',
+        descricao: 'Ritmo romântico e sensual de Angola e Cabo Verde',
+        descricaoLonga: 'A Kizomba é um género musical e dança que nasceu em Angola na década de 1980. Com influências do semba angolano e do zouk das Antilhas, a kizomba conquistou o mundo com seus ritmos suaves e românticos, perfeitos para dançar a dois.',
+        imagem: 'plutonio.jpg',
+        cor: '#8b5cf6',
+        artistas: [
+          { nome: 'C4 Pedro', imagem: 'IMG-20250209-WA0014.jpg', musicas: 31 },
+          { nome: 'Anselmo Ralph', imagem: 'baixar.png', musicas: 29 },
+          { nome: 'Maya Cool', imagem: 'xuxu.jpg', musicas: 22 }
+        ],
+        musicasPopulares: [
+          { titulo: 'African Beauty', artista: 'C4 Pedro', duracao: '4:23' },
+          { titulo: 'Não Me Toca', artista: 'Anselmo Ralph', duracao: '3:58' },
+          { titulo: 'Whiskas', artista: 'Maya Cool', duracao: '4:15' }
+        ]
+      },
+      'gheto-zouk': {
+        id: 'gheto-zouk',
+        nome: 'Gheto Zouk',
+        descricao: 'Fusão moderna do zouk com influências urbanas',
+        descricaoLonga: 'O Gheto Zouk é uma evolução moderna do zouk tradicional, incorporando elementos urbanos e contemporâneos. Este género representa a nova geração da música angolana, combinando tradição com inovação.',
+        imagem: 'ouvindo_musica.png',
+        cor: '#10b981',
+        artistas: [
+          { nome: 'Yola Semedo', imagem: 'emana.jpg', musicas: 25 },
+          { nome: 'Gama', imagem: '12furos.jpg', musicas: 19 },
+          { nome: 'Pérola', imagem: 'IMG-20250209-WA0010.jpg', musicas: 33 }
+        ],
+        musicasPopulares: [
+          { titulo: 'Morena', artista: 'Yola Semedo', duracao: '3:45' },
+          { titulo: 'Zouk Love', artista: 'Gama', duracao: '4:28' },
+          { titulo: 'Sedução', artista: 'Pérola', duracao: '3:52' }
+        ]
+      }
+    };
+    
+    const categoria = categorias[categoriaId];
+    
+    if (!categoria) {
+      return res.status(404).render('pages/404', { 
+        title: 'Categoria não encontrada',
+        message: 'A categoria solicitada não existe.'
+      });
+    }
+    
+    res.render('pages/categoria', {
+      title: categoria.nome,
+      categoria: categoria
+    });
   }
 };
 

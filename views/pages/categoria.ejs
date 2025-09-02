@@ -1,64 +1,157 @@
-<%- include('../partials/navbar') %>
-
-<section class="dizeres">
-  <div class="explanation_gener">
-    <div class="cima">
-      <h2>GÉNERO</h2>
-      <h3>Explore nossas músicas por gênero</h3>
-    </div>
-    <div class="baixo">
-      <h4>Kuduro, House, Hip hop, Kizomba... Temos tudo que você procura e muito mais.</h4>
-      <h5>Encontre as músicas ainda mais rápido explorando nossos gêneros selecionados para ti.</h5>
+<!-- Category Hero Section -->
+<section class="category-hero" style="background: linear-gradient(135deg, <%= categoria.cor %>22, <%= categoria.cor %>44), url('/assets/imagens/imagen_categorias/<%= categoria.imagem %>'); background-size: cover; background-position: center;">
+  <div class="container">
+    <div class="category-hero-content">
+      <div class="category-breadcrumb">
+        <a href="/categorias">Categorias</a>
+        <span class="breadcrumb-separator">›</span>
+        <span class="current-category"><%= categoria.nome %></span>
+      </div>
+      <h1 class="category-hero-title" style="color: <%= categoria.cor %>"><%= categoria.nome %></h1>
+      <p class="category-hero-description"><%= categoria.descricao %></p>
+      <div class="category-hero-stats">
+        <div class="stat-item">
+          <span class="stat-number"><%= categoria.artistas.length %></span>
+          <span class="stat-label">Artistas</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number"><%= categoria.artistas.reduce((total, artista) => total + artista.musicas, 0) %></span>
+          <span class="stat-label">Músicas</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">5.2K</span>
+          <span class="stat-label">Seguidores</span>
+        </div>
+      </div>
+      <div class="category-hero-actions">
+        <button class="btn btn-primary btn-large">
+          <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          Reproduzir Tudo
+        </button>
+        <button class="btn btn-secondary btn-large">
+          <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+          Seguir
+        </button>
+      </div>
     </div>
   </div>
 </section>
 
-<div class="risca"></div>
+<!-- Category Description Section -->
+<section class="category-description">
+  <div class="container">
+    <div class="description-content">
+      <h2>Sobre o <%= categoria.nome %></h2>
+      <p><%= categoria.descricaoLonga %></p>
+    </div>
+  </div>
+</section>
 
-<div class="genero_em">
-  <h2>Géneros em destaque</h2>
-</div>
-
-<section class="all_category">
-  <div class="divisao_das_categorias">
-    <div class="cabeca">
-      <% const destaques = [
-        { nome: "Kuduro", img: "emana.jpg", link: "/kuduro" },
-        { nome: "House", img: "IMG-20250209-WA0010.jpg", link: "#" },
-        { nome: "Semba", img: "xuxu.jpg", link: "#" },
-        { nome: "Gheto Zouk", img: "preto_show.jpg", link: "#" },
-        { nome: "Hip Hop", img: "paulelson.jpg", link: "#" },
-        { nome: "Kizomba", img: "12furos.jpg", link: "#" },
-      ]; %>
-
-      <% destaques.forEach(cat => { %>
-        <div class="card_one">
-          <div class="info"><h3><%= cat.nome %></h3></div>
-          <div class="imagem">
-            <a href="<%= cat.link %>"><img src="/assets/imagens/imagens_artistas/<%= cat.img %>" alt=""></a>
+<!-- Popular Tracks Section -->
+<section class="popular-tracks">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Músicas Populares</h2>
+      <a href="#" class="view-all-link">Ver todas</a>
+    </div>
+    
+    <div class="tracks-list">
+      <% categoria.musicasPopulares.forEach((musica, index) => { %>
+        <div class="track-row">
+          <div class="track-number">
+            <span class="number"><%= index + 1 %></span>
+            <button class="play-btn">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="track-info">
+            <h4 class="track-title"><%= musica.titulo %></h4>
+            <p class="track-artist"><%= musica.artista %></p>
+          </div>
+          <div class="track-duration"><%= musica.duracao %></div>
+          <div class="track-actions">
+            <button class="action-btn" title="Adicionar aos favoritos">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            </button>
+            <button class="action-btn" title="Mais opções">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+              </svg>
+            </button>
           </div>
         </div>
       <% }) %>
     </div>
+  </div>
+</section>
 
-    <div class="pernas">
-      <% const mais = [
-        "a07a260cb71e4c4ade7c000297a862bc.jpg",
-        "paulelson.jpg",
-        "IMG-20250209-WA0014.jpg",
-        "IMG-20250209-WA0012.jpg",
-        "IMG-20250209-WA0010.jpg",
-        "emana.jpg"
-      ]; %>
-
-      <% mais.forEach(imagem => { %>
-        <div class="card_two">
-          <div class="title"><h3>Zouk</h3></div>
-          <div class="eng"><a href="#"><img src="/assets/imagens/<%= imagem.includes('a07a') ? 'imagen_categorias' : 'imagens_artistas' %>/<%= imagem %>" alt=""></a></div>
-        </div>
+<!-- Featured Artists Section -->
+<section class="featured-artists">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Artistas em Destaque</h2>
+      <p class="section-subtitle">Conheça os principais artistas do <%= categoria.nome %></p>
+    </div>
+    
+    <div class="artists-grid">
+      <% categoria.artistas.forEach(artista => { %>
+        <article class="artist-card-detailed">
+          <div class="artist-image">
+            <img src="/assets/imagens/imagens_artistas/<%= artista.imagem %>" alt="<%= artista.nome %>">
+            <div class="artist-overlay">
+              <button class="artist-play-btn" style="background-color: <%= categoria.cor %>">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="artist-info">
+            <h3 class="artist-name"><%= artista.nome %></h3>
+            <p class="artist-stats"><%= artista.musicas %> músicas</p>
+            <div class="artist-actions">
+              <button class="btn btn-secondary btn-small">Seguir</button>
+              <button class="btn btn-ghost btn-small">Ver perfil</button>
+            </div>
+          </div>
+        </article>
       <% }) %>
     </div>
   </div>
 </section>
 
-<%- include('../partials/footer') %>
+<!-- Related Categories Section -->
+<section class="related-categories">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Categorias Relacionadas</h2>
+      <p class="section-subtitle">Explore outros géneros que pode gostar</p>
+    </div>
+    
+    <div class="related-categories-grid">
+      <% const relatedCategories = [
+        { id: 'kizomba', nome: 'Kizomba', cor: '#8b5cf6' },
+        { id: 'semba', nome: 'Semba', cor: '#ff8900' },
+        { id: 'afrohouse', nome: 'Afro House', cor: '#0051ff' }
+      ]; %>
+      
+      <% relatedCategories.filter(cat => cat.id !== categoria.id).slice(0, 3).forEach(cat => { %>
+        <a href="/categoria/<%= cat.id %>" class="related-category-card">
+          <div class="related-category-color" style="background-color: <%= cat.cor %>"></div>
+          <span class="related-category-name"><%= cat.nome %></span>
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+          </svg>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+</section>

@@ -10,6 +10,7 @@ router.get('/divulgar', function(req, res) {
 });
 
 router.get('/categorias', mainController.categorias);
+router.get('/categoria/:id', mainController.categoriaIndividual);
 
 
 module.exports = router;
