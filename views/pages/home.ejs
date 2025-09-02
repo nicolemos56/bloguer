@@ -61,28 +61,138 @@
   <div class="container">
     <div class="section-header">
       <h2 class="section-title">Mais curtidas</h2>
+      <p class="section-subtitle">As músicas mais populares da plataforma</p>
     </div>
     
-    <div class="tracks-grid">
-      <div class="track-item">
-        <div class="track-image">
-          <img src="/assets/imagens/imagens_artistas/preto_show.jpg" alt="Preto Show">
-        </div>
-        <div class="track-info">
-          <h4 class="track-title">Lorem ipsum dolor sit</h4>
-          <a href="#" class="track-artist">Preto Show</a>
-        </div>
-      </div>
+    <div class="popular-tracks-grid">
+      <% const musicasPopulares = [
+        { 
+          titulo: "Bem Estar", 
+          artista: "MCK", 
+          album: "Nha Vida",
+          imagem: "baixar.png", 
+          duracao: "4:23",
+          plays: "125K",
+          categoria: "Rap"
+        },
+        { 
+          titulo: "African Beauty", 
+          artista: "C4 Pedro", 
+          album: "King Ckwa",
+          imagem: "IMG-20250209-WA0014.jpg", 
+          duracao: "4:15",
+          plays: "98K",
+          categoria: "Kizomba"
+        },
+        { 
+          titulo: "Kuduro Dance", 
+          artista: "Puto Português", 
+          album: "Energia Pura",
+          imagem: "preto_show.jpg", 
+          duracao: "3:45",
+          plays: "87K",
+          categoria: "Kuduro"
+        },
+        { 
+          titulo: "Mona Ki Ngi Xica", 
+          artista: "Bonga", 
+          album: "Classics",
+          imagem: "paulelson.jpg", 
+          duracao: "4:56",
+          plays: "76K",
+          categoria: "Semba"
+        },
+        { 
+          titulo: "Luanda Nights", 
+          artista: "DJ Vado Poster", 
+          album: "Electronic Angola",
+          imagem: "xuxu.jpg", 
+          duracao: "5:12",
+          plays: "65K",
+          categoria: "Afro House"
+        },
+        { 
+          titulo: "Seduções", 
+          artista: "Pérola", 
+          album: "Romantic Vibes",
+          imagem: "emana.jpg", 
+          duracao: "3:52",
+          plays: "54K",
+          categoria: "Gheto Zouk"
+        }
+      ]; %>
       
-      <div class="track-item">
-        <div class="track-image">
-          <img src="/assets/imagens/imagens_artistas/12furos.jpg" alt="12 Furos">
-        </div>
-        <div class="track-info">
-          <h4 class="track-title">Lorem ipsum dolor sit</h4>
-          <a href="#" class="track-artist">12 Furos</a>
-        </div>
-      </div>
+      <% musicasPopulares.forEach((musica, index) => { %>
+        <article class="popular-track-card" data-rank="<%= index + 1 %>">
+          <div class="track-rank">
+            <span class="rank-number">#<%= index + 1 %></span>
+          </div>
+          
+          <div class="track-image-container">
+            <img src="/assets/imagens/imagens_artistas/<%= musica.imagem %>" alt="<%= musica.titulo %>">
+            <div class="track-overlay">
+              <button class="track-play-btn" title="Reproduzir">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </button>
+              <button class="track-download-btn" title="Download">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                </svg>
+              </button>
+            </div>
+            <div class="track-category-badge"><%= musica.categoria %></div>
+          </div>
+          
+          <div class="track-details">
+            <div class="track-main-info">
+              <h3 class="track-title-main"><%= musica.titulo %></h3>
+              <a href="#" class="track-artist-link"><%= musica.artista %></a>
+              <p class="track-album"><%= musica.album %></p>
+            </div>
+            
+            <div class="track-meta">
+              <div class="track-stats">
+                <span class="track-duration">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                  <%= musica.duracao %>
+                </span>
+                <span class="track-plays">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                  <%= musica.plays %>
+                </span>
+              </div>
+              
+              <div class="track-actions">
+                <button class="action-btn-small" title="Adicionar aos favoritos">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
+                </button>
+                <button class="action-btn-small" title="Compartilhar">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.50-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
+                  </svg>
+                </button>
+                <button class="action-btn-small" title="Mais opções">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+    
+    <div class="popular-section-footer">
+      <a href="/categorias" class="btn btn-secondary btn-large">Ver todas as categorias</a>
     </div>
   </div>
 </section>
