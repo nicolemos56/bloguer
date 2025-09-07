@@ -1456,7 +1456,7 @@
   background: var(--card-bg);
   border: 2px solid transparent;
   border-radius: 12px;
-  padding: 2rem;
+  padding: 1.5rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -1496,20 +1496,20 @@
 }
 
 .plano-price {
-  font-size: 3.2rem;
+  font-size: 2.8rem;
   font-weight: 800;
   color: var(--accent-primary);
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .plano-features {
   text-align: left;
-  margin: 2rem 0;
+  margin: 1.5rem 0;
 }
 
 .feature {
-  padding: 0.8rem 0;
-  font-size: 1.4rem;
+  padding: 0.6rem 0;
+  font-size: 1.3rem;
   color: var(--text-secondary);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -1519,11 +1519,11 @@
 }
 
 .plano-card .btn {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   width: 100%;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 600;
-  padding: 1.2rem;
+  padding: 1rem;
 }
 
 .btn-outline {
