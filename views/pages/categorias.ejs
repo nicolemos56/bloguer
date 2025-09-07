@@ -305,10 +305,10 @@ function closeLoginModal() {
   }
 }
 
-// Funções para cadastro e esqueci senha (placeholder)
+// Funções para modais
 function showRegisterModal() {
   closeLoginModal();
-  alert('Funcionalidade de cadastro será implementada em breve!');
+  document.getElementById('registerModal').style.display = 'flex';
 }
 
 function showForgotModal() {
@@ -316,8 +316,21 @@ function showForgotModal() {
   alert('Funcionalidade de recuperação de senha será implementada em breve!');
 }
 
-// Lidar com submissão do formulário de login
+function closeRegisterModal() {
+  document.getElementById('registerModal').style.display = 'none';
+  if (document.getElementById('registerForm')) {
+    document.getElementById('registerForm').reset();
+  }
+}
+
+function showLoginFromRegister() {
+  closeRegisterModal();
+  document.getElementById('loginModal').style.display = 'flex';
+}
+
+// Lidar com submissão dos formulários
 document.addEventListener('DOMContentLoaded', function() {
+  // Formulário de Login
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
     loginForm.addEventListener('submit', async function(e) {
@@ -370,6 +383,62 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+  
+  // Formulário de Cadastro
+  const registerForm = document.getElementById('registerForm');
+  if (registerForm) {
+    registerForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const nome = document.getElementById('registerNome').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      const confirmPassword = document.getElementById('registerConfirmPassword').value;
+      const submitBtn = this.querySelector('.login-btn');
+      
+      if (nome && email && password && confirmPassword) {
+        // Mostrar loading
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Criando...';
+        submitBtn.disabled = true;
+        
+        try {
+          const response = await fetch('/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ nome, email, password, confirmPassword })
+          });
+          
+          const data = await response.json();
+          
+          if (data.success) {
+            // Salvar token na sessão (login automático)
+            localStorage.setItem('vibToken', data.token);
+            localStorage.setItem('vibUser', JSON.stringify(data.usuario));
+            
+            // Mostrar sucesso
+            alert(`Bem-vindo, ${data.usuario.nome}! Sua conta foi criada com sucesso.`);
+            closeRegisterModal();
+            
+            // Recarregar para atualizar interface
+            window.location.reload();
+          } else {
+            // Mostrar erro
+            alert(data.message || 'Erro no cadastro. Tente novamente.');
+          }
+        } catch (error) {
+          console.error('Erro ao fazer cadastro:', error);
+          alert('Erro de conexão. Tente novamente.');
+        } finally {
+          // Restaurar botão
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+        }
+      }
+    });
+  }
 });
 </script>
 
@@ -402,6 +471,47 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="login-links">
         <a href="#" onclick="showRegisterModal()" class="login-link">Cadastrar-se</a>
         <a href="#" onclick="showForgotModal()" class="login-link">Esqueci minha senha</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Cadastro -->
+<div id="registerModal" class="login-modal" style="display: none;">
+  <div class="login-modal-overlay" onclick="closeRegisterModal()"></div>
+  <div class="login-modal-content">
+    <div class="login-modal-header">
+      <div class="login-modal-icon">
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1V3H9V1L3 7V9H21ZM21 19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V11H21V19Z"/>
+        </svg>
+      </div>
+    </div>
+    <div class="login-modal-body">
+      <p class="login-message">Criar sua conta VIB MUSIC</p>
+      
+      <form id="registerForm" class="login-form">
+        <div class="login-input-group">
+          <input type="text" id="registerNome" name="nome" placeholder="Nome completo" required>
+        </div>
+        
+        <div class="login-input-group">
+          <input type="email" id="registerEmail" name="email" placeholder="Email" required>
+        </div>
+        
+        <div class="login-input-group">
+          <input type="password" id="registerPassword" name="password" placeholder="Senha (mín. 6 caracteres)" required>
+        </div>
+        
+        <div class="login-input-group">
+          <input type="password" id="registerConfirmPassword" name="confirmPassword" placeholder="Confirmar senha" required>
+        </div>
+        
+        <button type="submit" class="login-btn">Criar Conta</button>
+      </form>
+      
+      <div class="login-links">
+        <a href="#" onclick="showLoginFromRegister()" class="login-link">Já tem conta? Fazer login</a>
       </div>
     </div>
   </div>
