@@ -885,30 +885,51 @@ document.getElementById('playAllArtistBtn')?.addEventListener('click', function(
     .catch(error => console.error('Erro ao registrar reprodução do artista:', error));
 });
 
+// Variável global para armazenar ação pendente
+let acaoPendente = null;
+
 // Funcionalidade Seguir Artista
 document.getElementById('followArtistBtn')?.addEventListener('click', async function() {
   const artist = this.dataset.artist;
-  const btnText = this.querySelector('.btn-text');
-  const isFollowing = this.classList.contains('following');
+  await tentarSeguirArtista(artist, this);
+});
+
+// Função para tentar seguir artista
+async function tentarSeguirArtista(artist, btnElement) {
+  const btnText = btnElement.querySelector('.btn-text');
   
   try {
-    const action = isFollowing ? 'unfollow' : 'follow';
-    const response = await fetch(`/${action}/${encodeURIComponent(artist)}`, { method: 'POST' });
+    const token = localStorage.getItem('vibToken');
+    const response = await fetch(`/follow/${encodeURIComponent(artist)}`, { 
+      method: 'POST',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      }
+    });
+    
     const data = await response.json();
     
     if (data.needLogin) {
+      // Armazenar ação para executar após login
+      acaoPendente = {
+        tipo: 'seguir',
+        artist: artist,
+        elemento: btnElement
+      };
       showLoginModal(data.message);
     } else if (data.success) {
-      if (isFollowing) {
-        btnText.textContent = 'Seguir';
-        this.classList.remove('following');
-        this.classList.remove('btn-accent');
-        this.classList.add('btn-secondary');
-      } else {
+      // Atualizar interface baseado no estado
+      if (data.following) {
         btnText.textContent = 'Seguindo';
-        this.classList.add('following');
-        this.classList.remove('btn-secondary');
-        this.classList.add('btn-accent');
+        btnElement.classList.add('following');
+        btnElement.classList.remove('btn-secondary');
+        btnElement.classList.add('btn-accent');
+      } else {
+        btnText.textContent = 'Seguir';
+        btnElement.classList.remove('following');
+        btnElement.classList.remove('btn-accent');
+        btnElement.classList.add('btn-secondary');
       }
     } else {
       alert(data.message || 'Erro ao processar solicitação');
@@ -917,29 +938,54 @@ document.getElementById('followArtistBtn')?.addEventListener('click', async func
     console.error('Erro ao seguir artista:', error);
     alert('Erro ao processar solicitação. Tente novamente.');
   }
-});
+}
 
 // Sistema de curtidas
 document.querySelectorAll('.like-btn').forEach(btn => {
   btn.addEventListener('click', async function() {
     const musicId = this.dataset.musicId;
-    
-    try {
-      const response = await fetch(`/like/${musicId}`, { method: 'POST' });
-      const data = await response.json();
-      
-      if (data.needLogin) {
-        showLoginModal(data.message);
-      } else if (data.success) {
-        const likeCount = this.querySelector('.like-count');
-        likeCount.textContent = parseInt(likeCount.textContent) + 1;
-        this.classList.add('liked');
-      }
-    } catch (error) {
-      console.error('Erro ao curtir música:', error);
-    }
+    await tentarCurtirMusica(musicId, this);
   });
 });
+
+// Função para tentar curtir música
+async function tentarCurtirMusica(musicId, btnElement) {
+  try {
+    const token = localStorage.getItem('vibToken');
+    const response = await fetch(`/like/${musicId}`, { 
+      method: 'POST',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    const data = await response.json();
+    
+    if (data.needLogin) {
+      // Armazenar ação para executar após login
+      acaoPendente = {
+        tipo: 'curtir',
+        musicId: musicId,
+        elemento: btnElement
+      };
+      showLoginModal(data.message);
+    } else if (data.success) {
+      // Atualizar interface baseado no estado
+      const likeCount = btnElement.querySelector('.like-count');
+      if (data.liked) {
+        btnElement.classList.add('liked');
+      } else {
+        btnElement.classList.remove('liked');
+      }
+      if (likeCount) {
+        likeCount.textContent = data.totalLikes;
+      }
+    }
+  } catch (error) {
+    console.error('Erro ao curtir música:', error);
+  }
+}
 
 // Reproduzir música individual
 document.querySelectorAll('.track-row').forEach((row, index) => {
@@ -1065,12 +1111,20 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('vibToken', data.token);
             localStorage.setItem('vibUser', JSON.stringify(data.usuario));
             
-            // Mostrar sucesso
-            alert(`Bem-vindo, ${data.usuario.nome}! Login realizado com sucesso.`);
             closeLoginModal();
             
-            // Recarregar para atualizar interface
-            window.location.reload();
+            // Executar ação pendente se existir
+            if (acaoPendente) {
+              if (acaoPendente.tipo === 'seguir') {
+                await tentarSeguirArtista(acaoPendente.artist, acaoPendente.elemento);
+              } else if (acaoPendente.tipo === 'curtir') {
+                await tentarCurtirMusica(acaoPendente.musicId, acaoPendente.elemento);
+              }
+              acaoPendente = null; // Limpar ação pendente
+            } else {
+              // Se não há ação pendente, mostrar boas-vindas
+              alert(`Bem-vindo, ${data.usuario.nome}! Login realizado com sucesso.`);
+            }
           } else {
             // Mostrar erro
             alert(data.message || 'Erro no login. Tente novamente.');
@@ -1121,12 +1175,20 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('vibToken', data.token);
             localStorage.setItem('vibUser', JSON.stringify(data.usuario));
             
-            // Mostrar sucesso
-            alert(`Bem-vindo, ${data.usuario.nome}! Sua conta foi criada com sucesso.`);
             closeRegisterModal();
             
-            // Recarregar para atualizar interface
-            window.location.reload();
+            // Executar ação pendente se existir
+            if (acaoPendente) {
+              if (acaoPendente.tipo === 'seguir') {
+                await tentarSeguirArtista(acaoPendente.artist, acaoPendente.elemento);
+              } else if (acaoPendente.tipo === 'curtir') {
+                await tentarCurtirMusica(acaoPendente.musicId, acaoPendente.elemento);
+              }
+              acaoPendente = null; // Limpar ação pendente
+            } else {
+              // Se não há ação pendente, mostrar boas-vindas
+              alert(`Bem-vindo, ${data.usuario.nome}! Sua conta foi criada com sucesso.`);
+            }
           } else {
             // Mostrar erro
             alert(data.message || 'Erro no cadastro. Tente novamente.');
