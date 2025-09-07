@@ -508,10 +508,18 @@ module.exports = {
       );
     }
     
+    // Extrair lista de artistas únicos das músicas existentes
+    const artistasExistentes = [...new Set(musicasGlobal.map(musica => musica.artista))].sort();
+    
+    console.log('=== ADMIN MÚSICAS ===');
+    console.log('Total músicas:', musicasGlobal.length);
+    console.log('Artistas existentes:', artistasExistentes);
+    
     res.render('admin/musicas', {
       title: 'Gerir Músicas - Admin',
       musicas: musicasFiltradas,
-      filtros: { search: search || '', categoria: categoria || '' }
+      filtros: { search: search || '', categoria: categoria || '' },
+      artistasExistentes: artistasExistentes
     });
   },
   

@@ -178,7 +178,16 @@
           </div>
           <div class="admin-form-group">
             <label>Artista</label>
-            <input type="text" name="artista" required placeholder="Ex: MCK">
+            <select id="artistaSelect" name="artistaSelect" required onchange="toggleArtistaInput()">
+              <option value="">Selecionar artista existente</option>
+              <% if (artistasExistentes && artistasExistentes.length > 0) { %>
+                <% artistasExistentes.forEach(artista => { %>
+                  <option value="<%= artista %>"><%= artista %></option>
+                <% }) %>
+              <% } %>
+              <option value="novo">+ Novo artista (digitar nome)</option>
+            </select>
+            <input type="text" id="artistaTexto" name="artista" style="display: none; margin-top: 10px;" placeholder="Digite o nome do novo artista">
           </div>
         </div>
         
@@ -268,8 +277,46 @@
       }
     }
     
+    // Função para alternar entre dropdown e input de texto para artista
+    function toggleArtistaInput() {
+      const artistaSelect = document.getElementById('artistaSelect');
+      const artistaTexto = document.getElementById('artistaTexto');
+      
+      if (artistaSelect.value === 'novo') {
+        artistaTexto.style.display = 'block';
+        artistaTexto.required = true;
+        artistaSelect.removeAttribute('name'); // Remove name do select
+        artistaTexto.name = 'artista'; // Adiciona name ao input
+      } else if (artistaSelect.value !== '') {
+        artistaTexto.style.display = 'none';
+        artistaTexto.required = false;
+        artistaSelect.name = 'artista'; // Adiciona name ao select
+        artistaTexto.removeAttribute('name'); // Remove name do input
+        artistaTexto.value = artistaSelect.value; // Copia valor selecionado
+      } else {
+        artistaTexto.style.display = 'none';
+        artistaTexto.required = false;
+        artistaSelect.name = 'artista';
+        artistaTexto.removeAttribute('name');
+      }
+    }
+
     document.getElementById('addMusicForm').addEventListener('submit', function(e) {
       e.preventDefault();
+      
+      // Garantir que o artista está definido corretamente
+      const artistaSelect = document.getElementById('artistaSelect');
+      const artistaTexto = document.getElementById('artistaTexto');
+      
+      if (artistaSelect.value === 'novo') {
+        if (!artistaTexto.value.trim()) {
+          alert('Por favor, digite o nome do artista.');
+          return;
+        }
+      } else if (!artistaSelect.value) {
+        alert('Por favor, selecione um artista ou digite um novo.');
+        return;
+      }
       
       const formData = new FormData(this);
       
