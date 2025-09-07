@@ -1637,7 +1637,7 @@ module.exports.enviarPedidoDivulgacao = function(req, res) {
   console.log('Arquivos recebidos:', req.files);
 
   try {
-    const { artistName, songTitle, releaseDate, phone, email, genre, biography } = req.body;
+    const { artistName, songTitle, releaseDate, phone, email, genre, biography, plano } = req.body;
 
     // Validar campos obrigatórios
     if (!artistName || !songTitle || !releaseDate || !phone || !email || !genre || !biography) {
@@ -1663,6 +1663,7 @@ module.exports.enviarPedidoDivulgacao = function(req, res) {
       releaseDate,
       genre,
       biography,
+      plano: plano || 'premium', // Plano selecionado
       dataPedido: new Date().toISOString().split('T')[0],
       status: 'pendente',
       comprovante: null, // Será atualizado quando comprovante for enviado

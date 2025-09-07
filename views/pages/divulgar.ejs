@@ -234,6 +234,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Preparar dados do formulário
     const formData = new FormData(divulgarForm);
     
+    // Adicionar plano selecionado
+    if (selectedPlan) {
+      formData.append('plano', selectedPlan);
+    }
+    
     // Enviar dados para o servidor
     fetch('/api/divulgacao', {
       method: 'POST',
