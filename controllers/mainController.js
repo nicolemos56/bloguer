@@ -887,8 +887,16 @@ module.exports = {
     const nomeArquivoServidor = musica.nomeArquivo || musica.link.replace('/uploads/', '');
     const caminhoArquivo = path.join(__dirname, '..', 'public', 'uploads', nomeArquivoServidor);
     
-    // Definir nome original para download
-    const nomeDownload = musica.nomeOriginal || `${musica.titulo} - ${musica.artista}.mp3`;
+    // Criar nome personalizado para download baseado nos dados cadastrados
+    const sanitizeName = (str) => {
+      return str.replace(/[^\w\s\-\(\)]/g, '').replace(/\s+/g, ' ').trim();
+    };
+    
+    const artistaSanitizado = sanitizeName(musica.artista);
+    const tituloSanitizado = sanitizeName(musica.titulo);
+    const ano = musica.ano || 'Unknown';
+    
+    const nomeDownload = `${artistaSanitizado} - ${tituloSanitizado} (${ano}).mp3`;
     
     res.download(caminhoArquivo, nomeDownload, (err) => {
       if (err) {
