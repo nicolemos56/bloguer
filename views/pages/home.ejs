@@ -179,6 +179,54 @@
 // Variável global para armazenar ação pendente
 let acaoPendente = null;
 
+// Verificar estado do usuário quando página carrega
+document.addEventListener('DOMContentLoaded', async function() {
+  await verificarEstadoUsuario();
+});
+
+// Função para verificar e atualizar estado dos botões
+async function verificarEstadoUsuario() {
+  try {
+    const token = localStorage.getItem('vibToken');
+    if (!token) return; // Se não há token, usuário não está logado
+    
+    const response = await fetch('/user/state', {
+      headers: {
+        'Authorization': token
+      }
+    });
+    
+    const data = await response.json();
+    
+    if (data.loggedIn) {
+      // Atualizar botões de seguir artistas
+      document.querySelectorAll('.follow-btn[data-artist]').forEach(btn => {
+        const artistName = btn.dataset.artist;
+        
+        // Buscar ID do artista baseado no nome
+        const artistasDisponiveis = <%= JSON.stringify(artistas || []) %>;
+        const artistaEncontrado = artistasDisponiveis.find(a => a.nome === artistName);
+        
+        if (artistaEncontrado && data.artistasFavoritos.includes(artistaEncontrado.id)) {
+          btn.textContent = 'Seguindo';
+          btn.classList.add('following');
+        }
+      });
+      
+      // Atualizar botões de curtir músicas
+      document.querySelectorAll('.like-btn[data-music-id]').forEach(btn => {
+        const musicId = parseInt(btn.dataset.musicId);
+        
+        if (data.musicasCurtidas.includes(musicId)) {
+          btn.classList.add('liked');
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Erro ao verificar estado do usuário:', error);
+  }
+}
+
 // Sistema de curtidas
 document.querySelectorAll('.like-btn').forEach(btn => {
   btn.addEventListener('click', async function() {

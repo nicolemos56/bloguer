@@ -38,5 +38,6 @@ router.post('/play-artist/:artista', mainController.playArtist);
 // Rotas de autenticação
 router.post('/login', mainController.loginUser);
 router.post('/register', mainController.registerUser);
+router.get('/user/state', mainController.getUserState);
 
 module.exports = router;

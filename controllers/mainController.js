@@ -182,6 +182,29 @@ console.log('=== CONTROLLER INICIALIZADO ===');
 console.log('Array de artistas inicializado:', artistasGlobal.length);
 
 module.exports = {
+  // Endpoint para verificar estado atual do usuário
+  getUserState: (req, res) => {
+    const usuario = verificarUsuarioLogado(req);
+    
+    if (!usuario) {
+      return res.json({ 
+        loggedIn: false,
+        musicasCurtidas: [],
+        artistasFavoritos: []
+      });
+    }
+    
+    return res.json({ 
+      loggedIn: true,
+      usuario: {
+        id: usuario.id,
+        nome: usuario.nome,
+        email: usuario.email
+      },
+      musicasCurtidas: usuario.musicasCurtidas || [],
+      artistasFavoritos: usuario.artistasFavoritos || []
+    });
+  },
   home: (req, res) => {
     console.log('Total de músicas no sistema:', musicasGlobal.length);
     
