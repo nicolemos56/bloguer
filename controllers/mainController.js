@@ -376,12 +376,18 @@ module.exports = {
         descricaoLonga: 'O Kuduro é um género musical e dança que surgiu em Angola na década de 1990. Caracteriza-se pelos seus ritmos acelerados, batidas electrónicas e movimentos de dança energéticos. É uma expressão cultural única que combina influências tradicionais angolanas com elementos modernos.',
         imagem: 'pessoas_dancando.jpg',
         cor: '#e17d18',
-        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('kuduro')).map(artista => ({
-          nome: artista.nome,
-          imagem: artista.imagem.replace('/assets/imagens/imagens_artistas/', ''),
-          musicas: musicasGlobal.filter(m => m.artista === artista.nome).length,
-          seguidores: artista.seguidores || 0
-        })),
+        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('kuduro')).map(artista => {
+          const musicasDoArtista = musicasGlobal.filter(m => m.artista === artista.nome);
+          const totalCurtidas = musicasDoArtista.reduce((total, musica) => total + (musica.likes || 0), 0);
+          return {
+            nome: artista.nome,
+            imagem: artista.imagem,
+            musicas: musicasDoArtista.length,
+            seguidores: artista.seguidores || 0,
+            totalCurtidas: totalCurtidas,
+            biografia: artista.biografia
+          };
+        }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
         musicasPopulares: filtrarMusicasPorCategoria('Kuduro')
       },
       'rap': {
@@ -391,12 +397,18 @@ module.exports = {
         descricaoLonga: 'O Rap angolano cresceu significativamente nas últimas décadas, tornando-se uma voz poderosa da juventude urbana. Com letras que abordam questões sociais, políticas e do quotidiano, o hip-hop angolano conquistou um lugar de destaque na música nacional.',
         imagem: 'pesso_com_micro.jpg',
         cor: '#ff0000',
-        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('rap')).map(artista => ({
-          nome: artista.nome,
-          imagem: artista.imagem.replace('/assets/imagens/imagens_artistas/', ''),
-          musicas: musicasGlobal.filter(m => m.artista === artista.nome).length,
-          seguidores: artista.seguidores || 0
-        })),
+        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('rap')).map(artista => {
+          const musicasDoArtista = musicasGlobal.filter(m => m.artista === artista.nome);
+          const totalCurtidas = musicasDoArtista.reduce((total, musica) => total + (musica.likes || 0), 0);
+          return {
+            nome: artista.nome,
+            imagem: artista.imagem,
+            musicas: musicasDoArtista.length,
+            seguidores: artista.seguidores || 0,
+            totalCurtidas: totalCurtidas,
+            biografia: artista.biografia
+          };
+        }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
         musicasPopulares: filtrarMusicasPorCategoria('Rap')
       },
       'afrohouse': {
@@ -406,12 +418,18 @@ module.exports = {
         descricaoLonga: 'O Afro House combina a energia da música house electrónica com os ritmos tradicionais africanos, criando uma fusão única que faz dançar. Este género tem ganhado popularidade internacional, com Angola na vanguarda da produção.',
         imagem: 'forca_suprema.jpg',
         cor: '#0051ff',
-        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('afro')).map(artista => ({
-          nome: artista.nome,
-          imagem: artista.imagem.replace('/assets/imagens/imagens_artistas/', ''),
-          musicas: musicasGlobal.filter(m => m.artista === artista.nome).length,
-          seguidores: artista.seguidores || 0
-        })),
+        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('afro')).map(artista => {
+          const musicasDoArtista = musicasGlobal.filter(m => m.artista === artista.nome);
+          const totalCurtidas = musicasDoArtista.reduce((total, musica) => total + (musica.likes || 0), 0);
+          return {
+            nome: artista.nome,
+            imagem: artista.imagem,
+            musicas: musicasDoArtista.length,
+            seguidores: artista.seguidores || 0,
+            totalCurtidas: totalCurtidas,
+            biografia: artista.biografia
+          };
+        }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
         musicasPopulares: filtrarMusicasPorCategoria('Afro House')
       },
       'semba': {
@@ -421,12 +439,18 @@ module.exports = {
         descricaoLonga: 'O Semba é um género musical tradicional de Angola, considerado o precursor da samba brasileira. Com ritmos cadenciados e letras que contam histórias do povo angolano, o semba é uma expressão cultural fundamental da identidade nacional.',
         imagem: 'pessoas_com_roupa_vermelha.jpg',
         cor: '#ff8900',
-        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('semba')).map(artista => ({
-          nome: artista.nome,
-          imagem: artista.imagem.replace('/assets/imagens/imagens_artistas/', ''),
-          musicas: musicasGlobal.filter(m => m.artista === artista.nome).length,
-          seguidores: artista.seguidores || 0
-        })),
+        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('semba')).map(artista => {
+          const musicasDoArtista = musicasGlobal.filter(m => m.artista === artista.nome);
+          const totalCurtidas = musicasDoArtista.reduce((total, musica) => total + (musica.likes || 0), 0);
+          return {
+            nome: artista.nome,
+            imagem: artista.imagem,
+            musicas: musicasDoArtista.length,
+            seguidores: artista.seguidores || 0,
+            totalCurtidas: totalCurtidas,
+            biografia: artista.biografia
+          };
+        }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
         musicasPopulares: filtrarMusicasPorCategoria('Semba')
       },
       'kizomba': {
@@ -436,12 +460,18 @@ module.exports = {
         descricaoLonga: 'A Kizomba é um género musical e dança que nasceu em Angola na década de 1980. Com influências do semba angolano e do zouk das Antilhas, a kizomba conquistou o mundo com seus ritmos suaves e românticos, perfeitos para dançar a dois.',
         imagem: 'plutonio.jpg',
         cor: '#8b5cf6',
-        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('kizomba')).map(artista => ({
-          nome: artista.nome,
-          imagem: artista.imagem.replace('/assets/imagens/imagens_artistas/', ''),
-          musicas: musicasGlobal.filter(m => m.artista === artista.nome).length,
-          seguidores: artista.seguidores || 0
-        })),
+        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('kizomba')).map(artista => {
+          const musicasDoArtista = musicasGlobal.filter(m => m.artista === artista.nome);
+          const totalCurtidas = musicasDoArtista.reduce((total, musica) => total + (musica.likes || 0), 0);
+          return {
+            nome: artista.nome,
+            imagem: artista.imagem,
+            musicas: musicasDoArtista.length,
+            seguidores: artista.seguidores || 0,
+            totalCurtidas: totalCurtidas,
+            biografia: artista.biografia
+          };
+        }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
         musicasPopulares: filtrarMusicasPorCategoria('Kizomba')
       },
       'gheto-zouk': {
@@ -451,12 +481,18 @@ module.exports = {
         descricaoLonga: 'O Gheto Zouk é uma evolução moderna do zouk tradicional, incorporando elementos urbanos e contemporâneos. Este género representa a nova geração da música angolana, combinando tradição com inovação.',
         imagem: 'ouvindo_musica.png',
         cor: '#10b981',
-        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('zouk')).map(artista => ({
-          nome: artista.nome,
-          imagem: artista.imagem.replace('/assets/imagens/imagens_artistas/', ''),
-          musicas: musicasGlobal.filter(m => m.artista === artista.nome).length,
-          seguidores: artista.seguidores || 0
-        })),
+        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('zouk')).map(artista => {
+          const musicasDoArtista = musicasGlobal.filter(m => m.artista === artista.nome);
+          const totalCurtidas = musicasDoArtista.reduce((total, musica) => total + (musica.likes || 0), 0);
+          return {
+            nome: artista.nome,
+            imagem: artista.imagem,
+            musicas: musicasDoArtista.length,
+            seguidores: artista.seguidores || 0,
+            totalCurtidas: totalCurtidas,
+            biografia: artista.biografia
+          };
+        }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
         musicasPopulares: filtrarMusicasPorCategoria('Gheto Zouk')
       }
     };
