@@ -1,33 +1,124 @@
-/* Music Player Bottom Bar Styles */
-.music-player {
+/* Music Player Modal Styles */
+.music-player-modal {
   position: fixed;
-  bottom: 0;
+  top: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 15px 20px;
-  z-index: 1000;
-  transform: translateY(0);
-  transition: transform 0.3s ease;
-  backdrop-filter: blur(10px);
+  bottom: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.3s ease;
 }
 
-.music-modal .modal-header {
+.music-player-modal.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.player-modal-content {
+  position: relative;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 20px;
+  width: 90%;
+  max-width: 450px;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  transform: scale(1);
+  transition: transform 0.3s ease;
+}
+
+.music-player-modal.hidden .player-modal-content {
+  transform: scale(0.9);
+}
+
+.player-header {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 20px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.music-modal .modal-header h2 {
+.player-header h3 {
   color: white;
   font-size: 1.2rem;
   font-weight: 600;
+  margin: 0;
 }
 
-.music-player {
+.close-player-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-player-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.player-body {
   padding: 30px 25px;
+  text-align: center;
+}
+
+.player-cover-section {
+  margin-bottom: 25px;
+}
+
+.player-cover-large {
+  width: 180px;
+  height: 180px;
+  border-radius: 15px;
+  object-fit: cover;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  margin: 0 auto;
+  display: block;
+}
+
+.player-info-section {
+  margin-bottom: 30px;
+}
+
+.player-info-section h4 {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.player-info-section p {
+  color: #b3b3b3;
+  font-size: 1.1rem;
+  margin: 0;
 }
 
 .music-info {
@@ -57,10 +148,49 @@
   font-size: 1rem;
 }
 
+.player-controls-section {
+  margin-top: 20px;
+}
+
 .player-controls {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  margin-bottom: 25px;
+}
+
+.player-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.player-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.player-btn-main {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, #ff6b35, #ff8c42);
+  box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+}
+
+.player-btn-main:hover {
+  background: linear-gradient(135deg, #ff8c42, #ff6b35);
+  box-shadow: 0 12px 35px rgba(255, 107, 53, 0.6);
+  transform: scale(1.15);
 }
 
 .control-btn {

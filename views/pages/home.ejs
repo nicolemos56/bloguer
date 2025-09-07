@@ -159,53 +159,60 @@
 </section>
 
 
-<!-- Player de Música Interno -->
-<div id="musicPlayer" class="music-player hidden">
-  <div class="player-container">
-    <div class="player-info">
-      <div class="player-cover">
-        <img id="playerCoverImg" src="" alt="Capa da música">
+<!-- Player de Música Modal -->
+<div id="musicPlayer" class="music-player-modal hidden">
+  <div class="modal-backdrop"></div>
+  <div class="player-modal-content">
+    <div class="player-header">
+      <h3 id="playerTrackTitle">Nome da Música</h3>
+      <button id="closePlayerBtn" class="close-player-btn">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="player-body">
+      <div class="player-cover-section">
+        <img id="playerCoverImg" src="" alt="Capa da música" class="player-cover-large">
       </div>
-      <div class="player-track-info">
-        <h4 id="playerTrackTitle">Nome da Música</h4>
+      
+      <div class="player-info-section">
+        <h4 id="playerTrackName">Nome da Música</h4>
         <p id="playerArtistName">Nome do Artista</p>
       </div>
-    </div>
-    
-    <div class="player-controls">
-      <button id="prevBtn" class="player-btn">
-        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
-        </svg>
-      </button>
-      <button id="playPauseBtn" class="player-btn player-btn-main">
-        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M8 5v14l11-7z"/>
-        </svg>
-      </button>
-      <button id="nextBtn" class="player-btn">
-        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
-        </svg>
-      </button>
-    </div>
-    
-    <div class="player-progress">
-      <div class="time-display">
-        <span id="currentTime">0:00</span>
-        <div class="progress-bar">
-          <div id="progressFill" class="progress-fill"></div>
-          <input type="range" id="progressSlider" class="progress-slider" min="0" max="100" value="0">
+      
+      <div class="player-controls-section">
+        <div class="player-controls">
+          <button id="prevBtn" class="player-btn">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+            </svg>
+          </button>
+          <button id="playPauseBtn" class="player-btn player-btn-main">
+            <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </button>
+          <button id="nextBtn" class="player-btn">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+            </svg>
+          </button>
         </div>
-        <span id="totalTime">0:00</span>
+        
+        <div class="player-progress">
+          <div class="time-display">
+            <span id="currentTime">0:00</span>
+            <div class="progress-bar">
+              <div id="progressFill" class="progress-fill"></div>
+              <input type="range" id="progressSlider" class="progress-slider" min="0" max="100" value="0">
+            </div>
+            <span id="totalTime">0:00</span>
+          </div>
+        </div>
       </div>
     </div>
-    
-    <button id="closePlayerBtn" class="close-player-btn">
-      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-      </svg>
-    </button>
   </div>
   
   <audio id="audioElement" preload="metadata"></audio>
@@ -479,6 +486,11 @@ class MusicPlayer {
     });
     
     this.audio.addEventListener('ended', () => this.nextTrack());
+    
+    // Fechar modal clicando no backdrop
+    document.querySelector('.modal-backdrop')?.addEventListener('click', () => {
+      this.closePlayer();
+    });
   }
   
   loadPlaylist(tracks, startIndex = 0) {
@@ -494,6 +506,7 @@ class MusicPlayer {
     const track = this.playlist[this.currentIndex];
     this.audio.src = track.arquivo || track.link;
     this.trackTitle.textContent = track.nome || track.titulo;
+    document.getElementById('playerTrackName').textContent = track.nome || track.titulo;
     this.artistName.textContent = track.artista;
     this.coverImg.src = track.imagem || track.cover || '/assets/imagens/imagens_musicas/default-cover.jpg';
     
@@ -514,11 +527,11 @@ class MusicPlayer {
   togglePlayPause() {
     if (this.audio.paused) {
       this.audio.play();
-      this.playPauseBtn.innerHTML = '<svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+      this.playPauseBtn.innerHTML = '<svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
       this.isPlaying = true;
     } else {
       this.audio.pause();
-      this.playPauseBtn.innerHTML = '<svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+      this.playPauseBtn.innerHTML = '<svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
       this.isPlaying = false;
     }
   }
@@ -538,14 +551,16 @@ class MusicPlayer {
   showPlayer() {
     this.player.classList.remove('hidden');
     document.body.classList.add('player-active');
+    document.body.style.overflow = 'hidden'; // Prevent scroll when modal is open
   }
   
   closePlayer() {
     this.audio.pause();
     this.player.classList.add('hidden');
     document.body.classList.remove('player-active');
+    document.body.style.overflow = ''; // Restore scroll
     this.isPlaying = false;
-    this.playPauseBtn.innerHTML = '<svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+    this.playPauseBtn.innerHTML = '<svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
   }
   
   formatTime(seconds) {
