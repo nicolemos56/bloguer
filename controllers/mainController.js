@@ -1867,10 +1867,7 @@ module.exports.musicaDetalhes = function(req, res) {
     const musica = musicasGlobal.find(m => m.id === musicaId);
     
     if (!musica) {
-      return res.status(404).render('error', { 
-        title: 'Música não encontrada',
-        message: 'A música solicitada não foi encontrada.'
-      });
+      return res.status(404).redirect('/');
     }
     
     // Buscar outras músicas do mesmo artista
@@ -1898,10 +1895,7 @@ module.exports.musicaDetalhes = function(req, res) {
     
   } catch (error) {
     console.error('Erro ao carregar detalhes da música:', error);
-    res.status(500).render('error', { 
-      title: 'Erro interno',
-      message: 'Ocorreu um erro ao carregar os detalhes da música.'
-    });
+    res.status(500).redirect('/');
   }
 };
 
