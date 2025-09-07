@@ -270,26 +270,53 @@
 </style>
 
 <script>
+// Variável global para armazenar ação pendente
+let acaoPendente = null;
+
 // Sistema de seguir artista na página de categorias
 document.querySelectorAll('.follow-btn').forEach(btn => {
   btn.addEventListener('click', async function() {
     const artist = this.dataset.artist;
-    
-    try {
-      const response = await fetch(`/follow/${encodeURIComponent(artist)}`, { method: 'POST' });
-      const data = await response.json();
-      
-      if (data.needLogin) {
-        showLoginModal(data.message);
-      } else if (data.success) {
-        this.textContent = 'Seguindo';
-        this.classList.add('following');
-      }
-    } catch (error) {
-      console.error('Erro ao seguir artista:', error);
-    }
+    await tentarSeguirArtista(artist, this);
   });
 });
+
+// Função para tentar seguir artista
+async function tentarSeguirArtista(artist, btnElement) {
+  try {
+    const token = localStorage.getItem('vibToken');
+    const response = await fetch(`/follow/${encodeURIComponent(artist)}`, { 
+      method: 'POST',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    const data = await response.json();
+    
+    if (data.needLogin) {
+      // Armazenar ação para executar após login
+      acaoPendente = {
+        tipo: 'seguir',
+        artist: artist,
+        elemento: btnElement
+      };
+      showLoginModal(data.message);
+    } else if (data.success) {
+      // Atualizar interface baseado no estado
+      if (data.following) {
+        btnElement.textContent = 'Seguindo';
+        btnElement.classList.add('following');
+      } else {
+        btnElement.textContent = 'Seguir';
+        btnElement.classList.remove('following');
+      }
+    }
+  } catch (error) {
+    console.error('Erro ao seguir artista:', error);
+  }
+}
 
 // Função para mostrar modal de login
 function showLoginModal(message) {

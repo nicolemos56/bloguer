@@ -176,49 +176,100 @@
 </div>
 
 <script>
+// Variável global para armazenar ação pendente
+let acaoPendente = null;
+
 // Sistema de curtidas
 document.querySelectorAll('.like-btn').forEach(btn => {
   btn.addEventListener('click', async function() {
     const musicId = this.dataset.musicId;
-    
-    try {
-      const response = await fetch(`/like/${musicId}`, { method: 'POST' });
-      const data = await response.json();
-      
-      if (data.needLogin) {
-        showLoginModal(data.message);
-      } else if (data.success) {
-        // Atualizar contador de likes na interface
-        const likeCount = this.querySelector('.like-count');
-        likeCount.textContent = parseInt(likeCount.textContent) + 1;
-        this.classList.add('liked');
-      }
-    } catch (error) {
-      console.error('Erro ao curtir música:', error);
-    }
+    await tentarCurtirMusica(musicId, this);
   });
 });
+
+// Função para tentar curtir música
+async function tentarCurtirMusica(musicId, btnElement) {
+  try {
+    const token = localStorage.getItem('vibToken');
+    const response = await fetch(`/like/${musicId}`, { 
+      method: 'POST',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    const data = await response.json();
+    
+    if (data.needLogin) {
+      // Armazenar ação para executar após login
+      acaoPendente = {
+        tipo: 'curtir',
+        musicId: musicId,
+        elemento: btnElement
+      };
+      showLoginModal(data.message);
+    } else if (data.success) {
+      // Atualizar interface baseado no estado
+      const likeCount = btnElement.querySelector('.like-count');
+      if (data.liked) {
+        btnElement.classList.add('liked');
+      } else {
+        btnElement.classList.remove('liked');
+      }
+      if (likeCount) {
+        likeCount.textContent = data.totalLikes;
+      }
+    }
+  } catch (error) {
+    console.error('Erro ao curtir música:', error);
+  }
+}
 
 // Sistema de seguir artista
 document.querySelectorAll('.follow-btn').forEach(btn => {
   btn.addEventListener('click', async function() {
     const artist = this.dataset.artist;
-    
-    try {
-      const response = await fetch(`/follow/${encodeURIComponent(artist)}`, { method: 'POST' });
-      const data = await response.json();
-      
-      if (data.needLogin) {
-        showLoginModal(data.message);
-      } else if (data.success) {
-        this.textContent = 'Seguindo';
-        this.classList.add('following');
-      }
-    } catch (error) {
-      console.error('Erro ao seguir artista:', error);
-    }
+    await tentarSeguirArtista(artist, this);
   });
 });
+
+// Função para tentar seguir artista
+async function tentarSeguirArtista(artist, btnElement) {
+  try {
+    const token = localStorage.getItem('vibToken');
+    const response = await fetch(`/follow/${encodeURIComponent(artist)}`, { 
+      method: 'POST',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    const data = await response.json();
+    
+    if (data.needLogin) {
+      // Armazenar ação para executar após login
+      acaoPendente = {
+        tipo: 'seguir',
+        artist: artist,
+        elemento: btnElement
+      };
+      showLoginModal(data.message);
+    } else if (data.success) {
+      // Atualizar interface baseado no estado
+      if (data.following) {
+        btnElement.textContent = 'Seguindo';
+        btnElement.classList.add('following');
+      } else {
+        btnElement.textContent = 'Seguir';
+        btnElement.classList.remove('following');
+      }
+    }
+  } catch (error) {
+    console.error('Erro ao seguir artista:', error);
+  }
+}
 
 // Registrar plays quando clicar em reproduzir
 document.querySelectorAll('.track-play-btn').forEach(btn => {
@@ -244,6 +295,18 @@ function showLoginModal(message) {
 
 function closeLoginModal() {
   document.getElementById('loginModal').style.display = 'none';
+}
+
+// Executar ação pendente após login na home
+window.executarAcaoPendente = async function() {
+  if (acaoPendente) {
+    if (acaoPendente.tipo === 'seguir') {
+      await tentarSeguirArtista(acaoPendente.artist, acaoPendente.elemento);
+    } else if (acaoPendente.tipo === 'curtir') {
+      await tentarCurtirMusica(acaoPendente.musicId, acaoPendente.elemento);
+    }
+    acaoPendente = null; // Limpar ação pendente
+  }
 }
 
 // Fechar modal clicando fora
