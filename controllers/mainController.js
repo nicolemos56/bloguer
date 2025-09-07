@@ -356,6 +356,7 @@ module.exports = {
   categoriaIndividual: (req, res) => {
     const categoriaId = req.params.id;
     
+    
     // Função para filtrar músicas por categoria
     const filtrarMusicasPorCategoria = (nomeCategoria) => {
       return musicasGlobal.filter(musica => {
