@@ -269,49 +269,79 @@ module.exports = {
   categoria: (req, res) => res.render('pages/categoria', { title: 'Categoria' }),
   divulgar: (req, res) => res.render('pages/divulgar', { title: 'Divulgar' }),
   categorias: (req, res) => {
-    // Dados das categorias musicais
+    // Função para filtrar músicas por categoria
+    const filtrarMusicasPorCategoria = (nomeCategoria) => {
+      return musicasGlobal.filter(musica => {
+        const musicaCategoria = musica.categoria.toLowerCase().replace(/[^a-z]/g, '');
+        const targetCategoria = nomeCategoria.toLowerCase().replace(/[^a-z]/g, '');
+        return musicaCategoria === targetCategoria || 
+               musicaCategoria.includes(targetCategoria) ||
+               targetCategoria.includes(musicaCategoria);
+      });
+    };
+
+    // Função para calcular dados reais por categoria
+    const calcularDadosCategoria = (nomeCategoria) => {
+      const musicasCategoria = filtrarMusicasPorCategoria(nomeCategoria);
+      const artistasUnicos = [...new Set(musicasCategoria.map(m => m.artista))];
+      const totalPlays = musicasCategoria.reduce((total, musica) => total + (musica.plays || 0), 0);
+      
+      return {
+        totalMusicas: musicasCategoria.length,
+        totalArtistas: artistasUnicos.length,
+        totalPlays: totalPlays
+      };
+    };
+
+    // Dados das categorias musicais com dados reais calculados
     const categorias = [
       {
         id: 'kuduro',
         nome: 'Kuduro',
         descricao: 'Ritmo energético e dançante de Angola',
         imagem: 'pessoas_dancando.jpg',
-        cor: '#e17d18'
+        cor: '#e17d18',
+        ...calcularDadosCategoria('kuduro')
       },
       {
         id: 'rap',
         nome: 'Rap/Hip-Hop',
         descricao: 'Música urbana com batidas fortes e letras expressivas',
         imagem: 'pesso_com_micro.jpg',
-        cor: '#ff0000'
+        cor: '#ff0000',
+        ...calcularDadosCategoria('rap')
       },
       {
         id: 'afrohouse',
         nome: 'Afro House',
         descricao: 'Fusão de house music com ritmos africanos',
         imagem: 'forca_suprema.jpg',
-        cor: '#0051ff'
+        cor: '#0051ff',
+        ...calcularDadosCategoria('afro house')
       },
       {
         id: 'semba',
         nome: 'Semba',
         descricao: 'Música tradicional angolana, precursora da samba',
         imagem: 'pessoas_com_roupa_vermelha.jpg',
-        cor: '#ff8900'
+        cor: '#ff8900',
+        ...calcularDadosCategoria('semba')
       },
       {
         id: 'kizomba',
         nome: 'Kizomba',
         descricao: 'Ritmo romântico e sensual de Angola e Cabo Verde',
         imagem: 'plutonio.jpg',
-        cor: '#8b5cf6'
+        cor: '#8b5cf6',
+        ...calcularDadosCategoria('kizomba')
       },
       {
         id: 'gheto-zouk',
         nome: 'Gheto Zouk',
         descricao: 'Fusão moderna do zouk com influências urbanas',
         imagem: 'ouvindo_musica.png',
-        cor: '#10b981'
+        cor: '#10b981',
+        ...calcularDadosCategoria('gheto zouk')
       }
     ];
     

@@ -36,15 +36,15 @@
             
             <div class="category-stats">
               <div class="stat-item">
-                <span class="stat-number">24</span>
+                <span class="stat-number"><%= categoria.totalArtistas %></span>
                 <span class="stat-label">Artistas</span>
               </div>
               <div class="stat-item">
-                <span class="stat-number">156</span>
+                <span class="stat-number"><%= categoria.totalMusicas %></span>
                 <span class="stat-label">Músicas</span>
               </div>
               <div class="stat-item">
-                <span class="stat-number">2.1K</span>
+                <span class="stat-number"><%= categoria.totalPlays >= 1000 ? (categoria.totalPlays / 1000).toFixed(1) + 'K' : categoria.totalPlays %></span>
                 <span class="stat-label">Plays</span>
               </div>
             </div>
