@@ -293,3 +293,43 @@ body {
 .menu_buttom {
     cursor: pointer;
 }
+
+/* Ver Todas Functionality */
+.track-hidden {
+  display: none;
+}
+
+.view-all-link {
+  transition: all 0.3s ease;
+}
+
+.view-all-link:hover {
+  opacity: 0.8;
+}
+
+/* Smooth animation for showing/hiding tracks */
+.track-row {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s ease;
+}
+
+.track-row.track-hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.track-row.track-showing {
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

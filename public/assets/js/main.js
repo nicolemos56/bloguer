@@ -337,3 +337,49 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
+// Ver Todas functionality for music lists
+document.addEventListener('DOMContentLoaded', function() {
+  const toggleBtn = document.getElementById('toggleMusicList');
+  
+  if (toggleBtn) {
+    let isExpanded = false;
+    
+    toggleBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      const hiddenTracks = document.querySelectorAll('.track-hidden');
+      
+      if (!isExpanded) {
+        // Show all hidden tracks
+        hiddenTracks.forEach((track, index) => {
+          setTimeout(() => {
+            track.classList.remove('track-hidden');
+            track.classList.add('track-showing');
+          }, index * 50); // Stagger animation
+        });
+        
+        toggleBtn.textContent = 'Ver menos';
+        isExpanded = true;
+      } else {
+        // Hide tracks beyond first 10
+        const allTracks = document.querySelectorAll('.track-row');
+        allTracks.forEach((track, index) => {
+          if (index >= 10) {
+            track.classList.remove('track-showing');
+            track.classList.add('track-hidden');
+          }
+        });
+        
+        toggleBtn.textContent = 'Ver todas';
+        isExpanded = false;
+        
+        // Scroll back to the section
+        document.getElementById('musicasList').scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  }
+});
