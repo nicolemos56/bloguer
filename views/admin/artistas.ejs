@@ -176,18 +176,15 @@
         <div class="admin-form-row">
           <div class="admin-form-group">
             <label>Nome do Artista</label>
-            <input type="text" name="nome" required placeholder="Ex: MCK">
-          </div>
-          <div class="admin-form-group">
-            <label>Categoria Principal</label>
-            <select name="categoria" required>
-              <option value="">Selecionar categoria</option>
-              <option value="Kuduro">Kuduro</option>
-              <option value="Rap">Rap/Hip-Hop</option>
-              <option value="Kizomba">Kizomba</option>
-              <option value="Semba">Semba</option>
-              <option value="Afro House">Afro House</option>
-              <option value="Gheto Zouk">Gheto Zouk</option>
+            <select name="nome" required>
+              <option value="">Selecionar artista das músicas</option>
+              <% if (artistasUnicos && artistasUnicos.length > 0) { %>
+                <% artistasUnicos.forEach(artista => { %>
+                  <option value="<%= artista.nome %>"><%= artista.nome %> (<%= artista.categoria %>)</option>
+                <% }) %>
+              <% } else { %>
+                <option value="" disabled>Nenhuma música encontrada</option>
+              <% } %>
             </select>
           </div>
         </div>

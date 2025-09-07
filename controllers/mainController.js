@@ -521,9 +521,28 @@ module.exports = {
     console.log('Total de artistas no array:', artistasGlobal.length);
     console.log('Artistas no array:', artistasGlobal);
     
+    // Extrair artistas únicos das músicas existentes
+    const artistasUnicos = [];
+    const artistasJaAdicionados = new Set();
+    
+    musicasGlobal.forEach(musica => {
+      if (!artistasJaAdicionados.has(musica.artista)) {
+        artistasUnicos.push({
+          nome: musica.artista,
+          categoria: musica.categoria
+        });
+        artistasJaAdicionados.add(musica.artista);
+      }
+    });
+    
+    console.log('=== ARTISTAS ÚNICOS DAS MÚSICAS ===');
+    console.log('Total artistas únicos encontrados:', artistasUnicos.length);
+    console.log('Artistas únicos:', artistasUnicos);
+    
     res.render('admin/artistas', {
       title: 'Gerir Artistas - Admin',
-      artistas: artistasGlobal
+      artistas: artistasGlobal,
+      artistasUnicos: artistasUnicos
     });
   },
 
@@ -531,19 +550,29 @@ module.exports = {
     console.log('=== INÍCIO ADD ARTISTA ===');
     
     const nome = req.body.nome;
-    const categoria = req.body.categoria;
     const biografia = req.body.biografia || '';
     
-    console.log('Nome:', nome);
-    console.log('Categoria:', categoria);
+    console.log('Nome do artista selecionado:', nome);
     console.log('Biografia:', biografia);
     
-    if (!nome || !categoria) {
+    if (!nome) {
       return res.status(400).json({ 
         success: false, 
-        message: 'Nome e categoria são obrigatórios!' 
+        message: 'Nome do artista é obrigatório!' 
       });
     }
+    
+    // Buscar a categoria do artista nas músicas existentes
+    const musicaDoArtista = musicasGlobal.find(musica => musica.artista === nome);
+    if (!musicaDoArtista) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Artista não encontrado nas músicas!' 
+      });
+    }
+    
+    const categoria = musicaDoArtista.categoria;
+    console.log('Categoria encontrada:', categoria);
     
     const novoId = artistasGlobal.length + 1;
     
