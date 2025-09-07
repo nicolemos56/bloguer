@@ -56,12 +56,14 @@
   <div class="container">
     <div class="section-header">
       <h2 class="section-title">Músicas Populares</h2>
-      <a href="#" class="view-all-link">Ver todas</a>
+      <% if (categoria.musicasPopulares.length > 10) { %>
+        <a href="#" class="view-all-link" id="toggleMusicList">Ver todas</a>
+      <% } %>
     </div>
     
-    <div class="tracks-list">
+    <div class="tracks-list" id="musicasList">
       <% categoria.musicasPopulares.forEach((musica, index) => { %>
-        <div class="track-row">
+        <div class="track-row<%= index >= 10 ? ' track-hidden' : '' %>">
           <div class="track-number">
             <span class="number"><%= index + 1 %></span>
             <% if (musica.link) { %>
