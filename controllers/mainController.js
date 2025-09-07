@@ -574,7 +574,16 @@ module.exports = {
     const categoria = musicaDoArtista.categoria;
     console.log('Categoria encontrada:', categoria);
     
-    const novoId = artistasGlobal.length + 1;
+    // Verificar se o artista já existe
+    const artistaExistente = artistasGlobal.find(artista => artista.nome === nome);
+    if (artistaExistente) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Este artista já possui um perfil!' 
+      });
+    }
+    
+    const novoId = Math.max(...artistasGlobal.map(a => a.id), 0) + 1;
     
     let imagemPath = '/assets/imagens/imagens_artistas/default.jpg';
     if (req.files && req.files.artistImage && req.files.artistImage[0]) {
@@ -592,10 +601,18 @@ module.exports = {
     
     artistasGlobal.push(novoArtista);
     
+    // Salvar no arquivo
+    const saved = saveArtistas(artistasGlobal);
+    
     console.log('Artista adicionado:', novoArtista);
     console.log('Total artistas:', artistasGlobal.length);
+    console.log('Salvo no arquivo:', saved);
     
-    res.json({ success: true, message: 'Artista adicionado com sucesso!' });
+    if (saved) {
+      res.json({ success: true, message: 'Artista adicionado com sucesso!' });
+    } else {
+      res.status(500).json({ success: false, message: 'Erro ao salvar artista!' });
+    }
   },
 
   deleteArtista: (req, res) => {
