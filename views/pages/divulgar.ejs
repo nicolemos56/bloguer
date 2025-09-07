@@ -128,8 +128,9 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const divulgarForm = document.getElementById('divulgarForm');
-  const paymentCard = document.getElementById('paymentCard');
+  const paymentModal = document.getElementById('paymentModal');
   const paymentForm = document.getElementById('paymentForm');
+  const cancelButton = document.getElementById('cancelPayment');
 
   divulgarForm.addEventListener('submit', function(e) {
     e.preventDefault();
@@ -145,12 +146,31 @@ document.addEventListener('DOMContentLoaded', function() {
       submitButton.textContent = 'Enviado ✓';
       submitButton.style.backgroundColor = '#28a745';
       
-      // Show payment card
+      // Show payment modal
       setTimeout(() => {
-        paymentCard.classList.add('show');
-        paymentCard.scrollIntoView({ behavior: 'smooth' });
+        paymentModal.classList.add('show');
+        document.body.style.overflow = 'hidden'; // Prevent background scroll
       }, 1000);
     }, 2000);
+  });
+
+  // Close modal on cancel button
+  cancelButton.addEventListener('click', function() {
+    paymentModal.classList.remove('show');
+    document.body.style.overflow = ''; // Restore scroll
+    
+    // Reset form button
+    const divulgarSubmit = divulgarForm.querySelector('button[type="submit"]');
+    divulgarSubmit.textContent = 'Enviar';
+    divulgarSubmit.disabled = false;
+    divulgarSubmit.style.backgroundColor = '';
+  });
+
+  // Close modal on backdrop click
+  paymentModal.addEventListener('click', function(e) {
+    if (e.target === paymentModal) {
+      cancelButton.click();
+    }
   });
 
   paymentForm.addEventListener('submit', function(e) {
@@ -172,7 +192,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Reset forms
         divulgarForm.reset();
         paymentForm.reset();
-        paymentCard.classList.remove('show');
+        paymentModal.classList.remove('show');
+        document.body.style.overflow = ''; // Restore scroll
         
         // Reset buttons
         const divulgarSubmit = divulgarForm.querySelector('button[type="submit"]');
