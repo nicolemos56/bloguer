@@ -119,35 +119,76 @@
 <section class="featured-artists">
   <div class="container">
     <div class="section-header">
-      <h2 class="section-title">Artistas em Destaque</h2>
-      <p class="section-subtitle">Conheça os principais artistas do <%= categoria.nome %></p>
+      <h2 class="section-title">✨ Artistas em Destaque</h2>
+      <p class="section-subtitle">Os mais curtidos do <%= categoria.nome %> baseado no amor dos fãs</p>
     </div>
     
-    <div class="artists-grid">
-      <% categoria.artistas.forEach(artista => { %>
-        <article class="artist-card-detailed">
-          <a href="/artista/<%= encodeURIComponent(artista.nome) %>" class="artist-card-link">
-            <div class="artist-image">
-              <img src="<%= artista.imagem || '/assets/imagens/imagens_artistas/default.jpg' %>" alt="<%= artista.nome %>">
-              <div class="artist-overlay">
-                <button class="artist-play-btn" style="background-color: <%= categoria.cor %>">
-                  <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+    <div class="featured-artists-grid">
+      <% if (categoria.artistas && categoria.artistas.length > 0) { %>
+        <% categoria.artistas.forEach((artista, index) => { %>
+          <div class="featured-artist-card rank-<%= index + 1 %>" onclick="window.location.href='/artista/<%= encodeURIComponent(artista.nome) %>'">
+            <div class="ranking-badge">
+              <span class="rank-number">#<%= index + 1 %></span>
+            </div>
+            
+            <div class="artist-image-container">
+              <img src="<%= artista.imagem || '/assets/imagens/imagens_artistas/default.jpg' %>" 
+                   alt="<%= artista.nome %>" 
+                   class="artist-featured-image"
+                   loading="lazy">
+              <div class="featured-overlay">
+                <div class="play-button" style="background: linear-gradient(135deg, <%= categoria.cor %>, <%= categoria.cor %>88);">
+                  <svg width="28" height="28" fill="white" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z"/>
                   </svg>
+                </div>
+              </div>
+              <div class="featured-gradient" style="background: linear-gradient(180deg, transparent 40%, <%= categoria.cor %>22 100%);"></div>
+            </div>
+            
+            <div class="featured-content">
+              <h3 class="featured-artist-name"><%= artista.nome %></h3>
+              <div class="featured-stats">
+                <div class="stat-item primary">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
+                  <span><%= artista.totalCurtidas || 0 %> curtidas</span>
+                </div>
+                <div class="stat-item">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                  </svg>
+                  <span><%= artista.musicas %> músicas</span>
+                </div>
+                <div class="stat-item">
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zM4 18v-4h2v-2.5c0-1.1.9-2 2-2h2V8h2v1.5h2c1.1 0 2 .9 2 2V14h2v4H4z"/>
+                  </svg>
+                  <span><%= artista.seguidores || 0 %> seguidores</span>
+                </div>
+              </div>
+              
+              <div class="featured-actions">
+                <button class="follow-btn-featured" data-artist="<%= artista.nome %>">
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
+                  Seguir
                 </button>
+                <div class="artist-rank-indicator" style="color: <%= categoria.cor %>;">
+                  Nº<%= index + 1 %> mais curtido
+                </div>
               </div>
             </div>
-            <div class="artist-info">
-              <h3 class="artist-name"><%= artista.nome %></h3>
-              <p class="artist-stats"><%= artista.musicas %> músicas</p>
-            </div>
-          </a>
-          <div class="artist-actions">
-            <button class="btn btn-secondary btn-small follow-btn" data-artist="<%= artista.nome %>">Seguir</button>
-            <a href="/artista/<%= encodeURIComponent(artista.nome) %>" class="btn btn-ghost btn-small">Ver perfil</a>
           </div>
-        </article>
-      <% }) %>
+        <% }) %>
+      <% } else { %>
+        <div class="no-featured-artists">
+          <p>Ainda não há artistas em destaque nesta categoria.</p>
+          <p>Seja o primeiro a curtir as músicas dos seus artistas favoritos!</p>
+        </div>
+      <% } %>
     </div>
   </div>
 </section>
