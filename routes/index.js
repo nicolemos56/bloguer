@@ -65,4 +65,7 @@ router.post('/api/divulgacao', upload.fields([
 
 router.post('/api/comprovante-pagamento', upload.single('paymentReceipt'), mainController.enviarComprovantePagamento);
 
+// Endpoint para aprovar/rejeitar pedidos
+router.post('/api/pedido/status', upload.none(), mainController.alterarStatusPedido);
+
 module.exports = router;

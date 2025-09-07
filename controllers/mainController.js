@@ -1751,4 +1751,110 @@ module.exports.enviarComprovantePagamento = function(req, res) {
   }
 };
 
+// Função para alterar status do pedido e adicionar música aprovada ao sistema
+exports.alterarStatusPedido = (req, res) => {
+  try {
+    const { pedidoId, novoStatus } = req.body;
+    
+    if (!pedidoId || !novoStatus) {
+      return res.status(400).json({ error: 'Dados incompletos' });
+    }
+    
+    if (!['aprovado', 'rejeitado'].includes(novoStatus)) {
+      return res.status(400).json({ error: 'Status inválido' });
+    }
+
+    // Carregar pedidos
+    const pedidos = loadPedidos();
+    const pedidoIndex = pedidos.findIndex(p => p.id == pedidoId);
+    
+    if (pedidoIndex === -1) {
+      return res.status(404).json({ error: 'Pedido não encontrado' });
+    }
+    
+    const pedido = pedidos[pedidoIndex];
+    
+    // Atualizar status
+    pedidos[pedidoIndex].status = novoStatus;
+    
+    let adicionadoAoSite = false;
+    
+    // Se aprovado, adicionar música ao sistema
+    if (novoStatus === 'aprovado') {
+      adicionadoAoSite = adicionarMusicaAoSistema(pedido);
+    }
+    
+    // Salvar pedidos atualizados
+    if (savePedidos(pedidos)) {
+      console.log(`=== PEDIDO ${novoStatus.toUpperCase()} ===`);
+      console.log(`Pedido ID: ${pedidoId} - Status alterado para: ${novoStatus}`);
+      if (adicionadoAoSite) {
+        console.log(`Música "${pedido.songTitle}" adicionada ao sistema!`);
+      }
+      
+      res.json({ 
+        success: true, 
+        message: `Pedido ${novoStatus} com sucesso!`,
+        adicionadoAoSite: adicionadoAoSite
+      });
+    } else {
+      res.status(500).json({ error: 'Erro ao salvar alterações' });
+    }
+    
+  } catch (error) {
+    console.error('Erro ao alterar status:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+};
+
+// Função para adicionar música aprovada ao sistema de músicas
+function adicionarMusicaAoSistema(pedido) {
+  try {
+    // Gerar novo ID para a música
+    const novoId = musicasGlobal.length > 0 ? Math.max(...musicasGlobal.map(m => m.id)) + 1 : 1;
+    
+    // Criar objeto de música no formato do sistema
+    const novaMusica = {
+      id: novoId,
+      nome: pedido.songTitle,
+      artista: pedido.artistName,
+      categoria: pedido.genre,
+      ano: new Date(pedido.releaseDate).getFullYear() || new Date().getFullYear(),
+      arquivo: `/uploads/${pedido.musicFile}`,
+      imagem: `/uploads/${pedido.coverPhoto}`,
+      plays: 0,
+      likes: 0,
+      downloads: 0,
+      duracao: '',
+      album: '',
+      link: `/uploads/${pedido.musicFile}`,
+      cover: `/uploads/${pedido.coverPhoto}`,
+      nomeOriginal: pedido.musicFile,
+      nomeArquivo: pedido.musicFile,
+      dataAdicao: new Date().toISOString(),
+      // Dados adicionais do pedido
+      biografia: pedido.biography,
+      emailArtista: pedido.email,
+      telefoneArtista: pedido.phone,
+      dataAprovacao: new Date().toISOString()
+    };
+    
+    // Adicionar à lista de músicas
+    musicasGlobal.push(novaMusica);
+    
+    // Salvar no arquivo
+    if (saveMusicas(musicasGlobal)) {
+      console.log(`=== MÚSICA ADICIONADA ===`);
+      console.log(`Nova música: "${novaMusica.nome}" por ${novaMusica.artista}`);
+      console.log(`ID: ${novaMusica.id} | Categoria: ${novaMusica.categoria}`);
+      return true;
+    }
+    
+    return false;
+  } catch (error) {
+    console.error('Erro ao adicionar música ao sistema:', error);
+    return false;
+  }
+}
+
 

@@ -244,11 +244,36 @@
 
 
     function changePedidoStatus(index, newStatus) {
-      if (confirm(`Tem certeza que deseja ${newStatus === 'aprovado' ? 'aprovar' : 'rejeitar'} este pedido?`)) {
-        // Aqui você implementaria a lógica para alterar o status
-        alert(`Pedido ${newStatus === 'aprovado' ? 'aprovado' : 'rejeitado'} com sucesso!`);
-        // Recarregar a página ou atualizar via AJAX
-        location.reload();
+      const pedido = pedidosData[index];
+      if (confirm(`Tem certeza que deseja ${newStatus === 'aprovado' ? 'aprovar' : 'rejeitar'} o pedido de "${pedido.artistName}"?`)) {
+        
+        // Preparar dados para envio
+        const formData = new FormData();
+        formData.append('pedidoId', pedido.id);
+        formData.append('novoStatus', newStatus);
+        
+        // Enviar requisição
+        fetch('/api/pedido/status', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            let message = data.message;
+            if (newStatus === 'aprovado' && data.adicionadoAoSite) {
+              message += '\nMúsica adicionada ao sistema e disponível no site!';
+            }
+            alert(message);
+            location.reload();
+          } else {
+            alert('Erro: ' + data.error);
+          }
+        })
+        .catch(error => {
+          console.error('Erro na requisição:', error);
+          alert('Erro ao processar pedido. Tente novamente.');
+        });
       }
     }
 
