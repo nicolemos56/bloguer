@@ -35,6 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Arquivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Configurar multer para uploads
 app.use('/admin/musicas/add', upload.fields([

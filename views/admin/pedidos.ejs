@@ -116,9 +116,9 @@
               </td>
               <td>
                 <% if(pedido.comprovante) { %>
-                  <button class="btn btn-sm btn-secondary" onclick="viewReceipt('<%= pedido.comprovante %>')">
-                    Ver Comprovante
-                  </button>
+                  <a href="<%= pedido.comprovante %>" target="_blank" class="btn btn-sm btn-secondary">
+                    📄 Comprovante
+                  </a>
                 <% } else { %>
                   <span class="text-muted">Não enviado</span>
                 <% } %>
@@ -180,18 +180,6 @@
     </div>
   </div>
 
-  <!-- Modal de Comprovante -->
-  <div id="receiptModal" class="modal-overlay" style="display: none;">
-    <div class="modal-content receipt-modal">
-      <div class="modal-header">
-        <h3>Comprovante de Pagamento</h3>
-        <button class="modal-close" onclick="closeReceiptModal()">&times;</button>
-      </div>
-      <div class="modal-body">
-        <!-- Conteúdo será preenchido via JavaScript -->
-      </div>
-    </div>
-  </div>
 
   <script>
     const pedidosData = <%- JSON.stringify(pedidos.lista) %>;
@@ -254,30 +242,6 @@
       modal.style.display = 'flex';
     }
 
-    function viewReceipt(receiptPath) {
-      const modal = document.getElementById('receiptModal');
-      const modalBody = modal.querySelector('.modal-body');
-      
-      // Detectar tipo de arquivo
-      const isPDF = receiptPath.toLowerCase().endsWith('.pdf');
-      
-      if (isPDF) {
-        // Mostrar PDF
-        modalBody.innerHTML = `
-          <embed src="${receiptPath}" type="application/pdf" width="100%" height="500px" style="border: none; border-radius: 8px;">
-          <p style="margin-top: 10px; text-align: center;">
-            <a href="${receiptPath}" target="_blank" style="color: var(--accent-primary);">
-              Abrir PDF em nova aba
-            </a>
-          </p>
-        `;
-      } else {
-        // Mostrar imagem
-        modalBody.innerHTML = `<img src="${receiptPath}" alt="Comprovante" style="max-width: 100%; height: auto; border-radius: 8px;">`;
-      }
-      
-      modal.style.display = 'flex';
-    }
 
     function changePedidoStatus(index, newStatus) {
       if (confirm(`Tem certeza que deseja ${newStatus === 'aprovado' ? 'aprovar' : 'rejeitar'} este pedido?`)) {
@@ -302,9 +266,6 @@
       document.getElementById('pedidoModal').style.display = 'none';
     }
 
-    function closeReceiptModal() {
-      document.getElementById('receiptModal').style.display = 'none';
-    }
 
     // Close modals when clicking outside
     document.querySelectorAll('.modal-overlay').forEach(modal => {
