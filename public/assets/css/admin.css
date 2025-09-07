@@ -805,3 +805,19 @@
     justify-content: center;
   }
 }
+
+/* Justificação de texto para conteúdo descritivo do admin */
+.admin-content p,
+.admin-card-body p,
+.admin-modal-body p,
+.admin-form-group p,
+.description-text {
+  text-align: justify;
+  line-height: 1.6;
+}
+
+.admin-card-body .description,
+.admin-info-text,
+.help-text {
+  text-align: justify;
+}

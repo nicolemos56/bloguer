@@ -195,6 +195,10 @@
   text-align: right;
 }
 
+.text-justify {
+  text-align: justify;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
