@@ -127,7 +127,7 @@
       <% categoria.artistas.forEach(artista => { %>
         <article class="artist-card-detailed">
           <div class="artist-image">
-            <img src="/assets/imagens/imagens_artistas/<%= artista.imagem %>" alt="<%= artista.nome %>">
+            <img src="<%= artista.imagem || '/assets/imagens/imagens_artistas/default.jpg' %>" alt="<%= artista.nome %>">
             <div class="artist-overlay">
               <button class="artist-play-btn" style="background-color: <%= categoria.cor %>">
                 <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
