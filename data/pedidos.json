@@ -11,5 +11,20 @@
     "dataPedido": "2025-01-07",
     "status": "pendente",
     "comprovante": "/uploads/comprovantes/comprovante1.jpg"
+  },
+  {
+    "id": 2,
+    "artistName": "Nico",
+    "email": "nicocohen56@gmail.com",
+    "phone": "+244929245390",
+    "songTitle": "Nuvem",
+    "releaseDate": "2025-09-13",
+    "genre": "kuduro",
+    "biography": "Eu sou Lemos",
+    "dataPedido": "2025-09-07",
+    "status": "pendente",
+    "comprovante": "/uploads/paymentReceipt-1757285327192-791457207.pdf",
+    "coverPhoto": "coverPhoto-1757285296238-187423200.jpg",
+    "musicFile": "musicFile-1757285298036-654243885.mp3"
   }
 ]
