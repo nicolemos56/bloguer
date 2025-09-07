@@ -25,5 +25,16 @@
     "dataCriacao": "2025-09-07T16:34:14.148Z",
     "artistasFavoritos": [],
     "musicasCurtidas": []
+  },
+  {
+    "id": 4,
+    "nome": "ToryBreeza",
+    "email": "nicocohen90@gmail.com",
+    "senha": "f429fb41fd59c9d000e25fb4669ffded2d1183a12b2a870349f029c859b248dc",
+    "dataCriacao": "2025-09-07T17:02:36.048Z",
+    "artistasFavoritos": [
+      6
+    ],
+    "musicasCurtidas": []
   }
 ]
