@@ -71,30 +71,35 @@
 </section>
 
 <!-- Featured Artists Section -->
-<section class="featured-playlists">
+<section class="featured-artists">
   <div class="container">
     <div class="section-header">
       <h2 class="section-title">Artistas do mês</h2>
       <p class="section-subtitle">Os artistas em destaque desta plataforma</p>
     </div>
     
-    <div class="playlists-grid">
+    <div class="artists-grid">
       <% (artistasDoMes || []).forEach(artista => { %>
-        <div class="playlist-card">
-          <div class="playlist-image">
+        <article class="artist-card-detailed">
+          <div class="artist-image">
             <img src="<%= artista.imagem || '/assets/imagens/imagens_artistas/default.jpg' %>" alt="<%= artista.nome %>">
-            <div class="play-button">
-              <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
+            <div class="artist-overlay">
+              <button class="artist-play-btn" style="background-color: var(--accent-primary)">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </button>
             </div>
           </div>
-          <div class="playlist-info">
-            <h3><%= artista.nome %></h3>
-            <p><%= artista.categoria %></p>
-            <span class="playlist-count"><%= artista.quantidadeMusicas || 0 %> músicas • <%= artista.seguidores || 0 %> seguidores</span>
+          <div class="artist-info">
+            <h3 class="artist-name"><%= artista.nome %></h3>
+            <p class="artist-stats"><%= artista.quantidadeMusicas || 0 %> músicas</p>
+            <div class="artist-actions">
+              <button class="btn btn-secondary btn-small follow-btn" data-artist="<%= artista.nome %>">Seguir</button>
+              <button class="btn btn-ghost btn-small">Ver perfil</button>
+            </div>
           </div>
-        </div>
+        </article>
       <% }) %>
     </div>
   </div>
