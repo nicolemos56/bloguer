@@ -256,7 +256,8 @@ module.exports = {
       title: 'VIB Music - Página Inicial',
       musicasEmDestaque: musicasEmDestaque || [],
       musicasRecentes: musicasRecentes || [],
-      musicasPorCategoria: []
+      musicasPorCategoria: [],
+      artistas: artistasGlobal || []
     });
   },
   artistas: (req, res) => res.render('pages/artistas'),
