@@ -1,10 +1,18 @@
 [
   {
-    "id": 4,
-    "nome": "Yola Semedo",
+    "id": 5,
+    "nome": "Tory Breeza",
     "categoria": "Kizomba",
-    "biografia": "Cantora de Kizomba e Zouk",
-    "imagem": "/assets/imagens/imagens_artistas/yola-semedo.jpg",
-    "seguidores": 750
+    "biografia": "Tory é um emblematico da musica angola, nasceu em Malanje e desde pequeno começou a cantar no grupo coral da Igreja. Nascido aos 1999 de dezembro.",
+    "imagem": "/uploads/artistImage-1757259765958-483016843.png",
+    "seguidores": 0
+  },
+  {
+    "id": 6,
+    "nome": "Dji Tafinha",
+    "categoria": "Kizomba",
+    "biografia": "Nascido a 05 de Maio de 1986, na cidade de Lucapa, em Lunda-Norte. Dji ganhou o gosto pela música hip hop nos anos 1998, quando tinha 12 anos.",
+    "imagem": "/uploads/artistImage-1757260043019-525201379.jpg",
+    "seguidores": 0
   }
 ]
