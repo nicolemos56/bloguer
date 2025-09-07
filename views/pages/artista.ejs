@@ -909,22 +909,29 @@ async function verificarEstadoUsuario() {
     
     if (data.loggedIn) {
       // Atualizar botões de seguir artistas
-      document.querySelectorAll('[data-artist]').forEach(btn => {
-        const artistName = btn.dataset.artist;
-        const artistaData = <%= JSON.stringify(artista) %>;
-        
-        if (data.artistasFavoritos.includes(artistaData.id)) {
-          const btnText = btn.querySelector('.btn-text');
-          if (btnText) {
-            btnText.textContent = 'Seguindo';
-          } else {
-            btn.textContent = 'Seguindo';
-          }
-          btn.classList.add('following');
-          btn.classList.remove('btn-secondary');
-          btn.classList.add('btn-accent');
+      if (data.artistasFavoritos && data.artistasFavoritos.length > 0) {
+        const allArtistsResponse = await fetch('/api/artistas');
+        if (allArtistsResponse.ok) {
+          const allArtists = await allArtistsResponse.json();
+          
+          document.querySelectorAll('[data-artist]').forEach(btn => {
+            const artistName = btn.dataset.artist;
+            const foundArtist = allArtists.find(a => a.nome === artistName);
+            
+            if (foundArtist && data.artistasFavoritos.includes(foundArtist.id)) {
+              const btnText = btn.querySelector('.btn-text');
+              if (btnText) {
+                btnText.textContent = 'Seguindo';
+              } else {
+                btn.textContent = 'Seguindo';
+              }
+              btn.classList.add('following');
+              btn.classList.remove('btn-secondary');
+              btn.classList.add('btn-accent');
+            }
+          });
         }
-      });
+      }
       
       // Atualizar botões de curtir músicas
       document.querySelectorAll('.like-btn[data-music-id]').forEach(btn => {

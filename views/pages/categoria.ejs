@@ -482,18 +482,22 @@ async function verificarEstadoUsuario() {
     
     if (data.loggedIn) {
       // Atualizar botões de seguir artistas
-      document.querySelectorAll('.follow-btn[data-artist]').forEach(btn => {
-        const artistName = btn.dataset.artist;
-        
-        // Buscar ID do artista baseado no nome
-        const artistasDisponiveis = <%= JSON.stringify(artistasCategoria || []) %>;
-        const artistaEncontrado = artistasDisponiveis.find(a => a.nome === artistName);
-        
-        if (artistaEncontrado && data.artistasFavoritos.includes(artistaEncontrado.id)) {
-          btn.textContent = 'Seguindo';
-          btn.classList.add('following');
+      if (data.artistasFavoritos && data.artistasFavoritos.length > 0) {
+        const allArtistsResponse = await fetch('/api/artistas');
+        if (allArtistsResponse.ok) {
+          const allArtists = await allArtistsResponse.json();
+          
+          document.querySelectorAll('.follow-btn[data-artist]').forEach(btn => {
+            const artistName = btn.dataset.artist;
+            const foundArtist = allArtists.find(a => a.nome === artistName);
+            
+            if (foundArtist && data.artistasFavoritos.includes(foundArtist.id)) {
+              btn.textContent = 'Seguindo';
+              btn.classList.add('following');
+            }
+          });
         }
-      });
+      }
       
       // Atualizar botões de curtir músicas
       document.querySelectorAll('.like-btn[data-music-id]').forEach(btn => {

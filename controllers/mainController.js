@@ -182,6 +182,11 @@ console.log('=== CONTROLLER INICIALIZADO ===');
 console.log('Array de artistas inicializado:', artistasGlobal.length);
 
 module.exports = {
+  // API endpoint para obter todos os artistas
+  getArtistas: (req, res) => {
+    return res.json(artistasGlobal || []);
+  },
+
   // Endpoint para verificar estado atual do usuário
   getUserState: (req, res) => {
     const usuario = verificarUsuarioLogado(req);

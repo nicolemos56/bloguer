@@ -40,4 +40,7 @@ router.post('/login', mainController.loginUser);
 router.post('/register', mainController.registerUser);
 router.get('/user/state', mainController.getUserState);
 
+// API endpoints
+router.get('/api/artistas', mainController.getArtistas);
+
 module.exports = router;
