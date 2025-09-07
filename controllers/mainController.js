@@ -1752,7 +1752,7 @@ module.exports.enviarComprovantePagamento = function(req, res) {
 };
 
 // Função para alterar status do pedido e adicionar música aprovada ao sistema
-exports.alterarStatusPedido = (req, res) => {
+module.exports.alterarStatusPedido = function(req, res) {
   try {
     const { pedidoId, novoStatus } = req.body;
     
