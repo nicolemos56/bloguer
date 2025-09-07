@@ -13,7 +13,7 @@
     "nomeArquivo": "musicFile-1757258021242-964588928.mp3",
     "likes": 0,
     "downloads": 0,
-    "plays": 3,
+    "plays": 5,
     "dataAdicao": "2025-09-07T15:13:57.687Z"
   },
   {
@@ -32,5 +32,56 @@
     "downloads": 0,
     "plays": 3,
     "dataAdicao": "2025-09-07T15:15:17.798Z"
+  },
+  {
+    "id": 9,
+    "titulo": "Mónica",
+    "artista": "Dji Tafinha",
+    "categoria": "Rap",
+    "duracao": "2:6",
+    "album": "Galaxia",
+    "ano": "2011",
+    "link": "/uploads/musicFile-1757260816521-368534825.mp3",
+    "cover": "/uploads/coverImage-1757260836381-150823512.jpg",
+    "nomeOriginal": "dji_tafinha_monica_mp3_56936.mp3",
+    "nomeArquivo": "musicFile-1757260816521-368534825.mp3",
+    "likes": 0,
+    "downloads": 0,
+    "plays": 2,
+    "dataAdicao": "2025-09-07T16:00:36.383Z"
+  },
+  {
+    "id": 10,
+    "titulo": "Imperfeito",
+    "artista": "Dji Tafinha",
+    "categoria": "Rap",
+    "duracao": "5:00",
+    "album": "Galaxia",
+    "ano": "2015",
+    "link": "/uploads/musicFile-1757260882282-786004030.mp3",
+    "cover": "/uploads/coverImage-1757260900041-208413345.jpg",
+    "nomeOriginal": "dji_tafinha_imperfeito_mp3_56979.mp3",
+    "nomeArquivo": "musicFile-1757260882282-786004030.mp3",
+    "likes": 0,
+    "downloads": 0,
+    "plays": 2,
+    "dataAdicao": "2025-09-07T16:01:40.042Z"
+  },
+  {
+    "id": 11,
+    "titulo": "Cinzas",
+    "artista": "Dji Tafinha",
+    "categoria": "Rap",
+    "duracao": "2:6",
+    "album": "Galaxia",
+    "ano": "2010",
+    "link": "/uploads/musicFile-1757260944002-247316332.mp3",
+    "cover": "/uploads/coverImage-1757260974737-199784067.jpg",
+    "nomeOriginal": "dji_tafinha_cinzas_official_music_video_gravado_e_editado_por_ecbkwg_play_multimedia_mp3_57019.mp3",
+    "nomeArquivo": "musicFile-1757260944002-247316332.mp3",
+    "likes": 0,
+    "downloads": 0,
+    "plays": 2,
+    "dataAdicao": "2025-09-07T16:02:54.774Z"
   }
 ]
