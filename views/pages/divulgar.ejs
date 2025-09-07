@@ -12,7 +12,7 @@
           <p>Divulgue a tua música hoje e vê-la a tocar</p>
         </div>
         
-        <form class="submission-form" action="#" method="POST">
+        <form class="submission-form" id="divulgarForm" action="#" method="POST">
           <div class="form-group">
             <label for="artistName">Nome artístico</label>
             <input type="text" id="artistName" name="artistName" placeholder="Seu nome artístico" required>
@@ -68,7 +68,118 @@
           
           <button type="submit" class="btn btn-primary btn-full">Enviar</button>
         </form>
+
+        <!-- Payment Card -->
+        <div class="payment-card" id="paymentCard">
+          <div class="payment-header">
+            <h2>Finalizar Divulgação</h2>
+            <p>Para finalizar o processo de divulgação, efetue o pagamento e envie o comprovante</p>
+          </div>
+
+          <div class="payment-details">
+            <h3>Dados Bancários</h3>
+            <div class="bank-info">
+              <div class="bank-item">
+                <span class="bank-label">Banco:</span>
+                <span class="bank-value">BAI - Banco Angolano de Investimentos</span>
+              </div>
+              <div class="bank-item">
+                <span class="bank-label">Conta:</span>
+                <span class="bank-value">40.10.80.001234567.89</span>
+              </div>
+              <div class="bank-item">
+                <span class="bank-label">IBAN:</span>
+                <span class="bank-value">AO06 0040 1080 0012 3456 7890</span>
+              </div>
+              <div class="bank-item">
+                <span class="bank-label">Titular:</span>
+                <span class="bank-value">e Nessa Banda Mekié, Lda</span>
+              </div>
+              <div class="bank-item">
+                <span class="bank-label">Valor:</span>
+                <span class="bank-value">15.000 AOA</span>
+              </div>
+            </div>
+          </div>
+
+          <form class="payment-form" id="paymentForm" action="#" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="paymentReceipt">Comprovante de Pagamento</label>
+              <input type="file" id="paymentReceipt" name="paymentReceipt" accept="image/*,.pdf" required>
+              <small style="color: var(--text-muted); font-size: 1.4rem;">
+                Faça upload da foto ou documento do comprovante de transferência
+              </small>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-full">Enviar Comprovante</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const divulgarForm = document.getElementById('divulgarForm');
+  const paymentCard = document.getElementById('paymentCard');
+  const paymentForm = document.getElementById('paymentForm');
+
+  divulgarForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Simulate form submission
+    const submitButton = divulgarForm.querySelector('button[type="submit"]');
+    const originalText = submitButton.textContent;
+    
+    submitButton.textContent = 'Enviando...';
+    submitButton.disabled = true;
+    
+    setTimeout(() => {
+      submitButton.textContent = 'Enviado ✓';
+      submitButton.style.backgroundColor = '#28a745';
+      
+      // Show payment card
+      setTimeout(() => {
+        paymentCard.classList.add('show');
+        paymentCard.scrollIntoView({ behavior: 'smooth' });
+      }, 1000);
+    }, 2000);
+  });
+
+  paymentForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const submitButton = paymentForm.querySelector('button[type="submit"]');
+    const originalText = submitButton.textContent;
+    
+    submitButton.textContent = 'Processando...';
+    submitButton.disabled = true;
+    
+    setTimeout(() => {
+      submitButton.textContent = 'Comprovante Enviado ✓';
+      submitButton.style.backgroundColor = '#28a745';
+      
+      setTimeout(() => {
+        alert('Pedido de divulgação enviado com sucesso! Entraremos em contacto em breve.');
+        
+        // Reset forms
+        divulgarForm.reset();
+        paymentForm.reset();
+        paymentCard.classList.remove('show');
+        
+        // Reset buttons
+        const divulgarSubmit = divulgarForm.querySelector('button[type="submit"]');
+        divulgarSubmit.textContent = 'Enviar';
+        divulgarSubmit.disabled = false;
+        divulgarSubmit.style.backgroundColor = '';
+        
+        submitButton.textContent = 'Enviar Comprovante';
+        submitButton.disabled = false;
+        submitButton.style.backgroundColor = '';
+        
+      }, 2000);
+    }, 2000);
+  });
+});
+</script>

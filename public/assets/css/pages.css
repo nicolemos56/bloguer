@@ -500,6 +500,116 @@
   background-color: rgba(225, 125, 24, 0.05);
 }
 
+.form-group textarea {
+  padding: var(--space-md);
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+  font-size: 1.6rem;
+  line-height: 1.5;
+  transition: all var(--transition-base);
+}
+
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(225, 125, 24, 0.1);
+}
+
+.form-group textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* Payment Card */
+.payment-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl);
+  margin-top: var(--space-2xl);
+  box-shadow: var(--shadow-lg);
+  display: none;
+}
+
+.payment-card.show {
+  display: block;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.payment-header {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.payment-header h2 {
+  color: var(--accent-primary);
+  font-size: 2.4rem;
+  margin-bottom: var(--space-sm);
+}
+
+.payment-header p {
+  color: var(--text-secondary);
+  font-size: 1.6rem;
+}
+
+.payment-details {
+  background: var(--bg-tertiary);
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-2xl);
+}
+
+.payment-details h3 {
+  color: var(--text-primary);
+  font-size: 1.8rem;
+  margin-bottom: var(--space-lg);
+}
+
+.bank-info {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.bank-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.bank-item:last-child {
+  border-bottom: none;
+}
+
+.bank-label {
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.bank-value {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-bold);
+  font-family: monospace;
+}
+
 /* Categories Page */
 .categories-hero {
   padding: var(--space-3xl) 0;
