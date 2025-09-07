@@ -35,9 +35,7 @@
     "artistasFavoritos": [
       6
     ],
-    "musicasCurtidas": [
-      13
-    ]
+    "musicasCurtidas": []
   },
   {
     "id": 5,
@@ -52,8 +50,7 @@
       7,
       9,
       10,
-      11,
-      13
+      11
     ]
   },
   {
@@ -102,17 +99,6 @@
     "artistasFavoritos": [],
     "musicasCurtidas": [
       8
-    ]
-  },
-  {
-    "id": 10,
-    "nome": "MANUEL PANDA MAINDO",
-    "email": "mipoyo4764@ncien.com",
-    "senha": "f429fb41fd59c9d000e25fb4669ffded2d1183a12b2a870349f029c859b248dc",
-    "dataCriacao": "2025-09-07T18:43:17.084Z",
-    "artistasFavoritos": [],
-    "musicasCurtidas": [
-      13
     ]
   }
 ]
