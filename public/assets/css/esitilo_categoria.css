@@ -333,3 +333,12 @@ body {
     transform: translateY(0);
   }
 }
+
+/* Justificação geral para textos do site */
+p:not(.stat-label):not(.track-artist):not(.featured-artist-name),
+.descricao,
+.texto-descritivo,
+.categoria-descricao p {
+  text-align: justify;
+  line-height: 1.6;
+}
