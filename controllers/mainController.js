@@ -799,6 +799,86 @@ module.exports = {
       needLogin: true, 
       message: `Precisa fazer login para seguir ${artista}!` 
     });
+  },
+
+  // Reproduzir todas as músicas de uma categoria
+  playCategoryAll: (req, res) => {
+    const categoriaId = req.params.categoria;
+    
+    console.log(`Reproduzir todas as músicas da categoria: ${categoriaId}`);
+    
+    // Filtrar músicas por categoria
+    const musicasDaCategoria = musicasGlobal.filter(musica => {
+      const musicaCategoria = musica.categoria.toLowerCase().replace(/[^a-z]/g, '');
+      const targetCategoria = categoriaId.toLowerCase().replace(/[^a-z]/g, '');
+      return musicaCategoria === targetCategoria || 
+             musicaCategoria.includes(targetCategoria) ||
+             targetCategoria.includes(musicaCategoria);
+    });
+    
+    // Incrementar plays de todas as músicas da categoria
+    musicasDaCategoria.forEach(musica => {
+      musica.plays = (musica.plays || 0) + 1;
+    });
+    
+    // Salvar mudanças
+    saveMusicas(musicasGlobal);
+    
+    console.log(`${musicasDaCategoria.length} músicas reproduzidas da categoria ${categoriaId}`);
+    
+    res.json({
+      success: true,
+      message: `Reproduzindo ${musicasDaCategoria.length} músicas da categoria ${categoriaId}`,
+      musicasCount: musicasDaCategoria.length
+    });
+  },
+
+  // Seguir categoria
+  followCategory: (req, res) => {
+    const categoriaId = req.params.categoria;
+    
+    // Simular que o usuário não está logado
+    const userLoggedIn = false; // Alterar para true quando houver sistema de login
+    
+    if (!userLoggedIn) {
+      return res.json({
+        needLogin: true,
+        success: false,
+        message: 'Você precisa estar logado para seguir categorias. Faça login e tente novamente.'
+      });
+    }
+    
+    console.log(`Usuário seguiu a categoria: ${categoriaId}`);
+    
+    res.json({
+      needLogin: false,
+      success: true,
+      message: `Você agora está seguindo a categoria ${categoriaId}!`
+    });
+  },
+
+  // Deixar de seguir categoria
+  unfollowCategory: (req, res) => {
+    const categoriaId = req.params.categoria;
+    
+    // Simular que o usuário não está logado
+    const userLoggedIn = false; // Alterar para true quando houver sistema de login
+    
+    if (!userLoggedIn) {
+      return res.json({
+        needLogin: true,
+        success: false,
+        message: 'Você precisa estar logado para deixar de seguir categorias.'
+      });
+    }
+    
+    console.log(`Usuário deixou de seguir a categoria: ${categoriaId}`);
+    
+    res.json({
+      needLogin: false,
+      success: true,
+      message: `Você deixou de seguir a categoria ${categoriaId}.`
+    });
   }
 };
 

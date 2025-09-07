@@ -29,5 +29,8 @@ router.get('/download/:id', mainController.downloadMusica);
 router.post('/like/:id', mainController.likeMusica);
 router.post('/play/:id', mainController.playMusica);
 router.post('/follow/:artista', mainController.followArtista);
+router.post('/play-category/:categoria', mainController.playCategoryAll);
+router.post('/follow-category/:categoria', mainController.followCategory);
+router.post('/unfollow-category/:categoria', mainController.unfollowCategory);
 
 module.exports = router;

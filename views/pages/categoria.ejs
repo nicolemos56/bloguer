@@ -24,17 +24,17 @@
         </div>
       </div>
       <div class="category-hero-actions">
-        <button class="btn btn-primary btn-large">
+        <button id="playAllBtn" class="btn btn-primary btn-large" data-category="<%= categoria.id %>">
           <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
             <path d="M8 5v14l11-7z"/>
           </svg>
-          Reproduzir Tudo
+          <span class="btn-text">Reproduzir Tudo</span>
         </button>
-        <button class="btn btn-secondary btn-large">
+        <button id="followCategoryBtn" class="btn btn-secondary btn-large" data-category="<%= categoria.id %>">
           <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
           </svg>
-          Seguir
+          <span class="btn-text">Seguir</span>
         </button>
       </div>
     </div>
@@ -237,5 +237,79 @@ document.querySelectorAll('.play-btn').forEach(btn => {
       }
     }
   });
+});
+
+// Funcionalidade Reproduzir Tudo
+document.getElementById('playAllBtn')?.addEventListener('click', function() {
+  const category = this.dataset.category;
+  const btnText = this.querySelector('.btn-text');
+  const playLinks = document.querySelectorAll('.play-btn[href]');
+  
+  if (playLinks.length === 0) {
+    alert('Não há músicas disponíveis para reproduzir nesta categoria.');
+    return;
+  }
+  
+  // Indicar que está tocando
+  btnText.textContent = 'Reproduzindo...';
+  this.disabled = true;
+  
+  // Reproduzir primeira música
+  let currentIndex = 0;
+  function playNext() {
+    if (currentIndex < playLinks.length) {
+      const link = playLinks[currentIndex];
+      // Abrir em nova aba/janela
+      window.open(link.href, '_blank');
+      currentIndex++;
+      
+      // Próxima música após 3 segundos
+      setTimeout(playNext, 3000);
+    } else {
+      // Terminou de reproduzir todas
+      btnText.textContent = 'Reproduzir Tudo';
+      document.getElementById('playAllBtn').disabled = false;
+    }
+  }
+  
+  playNext();
+  
+  // Registrar que reproduziu toda a categoria
+  fetch(`/play-category/${category}`, { method: 'POST' })
+    .catch(error => console.error('Erro ao registrar reprodução da categoria:', error));
+});
+
+// Funcionalidade Seguir Categoria
+document.getElementById('followCategoryBtn')?.addEventListener('click', async function() {
+  const category = this.dataset.category;
+  const btnText = this.querySelector('.btn-text');
+  const isFollowing = this.classList.contains('following');
+  
+  try {
+    const action = isFollowing ? 'unfollow' : 'follow';
+    const response = await fetch(`/${action}-category/${category}`, { method: 'POST' });
+    const data = await response.json();
+    
+    if (data.needLogin) {
+      alert(data.message);
+    } else if (data.success) {
+      if (isFollowing) {
+        btnText.textContent = 'Seguir';
+        this.classList.remove('following');
+        this.classList.remove('btn-accent');
+        this.classList.add('btn-secondary');
+      } else {
+        btnText.textContent = 'Seguindo';
+        this.classList.add('following');
+        this.classList.remove('btn-secondary');
+        this.classList.add('btn-accent');
+      }
+    } else {
+      alert(data.message || 'Erro ao processar solicitação');
+    }
+  } catch (error) {
+    console.error('Erro ao seguir categoria:', error);
+    alert('Erro ao processar solicitação. Tente novamente.');
+  }
 });
 </script>
