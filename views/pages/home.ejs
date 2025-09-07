@@ -417,4 +417,174 @@ document.getElementById('loginModal').addEventListener('click', function(e) {
     closeLoginModal();
   }
 });
+
+// === MUSIC PLAYER FUNCTIONALITY ===
+let currentAudio = null;
+let isPlaying = false;
+
+// Abrir modal de música
+function openMusicModal(musicId, title, artist, audioUrl, coverUrl) {
+  // Definir informações da música
+  document.getElementById('musicName').textContent = title;
+  document.getElementById('musicArtist').textContent = artist;
+  document.getElementById('musicTitle').textContent = `Reproduzindo: ${title}`;
+  
+  // Definir cover da música
+  const coverImg = document.getElementById('musicCover');
+  if (coverUrl && coverUrl !== 'undefined') {
+    coverImg.src = coverUrl;
+  } else {
+    coverImg.src = '/assets/imagens/imagens_musicas/default-cover.jpg';
+  }
+  
+  // Configurar player de áudio
+  const audioPlayer = document.getElementById('audioPlayer');
+  audioPlayer.src = audioUrl;
+  
+  // Reset controles
+  document.getElementById('currentTime').textContent = '0:00';
+  document.getElementById('totalTime').textContent = '0:00';
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('progressSlider').value = 0;
+  
+  // Reset botão play
+  const playBtn = document.getElementById('playPauseBtn');
+  const playIcon = document.getElementById('playIcon');
+  playIcon.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
+  playBtn.classList.remove('playing');
+  
+  // Mostrar modal
+  document.getElementById('musicModal').style.display = 'flex';
+  
+  // Configurar eventos do áudio
+  setupAudioEvents();
+  
+  // Registrar play na API
+  fetch(`/play/${musicId}`, { method: 'POST' })
+    .catch(error => console.error('Erro ao registrar play:', error));
+}
+
+// Configurar eventos do player de áudio
+function setupAudioEvents() {
+  const audioPlayer = document.getElementById('audioPlayer');
+  const progressSlider = document.getElementById('progressSlider');
+  const volumeSlider = document.getElementById('volumeSlider');
+  
+  // Quando metadados carregam
+  audioPlayer.addEventListener('loadedmetadata', function() {
+    document.getElementById('totalTime').textContent = formatTime(audioPlayer.duration);
+    progressSlider.max = audioPlayer.duration;
+  });
+  
+  // Atualizar progresso
+  audioPlayer.addEventListener('timeupdate', function() {
+    const currentTime = audioPlayer.currentTime;
+    const duration = audioPlayer.duration;
+    
+    if (!isNaN(duration) && duration > 0) {
+      const progress = (currentTime / duration) * 100;
+      document.getElementById('progressFill').style.width = progress + '%';
+      
+      if (!progressSlider.getAttribute('data-dragging')) {
+        progressSlider.value = currentTime;
+      }
+    }
+    
+    document.getElementById('currentTime').textContent = formatTime(currentTime);
+  });
+  
+  // Controle de progresso
+  progressSlider.addEventListener('mousedown', function() {
+    this.setAttribute('data-dragging', 'true');
+  });
+  
+  progressSlider.addEventListener('mouseup', function() {
+    audioPlayer.currentTime = this.value;
+    this.removeAttribute('data-dragging');
+  });
+  
+  progressSlider.addEventListener('input', function() {
+    if (this.getAttribute('data-dragging')) {
+      const progress = (this.value / audioPlayer.duration) * 100;
+      document.getElementById('progressFill').style.width = progress + '%';
+      document.getElementById('currentTime').textContent = formatTime(this.value);
+    }
+  });
+  
+  // Controle de volume
+  volumeSlider.addEventListener('input', function() {
+    audioPlayer.volume = this.value / 100;
+  });
+  
+  // Definir volume inicial
+  audioPlayer.volume = volumeSlider.value / 100;
+}
+
+// Toggle play/pause
+function togglePlayPause() {
+  const audioPlayer = document.getElementById('audioPlayer');
+  const playBtn = document.getElementById('playPauseBtn');
+  const playIcon = document.getElementById('playIcon');
+  
+  if (audioPlayer.paused) {
+    audioPlayer.play();
+    playIcon.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z'); // Pause icon
+    playBtn.classList.add('playing');
+    isPlaying = true;
+  } else {
+    audioPlayer.pause();
+    playIcon.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
+    playBtn.classList.remove('playing');
+    isPlaying = false;
+  }
+}
+
+// Fechar modal de música
+function closeMusicModal() {
+  const audioPlayer = document.getElementById('audioPlayer');
+  
+  // Parar reprodução
+  audioPlayer.pause();
+  audioPlayer.currentTime = 0;
+  
+  // Reset estado
+  isPlaying = false;
+  const playBtn = document.getElementById('playPauseBtn');
+  const playIcon = document.getElementById('playIcon');
+  playIcon.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
+  playBtn.classList.remove('playing');
+  
+  // Esconder modal
+  document.getElementById('musicModal').style.display = 'none';
+}
+
+// Formatar tempo em mm:ss
+function formatTime(seconds) {
+  if (isNaN(seconds) || seconds < 0) return '0:00';
+  
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
+// Fechar modal clicando fora
+document.getElementById('musicModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeMusicModal();
+  }
+});
+
+// Teclas de atalho
+document.addEventListener('keydown', function(e) {
+  const musicModal = document.getElementById('musicModal');
+  
+  if (musicModal.style.display === 'flex') {
+    if (e.code === 'Space') {
+      e.preventDefault();
+      togglePlayPause();
+    } else if (e.code === 'Escape') {
+      closeMusicModal();
+    }
+  }
+});
 </script>
