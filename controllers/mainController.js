@@ -1537,72 +1537,87 @@ module.exports.registerUser = function(req, res) {
   }
 };
 
+// Sistema de armazenamento de pedidos
+const fs = require('fs');
+const path = require('path');
+
+const pedidosFile = path.join(__dirname, '../data/pedidos.json');
+
+// Função para carregar pedidos do arquivo
+function loadPedidos() {
+  try {
+    if (fs.existsSync(pedidosFile)) {
+      const data = fs.readFileSync(pedidosFile, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('Erro ao carregar pedidos:', error);
+  }
+  return [];
+}
+
+// Função para salvar pedidos no arquivo
+function savePedidos(pedidos) {
+  try {
+    const dataDir = path.dirname(pedidosFile);
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    fs.writeFileSync(pedidosFile, JSON.stringify(pedidos, null, 2));
+    return true;
+  } catch (error) {
+    console.error('Erro ao salvar pedidos:', error);
+    return false;
+  }
+}
+
+// Inicializar com dados de exemplo se arquivo não existir
+function initializePedidos() {
+  const existingPedidos = loadPedidos();
+  if (existingPedidos.length === 0) {
+    const pedidosExemplo = [
+      {
+        id: 1,
+        artistName: "João Silva",
+        email: "joao@email.com",
+        phone: "+244 924 123 456",
+        songTitle: "Minha Nova Música",
+        releaseDate: "2025-01-15",
+        genre: "kuduro",
+        biography: "Sou um artista angolano apaixonado pela música desde criança. Influenciado pelos grandes nomes do kuduro, busco trazer algo novo ao cenário musical.",
+        dataPedido: "2025-01-07",
+        status: "pendente",
+        comprovante: "/uploads/comprovantes/comprovante1.jpg"
+      }
+    ];
+    savePedidos(pedidosExemplo);
+    return pedidosExemplo;
+  }
+  return existingPedidos;
+}
+
 // Admin Pedidos
 module.exports.adminPedidos = function(req, res) {
   console.log('=== ADMIN PEDIDOS ===');
   
-  // Dados simulados de pedidos de divulgação
-  const pedidosSimulados = [
-    {
-      artistName: "João Silva",
-      email: "joao@email.com",
-      phone: "+244 924 123 456",
-      songTitle: "Minha Nova Música",
-      releaseDate: "2025-01-15",
-      genre: "kuduro",
-      biography: "Sou um artista angolano apaixonado pela música desde criança. Influenciado pelos grandes nomes do kuduro, busco trazer algo novo ao cenário musical.",
-      dataPedido: "2025-01-07",
-      status: "pendente",
-      comprovante: "/uploads/comprovantes/comprovante1.jpg"
-    },
-    {
-      artistName: "Maria Santos",
-      email: "maria@email.com",
-      phone: "+244 923 987 654",
-      songTitle: "Semba do Coração",
-      releaseDate: "2025-01-20",
-      genre: "semba",
-      biography: "Cantora e compositora com 10 anos de experiência. Minha música reflete as tradições angolanas com toque moderno.",
-      dataPedido: "2025-01-06",
-      status: "aprovado",
-      comprovante: "/uploads/comprovantes/comprovante2.jpg"
-    },
-    {
-      artistName: "Pedro Costa",
-      email: "pedro@email.com",
-      phone: "+244 925 555 777",
-      songTitle: "Afrobeat Moderno",
-      releaseDate: "2025-02-01",
-      genre: "afrohouse",
-      biography: "DJ e produtor especializado em afrohouse. Trabalho há 8 anos criando batidas que fazem a galera dançar.",
-      dataPedido: "2025-01-05",
-      status: "rejeitado",
-      comprovante: null
-    },
-    {
-      artistName: "Ana Ferreira",
-      email: "ana@email.com",
-      phone: "+244 926 333 888",
-      songTitle: "Kizomba Romântica",
-      releaseDate: "2025-01-25",
-      genre: "kizomba",
-      biography: "Artista dedicada à kizomba romântica. Minhas canções falam sobre amor e relacionamentos com melodias suaves.",
-      dataPedido: "2025-01-04",
-      status: "pendente",
-      comprovante: "/uploads/comprovantes/comprovante4.jpg"
-    }
-  ];
+  // Carregar pedidos reais
+  let pedidosList = loadPedidos();
+  
+  // Inicializar se necessário
+  if (pedidosList.length === 0) {
+    pedidosList = initializePedidos();
+  }
 
   // Calcular estatísticas
   const stats = {
-    total: pedidosSimulados.length,
-    pendentes: pedidosSimulados.filter(p => p.status === 'pendente').length,
-    aprovados: pedidosSimulados.filter(p => p.status === 'aprovado').length,
-    rejeitados: pedidosSimulados.filter(p => p.status === 'rejeitado').length
+    total: pedidosList.length,
+    pendentes: pedidosList.filter(p => p.status === 'pendente').length,
+    aprovados: pedidosList.filter(p => p.status === 'aprovado').length,
+    rejeitados: pedidosList.filter(p => p.status === 'rejeitado').length
   };
 
   const dadosPedidos = {
-    lista: pedidosSimulados,
+    lista: pedidosList,
     total: stats.total,
     pendentes: stats.pendentes,
     aprovados: stats.aprovados,
@@ -1615,6 +1630,127 @@ module.exports.adminPedidos = function(req, res) {
     title: 'Pedidos de Divulgação',
     pedidos: dadosPedidos
   });
+};
+
+// Enviar pedido de divulgação
+module.exports.enviarPedidoDivulgacao = function(req, res) {
+  console.log('=== NOVO PEDIDO DE DIVULGAÇÃO ===');
+  console.log('Dados recebidos:', req.body);
+  console.log('Arquivos recebidos:', req.files);
+
+  try {
+    const { artistName, songTitle, releaseDate, phone, email, genre, biography } = req.body;
+
+    // Validar campos obrigatórios
+    if (!artistName || !songTitle || !releaseDate || !phone || !email || !genre || !biography) {
+      return res.status(400).json({
+        success: false,
+        message: 'Todos os campos são obrigatórios'
+      });
+    }
+
+    // Carregar pedidos existentes
+    let pedidos = loadPedidos();
+    
+    // Gerar novo ID
+    const novoId = pedidos.length > 0 ? Math.max(...pedidos.map(p => p.id)) + 1 : 1;
+
+    // Criar novo pedido
+    const novoPedido = {
+      id: novoId,
+      artistName,
+      email,
+      phone,
+      songTitle,
+      releaseDate,
+      genre,
+      biography,
+      dataPedido: new Date().toISOString().split('T')[0],
+      status: 'pendente',
+      comprovante: null, // Será atualizado quando comprovante for enviado
+      coverPhoto: req.files?.coverPhoto?.[0]?.filename || null,
+      musicFile: req.files?.musicFile?.[0]?.filename || null
+    };
+
+    // Adicionar à lista
+    pedidos.push(novoPedido);
+
+    // Salvar no arquivo
+    if (savePedidos(pedidos)) {
+      console.log('Pedido salvo com sucesso:', novoPedido);
+      res.json({
+        success: true,
+        message: 'Pedido enviado com sucesso!',
+        pedidoId: novoId
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Erro ao salvar pedido'
+      });
+    }
+
+  } catch (error) {
+    console.error('Erro ao processar pedido:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erro interno do servidor'
+    });
+  }
+};
+
+// Enviar comprovante de pagamento
+module.exports.enviarComprovantePagamento = function(req, res) {
+  console.log('=== COMPROVANTE DE PAGAMENTO ===');
+  console.log('Dados recebidos:', req.body);
+  console.log('Arquivo recebido:', req.file);
+
+  try {
+    const { pedidoId } = req.body;
+    
+    if (!pedidoId || !req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'ID do pedido e comprovante são obrigatórios'
+      });
+    }
+
+    // Carregar pedidos
+    let pedidos = loadPedidos();
+    
+    // Encontrar pedido
+    const pedidoIndex = pedidos.findIndex(p => p.id == pedidoId);
+    if (pedidoIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        message: 'Pedido não encontrado'
+      });
+    }
+
+    // Atualizar comprovante
+    pedidos[pedidoIndex].comprovante = '/uploads/' + req.file.filename;
+
+    // Salvar
+    if (savePedidos(pedidos)) {
+      console.log('Comprovante atualizado:', pedidos[pedidoIndex]);
+      res.json({
+        success: true,
+        message: 'Comprovante enviado com sucesso!'
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Erro ao salvar comprovante'
+      });
+    }
+
+  } catch (error) {
+    console.error('Erro ao processar comprovante:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erro interno do servidor'
+    });
+  }
 };
 
 

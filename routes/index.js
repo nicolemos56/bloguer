@@ -2,6 +2,19 @@
 const express = require('express');
 const router = express.Router();
 const mainController = require('../controllers/mainController');
+const multer = require('multer');
+
+// Configuração do multer para upload de arquivos
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, file.fieldname + '-' + uniqueSuffix + '.' + file.originalname.split('.').pop())
+  }
+});
+const upload = multer({ storage: storage });
 
 router.get('/', mainController.home);//exemplo de rota para a página inicial
 
@@ -43,5 +56,13 @@ router.get('/user/state', mainController.getUserState);
 
 // API endpoints
 router.get('/api/artistas', mainController.getArtistas);
+
+// API routes para divulgação
+router.post('/api/divulgacao', upload.fields([
+  { name: 'coverPhoto', maxCount: 1 },
+  { name: 'musicFile', maxCount: 1 }
+]), mainController.enviarPedidoDivulgacao);
+
+router.post('/api/comprovante-pagamento', upload.single('paymentReceipt'), mainController.enviarComprovantePagamento);
 
 module.exports = router;

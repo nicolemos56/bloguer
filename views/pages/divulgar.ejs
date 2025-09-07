@@ -135,23 +135,46 @@ document.addEventListener('DOMContentLoaded', function() {
   divulgarForm.addEventListener('submit', function(e) {
     e.preventDefault();
     
-    // Simulate form submission
     const submitButton = divulgarForm.querySelector('button[type="submit"]');
     const originalText = submitButton.textContent;
     
     submitButton.textContent = 'Enviando...';
     submitButton.disabled = true;
     
-    setTimeout(() => {
-      submitButton.textContent = 'Enviado ✓';
-      submitButton.style.backgroundColor = '#28a745';
-      
-      // Show payment modal
-      setTimeout(() => {
-        paymentModal.classList.add('show');
-        document.body.style.overflow = 'hidden'; // Prevent background scroll
-      }, 1000);
-    }, 2000);
+    // Preparar dados do formulário
+    const formData = new FormData(divulgarForm);
+    
+    // Enviar dados para o servidor
+    fetch('/api/divulgacao', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        submitButton.textContent = 'Enviado ✓';
+        submitButton.style.backgroundColor = '#28a745';
+        
+        // Armazenar ID do pedido para usar no comprovante
+        sessionStorage.setItem('pedidoId', data.pedidoId);
+        
+        // Show payment modal
+        setTimeout(() => {
+          paymentModal.classList.add('show');
+          document.body.style.overflow = 'hidden'; // Prevent background scroll
+        }, 1000);
+      } else {
+        alert('Erro: ' + data.message);
+        submitButton.textContent = originalText;
+        submitButton.disabled = false;
+      }
+    })
+    .catch(error => {
+      console.error('Erro:', error);
+      alert('Erro ao enviar formulário. Tente novamente.');
+      submitButton.textContent = originalText;
+      submitButton.disabled = false;
+    });
   });
 
   // Close modal on cancel button
@@ -182,31 +205,63 @@ document.addEventListener('DOMContentLoaded', function() {
     submitButton.textContent = 'Processando...';
     submitButton.disabled = true;
     
-    setTimeout(() => {
-      submitButton.textContent = 'Comprovante Enviado ✓';
-      submitButton.style.backgroundColor = '#28a745';
-      
-      setTimeout(() => {
-        alert('Pedido de divulgação enviado com sucesso! Entraremos em contacto em breve.');
+    // Preparar dados do comprovante
+    const formData = new FormData(paymentForm);
+    const pedidoId = sessionStorage.getItem('pedidoId');
+    
+    if (!pedidoId) {
+      alert('Erro: ID do pedido não encontrado');
+      submitButton.textContent = originalText;
+      submitButton.disabled = false;
+      return;
+    }
+    
+    formData.append('pedidoId', pedidoId);
+    
+    // Enviar comprovante para o servidor
+    fetch('/api/comprovante-pagamento', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        submitButton.textContent = 'Comprovante Enviado ✓';
+        submitButton.style.backgroundColor = '#28a745';
         
-        // Reset forms
-        divulgarForm.reset();
-        paymentForm.reset();
-        paymentModal.classList.remove('show');
-        document.body.style.overflow = ''; // Restore scroll
-        
-        // Reset buttons
-        const divulgarSubmit = divulgarForm.querySelector('button[type="submit"]');
-        divulgarSubmit.textContent = 'Enviar';
-        divulgarSubmit.disabled = false;
-        divulgarSubmit.style.backgroundColor = '';
-        
-        submitButton.textContent = 'Enviar Comprovante';
+        setTimeout(() => {
+          alert('Pedido de divulgação enviado com sucesso! Entraremos em contacto em breve.');
+          
+          // Reset forms
+          divulgarForm.reset();
+          paymentForm.reset();
+          paymentModal.classList.remove('show');
+          document.body.style.overflow = ''; // Restore scroll
+          sessionStorage.removeItem('pedidoId');
+          
+          // Reset buttons
+          const divulgarSubmit = divulgarForm.querySelector('button[type="submit"]');
+          divulgarSubmit.textContent = 'Enviar';
+          divulgarSubmit.disabled = false;
+          divulgarSubmit.style.backgroundColor = '';
+          
+          submitButton.textContent = 'Enviar Comprovante';
+          submitButton.disabled = false;
+          submitButton.style.backgroundColor = '';
+          
+        }, 2000);
+      } else {
+        alert('Erro: ' + data.message);
+        submitButton.textContent = originalText;
         submitButton.disabled = false;
-        submitButton.style.backgroundColor = '';
-        
-      }, 2000);
-    }, 2000);
+      }
+    })
+    .catch(error => {
+      console.error('Erro:', error);
+      alert('Erro ao enviar comprovante. Tente novamente.');
+      submitButton.textContent = originalText;
+      submitButton.disabled = false;
+    });
   });
 });
 </script>

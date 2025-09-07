@@ -589,6 +589,17 @@
   box-shadow: var(--shadow-sm);
 }
 
+.action-btn.delete-btn {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+.action-btn.delete-btn:hover {
+  background: rgba(108, 117, 125, 0.1);
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
 .view-btn {
   color: var(--accent-primary);
 }
