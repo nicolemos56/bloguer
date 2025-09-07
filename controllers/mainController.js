@@ -419,6 +419,7 @@ module.exports = {
             biografia: artista.biografia
           };
         }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
+        totalSeguidores: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('kuduro')).reduce((total, artista) => total + (artista.seguidores || 0), 0),
         musicasPopulares: filtrarMusicasPorCategoria('Kuduro')
       },
       'rap': {
@@ -440,6 +441,7 @@ module.exports = {
             biografia: artista.biografia
           };
         }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
+        totalSeguidores: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('rap')).reduce((total, artista) => total + (artista.seguidores || 0), 0),
         musicasPopulares: filtrarMusicasPorCategoria('Rap')
       },
       'afrohouse': {
@@ -461,6 +463,7 @@ module.exports = {
             biografia: artista.biografia
           };
         }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
+        totalSeguidores: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('afro')).reduce((total, artista) => total + (artista.seguidores || 0), 0),
         musicasPopulares: filtrarMusicasPorCategoria('Afro House')
       },
       'semba': {
@@ -482,6 +485,7 @@ module.exports = {
             biografia: artista.biografia
           };
         }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
+        totalSeguidores: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('semba')).reduce((total, artista) => total + (artista.seguidores || 0), 0),
         musicasPopulares: filtrarMusicasPorCategoria('Semba')
       },
       'kizomba': {
@@ -503,6 +507,7 @@ module.exports = {
             biografia: artista.biografia
           };
         }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
+        totalSeguidores: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('kizomba')).reduce((total, artista) => total + (artista.seguidores || 0), 0),
         musicasPopulares: filtrarMusicasPorCategoria('Kizomba')
       },
       'gheto-zouk': {
@@ -524,6 +529,7 @@ module.exports = {
             biografia: artista.biografia
           };
         }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
+        totalSeguidores: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('zouk')).reduce((total, artista) => total + (artista.seguidores || 0), 0),
         musicasPopulares: filtrarMusicasPorCategoria('Gheto Zouk')
       }
     };
