@@ -51,3 +51,24 @@ Preferred communication style: Simple, everyday language.
 - Node.js runtime environment
 - Static file hosting capability
 - No database requirements in current implementation
+
+# Project Features
+
+## Music Platform Features
+- **Music Discovery**: Browse categories like Kuduro, Rap, Afro House, Semba, Kizomba, and Gheto Zouk
+- **User Authentication**: Registration and login system with session management
+- **Music Interaction**: Play, download, and like functionality for tracks
+- **Artist Profiles**: Featured artists sections with engagement metrics
+
+## Paid Music Promotion System
+- **Artist Submission Form**: Comprehensive form with personal details, music files, and biography
+- **Payment Modal Interface**: Full-screen overlay modal displaying bank details for AOA 15,000 payment
+- **Proof of Payment Upload**: File upload system for payment receipt verification
+- **Admin Management Panel**: Complete workflow for reviewing, approving, and rejecting promotion requests
+- **Status Tracking**: Real-time filtering by pending, approved, and rejected submissions
+
+## Recent Technical Implementations
+- **Modal-based Payment Flow**: Replaced inline payment cards with full-screen overlay modals for better UX
+- **Form State Management**: Prevents data submission until payment proof is uploaded
+- **Responsive Design**: Mobile-optimized interface with proper scroll handling
+- **Animation System**: Smooth modal transitions and user feedback animations
