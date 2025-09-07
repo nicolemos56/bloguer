@@ -524,20 +524,37 @@
   color: var(--text-muted);
 }
 
-/* Payment Card */
-.payment-card {
+/* Payment Modal */
+.payment-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(8px);
+}
+
+.payment-modal.show {
+  display: flex;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.payment-modal-content {
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: var(--space-2xl);
-  margin-top: var(--space-2xl);
-  box-shadow: var(--shadow-lg);
-  display: none;
-}
-
-.payment-card.show {
-  display: block;
-  animation: slideIn 0.3s ease-out;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-2xl);
+  animation: modalSlideUp 0.3s ease-out;
 }
 
 @keyframes slideIn {
@@ -548,6 +565,26 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -608,6 +645,13 @@
   color: var(--text-primary);
   font-weight: var(--font-weight-bold);
   font-family: monospace;
+}
+
+.payment-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: flex-end;
+  margin-top: var(--space-lg);
 }
 
 /* Categories Page */
