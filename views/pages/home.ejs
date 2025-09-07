@@ -78,21 +78,16 @@
           <div class="track-image-container">
             <img src="<%= musica.cover || '/assets/imagens/imagens_artistas/' + (musica.imagem || 'default.jpg') %>" alt="<%= musica.titulo %>">
             <div class="track-overlay">
-              <% if (musica.link) { %>
-                <a href="<%= musica.link %>" class="track-play-btn" title="Reproduzir" target="_blank">
+              <% if (musica.arquivo || musica.link) { %>
+                <button class="track-play-btn" title="Reproduzir" onclick="playMusic('<%= musica.id %>', '<%= musica.titulo %>', '<%= musica.artista %>', '<%= musica.arquivo || musica.link %>', '<%= musica.cover || musica.imagem %>')">
               <% } else { %>
-                <button class="track-play-btn" title="Reproduzir">
+                <button class="track-play-btn" title="Reproduzir" disabled>
               <% } %>
                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z"/>
                 </svg>
-              <% if (musica.link) { %>
-                </a>
-                <a href="/download/<%= musica.id %>" class="track-download-btn" title="Download">
-              <% } else { %>
-                </button>
-                <button class="track-download-btn" title="Download">
-              <% } %>
+              </button>
+              <a href="/download/<%= musica.id %>" class="track-download-btn" title="Download">
                 <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
                 </svg>
@@ -384,21 +379,7 @@ async function tentarSeguirArtista(artist, btnElement) {
   }
 }
 
-// Registrar plays quando clicar em reproduzir
-document.querySelectorAll('.track-play-btn').forEach(btn => {
-  if (btn.tagName === 'A') {
-    btn.addEventListener('click', async function() {
-      const musicId = this.closest('.popular-track-card').querySelector('.like-btn')?.dataset.musicId;
-      if (musicId) {
-        try {
-          await fetch(`/play/${musicId}`, { method: 'POST' });
-        } catch (error) {
-          console.error('Erro ao registrar play:', error);
-        }
-      }
-    });
-  }
-});
+// Os plays são registrados automaticamente pela função playMusic() do modal player
 
 // Funções do modal
 function showLoginModal(message) {
