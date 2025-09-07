@@ -32,6 +32,10 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 0 var(--space-lg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .hero-content {
@@ -41,6 +45,12 @@
   padding: var(--space-3xl) var(--space-2xl);
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-xl);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .hero-title {
