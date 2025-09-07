@@ -253,7 +253,7 @@ module.exports = {
         downloads: musica.downloads || 0
       }));
     
-    // *** NOVO: Calcular artistas em destaque baseado em engajamento real ***
+    // *** Calcular artistas em destaque baseado APENAS em curtidas das músicas ***
     const artistasComScore = artistasGlobal.map(artista => {
       // Calcular total de curtidas nas músicas do artista
       const musicasDoArtista = musicasGlobal.filter(musica => 
@@ -263,32 +263,26 @@ module.exports = {
         total + (musica.likes || 0), 0
       );
       
-      // Calcular total de plays nas músicas do artista  
+      // Calcular total de plays nas músicas do artista (só para exibir)
       const totalPlaysMusicasArtista = musicasDoArtista.reduce((total, musica) => 
         total + (musica.plays || 0), 0
       );
-      
-      // Score = seguidores * 5 + likes nas músicas * 3 + plays nas músicas * 1
-      const score = (artista.seguidores || 0) * 5 + 
-                    totalLikesMusicasArtista * 3 + 
-                    totalPlaysMusicasArtista * 1;
       
       return {
         ...artista,
         totalLikes: totalLikesMusicasArtista,
         totalPlays: totalPlaysMusicasArtista,
-        totalMusicas: musicasDoArtista.length,
-        scoreEngajamento: score
+        totalMusicas: musicasDoArtista.length
       };
     });
     
-    // Ordenar por score de engajamento e pegar os top 4
+    // Ordenar APENAS por número de curtidas das músicas e pegar os top 4
     const artistasEmDestaque = artistasComScore
-      .filter(artista => artista.scoreEngajamento > 0) // Só artistas com algum engajamento
-      .sort((a, b) => b.scoreEngajamento - a.scoreEngajamento)
+      .filter(artista => artista.totalLikes > 0) // Só artistas com curtidas
+      .sort((a, b) => b.totalLikes - a.totalLikes)
       .slice(0, 4);
     
-    // Se não há artistas com engajamento, mostrar os 4 primeiros
+    // Se não há artistas com curtidas, mostrar os 4 primeiros
     const artistasParaExibir = artistasEmDestaque.length > 0 ? 
       artistasEmDestaque : artistasGlobal.slice(0, 4);
     
