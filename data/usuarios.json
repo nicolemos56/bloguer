@@ -36,5 +36,69 @@
       6
     ],
     "musicasCurtidas": []
+  },
+  {
+    "id": 5,
+    "nome": "teste",
+    "email": "nicocohen43@gmail.com",
+    "senha": "6c5e0a9d81440605b7c4ece80b0412120c35506f58aebe923e5ab55f2e31a352",
+    "dataCriacao": "2025-09-07T17:31:34.136Z",
+    "artistasFavoritos": [
+      6
+    ],
+    "musicasCurtidas": [
+      7,
+      9,
+      10,
+      11
+    ]
+  },
+  {
+    "id": 6,
+    "nome": "Manucho",
+    "email": "pegihe6664@bizmud.com",
+    "senha": "d8a7dd0ee25e028b1650e8569e9eff5fe7f830d01246cf9f53dded6e63fd2195",
+    "dataCriacao": "2025-09-07T17:35:35.655Z",
+    "artistasFavoritos": [],
+    "musicasCurtidas": [
+      11,
+      7,
+      9,
+      10,
+      8
+    ]
+  },
+  {
+    "id": 7,
+    "nome": "tflw90",
+    "email": "ngongoyossodedeus@gmail.com",
+    "senha": "ff9d926ff2a40757cb9ebf506544797207e558dd5391c497fe0c798c9fa53442",
+    "dataCriacao": "2025-09-07T17:43:24.842Z",
+    "artistasFavoritos": [],
+    "musicasCurtidas": [
+      8
+    ]
+  },
+  {
+    "id": 8,
+    "nome": "ACADEMIA SABANDE",
+    "email": "manuel.deus@wiconnect.co",
+    "senha": "f429fb41fd59c9d000e25fb4669ffded2d1183a12b2a870349f029c859b248dc",
+    "dataCriacao": "2025-09-07T17:45:08.764Z",
+    "artistasFavoritos": [],
+    "musicasCurtidas": [
+      8
+    ]
+  },
+  {
+    "id": 9,
+    "nome": "ACADEMI",
+    "email": "finowilliam56@gmail.com",
+    "senha": "f429fb41fd59c9d000e25fb4669ffded2d1183a12b2a870349f029c859b248dc",
+    "dataCriacao": "2025-09-07T17:45:54.221Z",
+    "artistasFavoritos": [],
+    "musicasCurtidas": [
+      8
+    ]
   }
 ]
