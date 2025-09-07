@@ -879,7 +879,113 @@ module.exports = {
       success: true,
       message: `Você deixou de seguir a categoria ${categoriaId}.`
     });
+  },
+
+  // Perfil do Artista
+  perfilArtista: (req, res) => {
+    const nomeArtista = decodeURIComponent(req.params.nome);
+    
+    // Buscar artista no array global
+    const artista = artistasGlobal.find(a => 
+      a.nome.toLowerCase() === nomeArtista.toLowerCase()
+    );
+    
+    if (!artista) {
+      return res.status(404).render('pages/404', { 
+        title: 'Artista não encontrado',
+        message: 'O artista solicitado não existe.'
+      });
+    }
+    
+    // Buscar todas as músicas do artista
+    const musicasDoArtista = musicasGlobal.filter(musica => 
+      musica.artista.toLowerCase() === artista.nome.toLowerCase()
+    );
+    
+    // Calcular estatísticas do artista
+    const totalPlays = musicasDoArtista.reduce((total, musica) => total + (musica.plays || 0), 0);
+    const totalLikes = musicasDoArtista.reduce((total, musica) => total + (musica.likes || 0), 0);
+    
+    // Estruturar dados do artista para a view
+    const perfilCompleto = {
+      id: artista.id,
+      nome: artista.nome,
+      categoria: artista.categoria,
+      biografia: artista.biografia,
+      imagem: artista.imagem,
+      seguidores: artista.seguidores || 0,
+      totalMusicas: musicasDoArtista.length,
+      totalPlays: totalPlays,
+      totalLikes: totalLikes,
+      cor: getCorPorCategoria(artista.categoria),
+      musicas: musicasDoArtista.map(musica => ({
+        id: musica.id,
+        titulo: musica.titulo || musica.nome,
+        nome: musica.nome || musica.titulo,
+        artista: musica.artista,
+        categoria: musica.categoria,
+        duracao: musica.duracao || '3:30',
+        album: musica.album,
+        ano: musica.ano,
+        link: musica.link,
+        cover: musica.cover,
+        likes: musica.likes || 0,
+        plays: musica.plays || 0,
+        downloads: musica.downloads || 0
+      }))
+    };
+    
+    console.log(`=== PERFIL DO ARTISTA ===`);
+    console.log(`Artista: ${artista.nome}`);
+    console.log(`Total de músicas: ${musicasDoArtista.length}`);
+    console.log(`Total de plays: ${totalPlays}`);
+    
+    res.render('pages/artista', {
+      title: `${artista.nome} - Perfil`,
+      artista: perfilCompleto
+    });
+  },
+
+  // Reproduzir todas as músicas de um artista
+  playArtist: (req, res) => {
+    const nomeArtista = decodeURIComponent(req.params.artista);
+    
+    console.log(`Reproduzir todas as músicas do artista: ${nomeArtista}`);
+    
+    // Filtrar músicas por artista
+    const musicasDoArtista = musicasGlobal.filter(musica => 
+      musica.artista.toLowerCase() === nomeArtista.toLowerCase()
+    );
+    
+    // Incrementar plays de todas as músicas do artista
+    musicasDoArtista.forEach(musica => {
+      musica.plays = (musica.plays || 0) + 1;
+    });
+    
+    // Salvar mudanças
+    saveMusicas(musicasGlobal);
+    
+    console.log(`${musicasDoArtista.length} músicas reproduzidas do artista ${nomeArtista}`);
+    
+    res.json({
+      success: true,
+      message: `Reproduzindo ${musicasDoArtista.length} músicas de ${nomeArtista}`,
+      musicasCount: musicasDoArtista.length
+    });
   }
 };
+
+// Função auxiliar para obter cor por categoria
+function getCorPorCategoria(categoria) {
+  const cores = {
+    'kuduro': '#ff6b35',
+    'kizomba': '#8b5cf6',
+    'semba': '#ff8900',
+    'afro house': '#0051ff',
+    'gheto zouk': '#10b981'
+  };
+  
+  return cores[categoria.toLowerCase()] || '#8b5cf6';
+}
 
 

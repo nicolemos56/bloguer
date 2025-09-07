@@ -1,18 +1,1 @@
-[
-  {
-    "id": 2,
-    "nome": "Puto Português",
-    "categoria": "Kuduro",
-    "biografia": "Pioneiro do Kuduro em Angola",
-    "imagem": "/assets/imagens/imagens_artistas/puto-portugues.jpg",
-    "seguidores": 890
-  },
-  {
-    "id": 4,
-    "nome": "Yola Semedo",
-    "categoria": "Kizomba",
-    "biografia": "Cantora de Kizomba e Zouk",
-    "imagem": "/assets/imagens/imagens_artistas/yola-semedo.jpg",
-    "seguidores": 750
-  }
-]
+[]

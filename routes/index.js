@@ -11,6 +11,7 @@ router.get('/divulgar', function(req, res) {
 
 router.get('/categorias', mainController.categorias);
 router.get('/categoria/:id', mainController.categoriaIndividual);
+router.get('/artista/:nome', mainController.perfilArtista);
 
 // Admin Routes
 router.get('/admin', mainController.adminDashboard);
@@ -32,5 +33,6 @@ router.post('/follow/:artista', mainController.followArtista);
 router.post('/play-category/:categoria', mainController.playCategoryAll);
 router.post('/follow-category/:categoria', mainController.followCategory);
 router.post('/unfollow-category/:categoria', mainController.unfollowCategory);
+router.post('/play-artist/:artista', mainController.playArtist);
 
 module.exports = router;
