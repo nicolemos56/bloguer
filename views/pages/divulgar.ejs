@@ -10,9 +10,12 @@
         <div class="form-header">
           <h1>Bem-vindo/a</h1>
           <p>Divulgue a tua música hoje e vê-la a tocar</p>
+          <button class="btn btn-primary btn-large" id="startDivulgacao" style="margin: 20px 0;">
+            🎵 Escolher Plano de Divulgação
+          </button>
         </div>
         
-        <form class="submission-form" id="divulgarForm" action="#" method="POST">
+        <form class="submission-form" id="divulgarForm" action="#" method="POST" style="display: none;">
           <div class="form-group">
             <label for="artistName">Nome artístico</label>
             <input type="text" id="artistName" name="artistName" placeholder="Seu nome artístico" required>
@@ -74,6 +77,84 @@
   </div>
 </section>
 
+<!-- Modal de Planos de Divulgação -->
+<div id="planosModal" class="modal-overlay" style="display: none;">
+  <div class="modal-content planos-modal">
+    <div class="modal-header">
+      <h2>Escolha seu Plano de Divulgação</h2>
+      <button class="modal-close" onclick="closePlanosModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="planos-grid">
+        
+        <!-- Plano Básico -->
+        <div class="plano-card" onclick="selectPlano('basico')">
+          <div class="plano-header">
+            <h3>Básico</h3>
+            <div class="plano-price">1.000 Kz</div>
+          </div>
+          <div class="plano-features">
+            <div class="feature">✅ 1 música</div>
+            <div class="feature">📈 Divulgação básica</div>
+            <div class="feature">🎯 Alcance limitado</div>
+          </div>
+          <button class="btn btn-outline">Escolher Básico</button>
+        </div>
+
+        <!-- Plano Normal -->
+        <div class="plano-card" onclick="selectPlano('normal')">
+          <div class="plano-header">
+            <h3>Normal</h3>
+            <div class="plano-price">4.000 Kz</div>
+          </div>
+          <div class="plano-features">
+            <div class="feature">✅ 5 músicas</div>
+            <div class="feature">📈 Divulgação ampliada</div>
+            <div class="feature">🎯 Melhor alcance</div>
+            <div class="feature">📊 Estatísticas básicas</div>
+          </div>
+          <button class="btn btn-outline">Escolher Normal</button>
+        </div>
+
+        <!-- Plano Premium -->
+        <div class="plano-card popular" onclick="selectPlano('premium')">
+          <div class="plano-badge">Mais Popular</div>
+          <div class="plano-header">
+            <h3>Premium</h3>
+            <div class="plano-price">15.000 Kz</div>
+          </div>
+          <div class="plano-features">
+            <div class="feature">✅ EP completo</div>
+            <div class="feature">📈 Engajamentos avançados</div>
+            <div class="feature">👤 Criar perfil de artista</div>
+            <div class="feature">📊 Relatórios detalhados</div>
+            <div class="feature">🎯 Alcance premium</div>
+          </div>
+          <button class="btn btn-primary">Escolher Premium</button>
+        </div>
+
+        <!-- Plano Profissional -->
+        <div class="plano-card" onclick="selectPlano('profissional')">
+          <div class="plano-header">
+            <h3>Profissional</h3>
+            <div class="plano-price">30.000 Kz</div>
+          </div>
+          <div class="plano-features">
+            <div class="feature">✅ Album completo</div>
+            <div class="feature">📈 Engajamentos máximos</div>
+            <div class="feature">👤 Perfil destacado</div>
+            <div class="feature">⭐ Seção destaques</div>
+            <div class="feature">📺 Publicidades/Anúncios</div>
+            <div class="feature">🚀 Máximo alcance</div>
+          </div>
+          <button class="btn btn-primary">Escolher Profissional</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Payment Modal -->
 <div class="payment-modal" id="paymentModal">
   <div class="payment-modal-content">
@@ -103,7 +184,7 @@
         </div>
         <div class="bank-item">
           <span class="bank-label">Valor:</span>
-          <span class="bank-value">15.000 AOA</span>
+          <span class="bank-value" id="planValue">15.000 AOA</span>
         </div>
       </div>
     </div>
@@ -126,11 +207,20 @@
 </div>
 
 <script>
+let selectedPlan = null;
+
 document.addEventListener('DOMContentLoaded', function() {
+  const startButton = document.getElementById('startDivulgacao');
+  const planosModal = document.getElementById('planosModal');
   const divulgarForm = document.getElementById('divulgarForm');
   const paymentModal = document.getElementById('paymentModal');
   const paymentForm = document.getElementById('paymentForm');
   const cancelButton = document.getElementById('cancelPayment');
+
+  // Abrir modal de planos ao clicar em "Escolher Plano"
+  startButton.addEventListener('click', function() {
+    planosModal.style.display = 'flex';
+  });
 
   divulgarForm.addEventListener('submit', function(e) {
     e.preventDefault();
@@ -263,5 +353,42 @@ document.addEventListener('DOMContentLoaded', function() {
       submitButton.disabled = false;
     });
   });
+
+  // Funções para controlar modais de planos
+  window.selectPlano = function(plano) {
+    selectedPlan = plano;
+    
+    // Atualizar valor no modal de pagamento conforme o plano
+    const planValue = document.getElementById('planValue');
+    const planValues = {
+      'basico': '1.000 AOA',
+      'normal': '4.000 AOA', 
+      'premium': '15.000 AOA',
+      'profissional': '30.000 AOA'
+    };
+    
+    planValue.textContent = planValues[plano];
+    
+    // Fechar modal de planos e mostrar formulário
+    planosModal.style.display = 'none';
+    divulgarForm.style.display = 'block';
+    
+    // Scroll para o formulário
+    divulgarForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    
+    alert(`Plano ${plano} selecionado! Preencha o formulário abaixo.`);
+  };
+
+  window.closePlanosModal = function() {
+    planosModal.style.display = 'none';
+  };
+
+  // Fechar modal ao clicar fora
+  planosModal.addEventListener('click', function(e) {
+    if (e.target === planosModal) {
+      closePlanosModal();
+    }
+  });
+
 });
 </script>
