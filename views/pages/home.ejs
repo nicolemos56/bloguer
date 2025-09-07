@@ -43,7 +43,7 @@
             <p class="artist-description"><%= musica.titulo %> <%= musica.ano %></p>
             <div class="artist-actions">
               <% if (musica.arquivo || musica.link) { %>
-                <button class="btn btn-secondary" onclick="openMusicModal('<%= musica.id %>', '<%= musica.titulo %>', '<%= musica.artista %>', '<%= musica.arquivo || musica.link %>', '<%= musica.imagem || musica.cover %>')">Ouvir agora</button>
+                <button class="btn btn-secondary" onclick="playMusic('<%= musica.id %>', '<%= musica.titulo %>', '<%= musica.artista %>', '<%= musica.arquivo || musica.link %>', '<%= musica.imagem || musica.cover %>')">Ouvir agora</button>
                 <a href="/download/<%= musica.id %>" class="btn btn-accent">Baixar agora</a>
               <% } else { %>
                 <button class="btn btn-secondary" disabled>Ouvir agora</button>
@@ -159,52 +159,56 @@
 </section>
 
 
-<!-- Modal de Reprodução de Música -->
-<div id="musicModal" class="modal-overlay" style="display: none;">
-  <div class="modal-content music-modal">
-    <div class="modal-header">
-      <h2 id="musicTitle">Reproduzindo música</h2>
-      <button class="modal-close" onclick="closeMusicModal()">&times;</button>
-    </div>
-    
-    <div class="music-player">
-      <div class="music-info">
-        <img id="musicCover" src="" alt="Cover da música" class="music-cover">
-        <div class="music-details">
-          <h3 id="musicName">Nome da Música</h3>
-          <p id="musicArtist">Artista</p>
-        </div>
+<!-- Player de Música Interno -->
+<div id="musicPlayer" class="music-player hidden">
+  <div class="player-container">
+    <div class="player-info">
+      <div class="player-cover">
+        <img id="playerCoverImg" src="" alt="Capa da música">
       </div>
-      
-      <div class="player-controls">
-        <button id="playPauseBtn" class="control-btn play-btn" onclick="togglePlayPause()">
-          <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-            <path id="playIcon" d="M8 5v14l11-7z"/>
-          </svg>
-        </button>
-        
-        <div class="progress-container">
-          <span id="currentTime">0:00</span>
-          <div class="progress-bar">
-            <div id="progressFill" class="progress-fill"></div>
-            <input type="range" id="progressSlider" class="progress-slider" min="0" max="100" value="0">
-          </div>
-          <span id="totalTime">0:00</span>
-        </div>
-        
-        <div class="volume-container">
-          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-          </svg>
-          <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="50">
-        </div>
+      <div class="player-track-info">
+        <h4 id="playerTrackTitle">Nome da Música</h4>
+        <p id="playerArtistName">Nome do Artista</p>
       </div>
     </div>
     
-    <audio id="audioPlayer" preload="metadata">
-      Seu navegador não suporta o elemento de áudio.
-    </audio>
+    <div class="player-controls">
+      <button id="prevBtn" class="player-btn">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+        </svg>
+      </button>
+      <button id="playPauseBtn" class="player-btn player-btn-main">
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+      </button>
+      <button id="nextBtn" class="player-btn">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="player-progress">
+      <div class="time-display">
+        <span id="currentTime">0:00</span>
+        <div class="progress-bar">
+          <div id="progressFill" class="progress-fill"></div>
+          <input type="range" id="progressSlider" class="progress-slider" min="0" max="100" value="0">
+        </div>
+        <span id="totalTime">0:00</span>
+      </div>
+    </div>
+    
+    <button id="closePlayerBtn" class="close-player-btn">
+      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+      </svg>
+    </button>
   </div>
+  
+  <audio id="audioElement" preload="metadata"></audio>
 </div>
 
 <!-- Modal de Login -->
@@ -419,172 +423,155 @@ document.getElementById('loginModal').addEventListener('click', function(e) {
 });
 
 // === MUSIC PLAYER FUNCTIONALITY ===
-let currentAudio = null;
-let isPlaying = false;
-
-// Abrir modal de música
-function openMusicModal(musicId, title, artist, audioUrl, coverUrl) {
-  // Definir informações da música
-  document.getElementById('musicName').textContent = title;
-  document.getElementById('musicArtist').textContent = artist;
-  document.getElementById('musicTitle').textContent = `Reproduzindo: ${title}`;
-  
-  // Definir cover da música
-  const coverImg = document.getElementById('musicCover');
-  if (coverUrl && coverUrl !== 'undefined') {
-    coverImg.src = coverUrl;
-  } else {
-    coverImg.src = '/assets/imagens/imagens_musicas/default-cover.jpg';
+// Sistema de Player de Música Interno
+class MusicPlayer {
+  constructor() {
+    this.audio = document.getElementById('audioElement');
+    this.player = document.getElementById('musicPlayer');
+    this.playPauseBtn = document.getElementById('playPauseBtn');
+    this.prevBtn = document.getElementById('prevBtn');
+    this.nextBtn = document.getElementById('nextBtn');
+    this.closeBtn = document.getElementById('closePlayerBtn');
+    this.progressSlider = document.getElementById('progressSlider');
+    this.progressFill = document.getElementById('progressFill');
+    this.currentTimeEl = document.getElementById('currentTime');
+    this.totalTimeEl = document.getElementById('totalTime');
+    this.coverImg = document.getElementById('playerCoverImg');
+    this.trackTitle = document.getElementById('playerTrackTitle');
+    this.artistName = document.getElementById('playerArtistName');
+    
+    this.playlist = [];
+    this.currentIndex = 0;
+    this.isPlaying = false;
+    
+    this.setupEventListeners();
   }
   
-  // Configurar player de áudio
-  const audioPlayer = document.getElementById('audioPlayer');
-  audioPlayer.src = audioUrl;
-  
-  // Reset controles
-  document.getElementById('currentTime').textContent = '0:00';
-  document.getElementById('totalTime').textContent = '0:00';
-  document.getElementById('progressFill').style.width = '0%';
-  document.getElementById('progressSlider').value = 0;
-  
-  // Reset botão play
-  const playBtn = document.getElementById('playPauseBtn');
-  const playIcon = document.getElementById('playIcon');
-  playIcon.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
-  playBtn.classList.remove('playing');
-  
-  // Mostrar modal
-  document.getElementById('musicModal').style.display = 'flex';
-  
-  // Configurar eventos do áudio
-  setupAudioEvents();
-  
-  // Registrar play na API
-  fetch(`/play/${musicId}`, { method: 'POST' })
-    .catch(error => console.error('Erro ao registrar play:', error));
-}
-
-// Configurar eventos do player de áudio
-function setupAudioEvents() {
-  const audioPlayer = document.getElementById('audioPlayer');
-  const progressSlider = document.getElementById('progressSlider');
-  const volumeSlider = document.getElementById('volumeSlider');
-  
-  // Quando metadados carregam
-  audioPlayer.addEventListener('loadedmetadata', function() {
-    document.getElementById('totalTime').textContent = formatTime(audioPlayer.duration);
-    progressSlider.max = audioPlayer.duration;
-  });
-  
-  // Atualizar progresso
-  audioPlayer.addEventListener('timeupdate', function() {
-    const currentTime = audioPlayer.currentTime;
-    const duration = audioPlayer.duration;
+  setupEventListeners() {
+    if (!this.audio) return;
     
-    if (!isNaN(duration) && duration > 0) {
-      const progress = (currentTime / duration) * 100;
-      document.getElementById('progressFill').style.width = progress + '%';
-      
-      if (!progressSlider.getAttribute('data-dragging')) {
-        progressSlider.value = currentTime;
+    this.playPauseBtn?.addEventListener('click', () => this.togglePlayPause());
+    this.prevBtn?.addEventListener('click', () => this.previousTrack());
+    this.nextBtn?.addEventListener('click', () => this.nextTrack());
+    this.closeBtn?.addEventListener('click', () => this.closePlayer());
+    
+    this.audio.addEventListener('loadedmetadata', () => {
+      this.totalTimeEl.textContent = this.formatTime(this.audio.duration);
+      this.progressSlider.max = this.audio.duration;
+    });
+    
+    this.audio.addEventListener('timeupdate', () => {
+      if (!this.progressSlider.getAttribute('data-dragging')) {
+        const progress = (this.audio.currentTime / this.audio.duration) * 100;
+        this.progressFill.style.width = progress + '%';
+        this.progressSlider.value = this.audio.currentTime;
       }
+      this.currentTimeEl.textContent = this.formatTime(this.audio.currentTime);
+    });
+    
+    this.progressSlider?.addEventListener('mousedown', () => {
+      this.progressSlider.setAttribute('data-dragging', 'true');
+    });
+    
+    this.progressSlider?.addEventListener('mouseup', () => {
+      this.audio.currentTime = this.progressSlider.value;
+      this.progressSlider.removeAttribute('data-dragging');
+    });
+    
+    this.audio.addEventListener('ended', () => this.nextTrack());
+  }
+  
+  loadPlaylist(tracks, startIndex = 0) {
+    this.playlist = tracks;
+    this.currentIndex = startIndex;
+    this.loadCurrentTrack();
+    this.showPlayer();
+  }
+  
+  loadCurrentTrack() {
+    if (this.playlist.length === 0) return;
+    
+    const track = this.playlist[this.currentIndex];
+    this.audio.src = track.arquivo || track.link;
+    this.trackTitle.textContent = track.nome || track.titulo;
+    this.artistName.textContent = track.artista;
+    this.coverImg.src = track.imagem || track.cover || '/assets/imagens/imagens_musicas/default-cover.jpg';
+    
+    // Reset progress
+    this.progressFill.style.width = '0%';
+    this.currentTimeEl.textContent = '0:00';
+    
+    // Auto play
+    if (this.isPlaying) {
+      this.audio.play();
     }
     
-    document.getElementById('currentTime').textContent = formatTime(currentTime);
-  });
-  
-  // Controle de progresso
-  progressSlider.addEventListener('mousedown', function() {
-    this.setAttribute('data-dragging', 'true');
-  });
-  
-  progressSlider.addEventListener('mouseup', function() {
-    audioPlayer.currentTime = this.value;
-    this.removeAttribute('data-dragging');
-  });
-  
-  progressSlider.addEventListener('input', function() {
-    if (this.getAttribute('data-dragging')) {
-      const progress = (this.value / audioPlayer.duration) * 100;
-      document.getElementById('progressFill').style.width = progress + '%';
-      document.getElementById('currentTime').textContent = formatTime(this.value);
-    }
-  });
-  
-  // Controle de volume
-  volumeSlider.addEventListener('input', function() {
-    audioPlayer.volume = this.value / 100;
-  });
-  
-  // Definir volume inicial
-  audioPlayer.volume = volumeSlider.value / 100;
-}
-
-// Toggle play/pause
-function togglePlayPause() {
-  const audioPlayer = document.getElementById('audioPlayer');
-  const playBtn = document.getElementById('playPauseBtn');
-  const playIcon = document.getElementById('playIcon');
-  
-  if (audioPlayer.paused) {
-    audioPlayer.play();
-    playIcon.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z'); // Pause icon
-    playBtn.classList.add('playing');
-    isPlaying = true;
-  } else {
-    audioPlayer.pause();
-    playIcon.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
-    playBtn.classList.remove('playing');
-    isPlaying = false;
+    // Registrar play
+    fetch(`/play/${track.id}`, { method: 'POST' })
+      .catch(error => console.error('Erro ao registrar play:', error));
   }
-}
-
-// Fechar modal de música
-function closeMusicModal() {
-  const audioPlayer = document.getElementById('audioPlayer');
   
-  // Parar reprodução
-  audioPlayer.pause();
-  audioPlayer.currentTime = 0;
-  
-  // Reset estado
-  isPlaying = false;
-  const playBtn = document.getElementById('playPauseBtn');
-  const playIcon = document.getElementById('playIcon');
-  playIcon.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
-  playBtn.classList.remove('playing');
-  
-  // Esconder modal
-  document.getElementById('musicModal').style.display = 'none';
-}
-
-// Formatar tempo em mm:ss
-function formatTime(seconds) {
-  if (isNaN(seconds) || seconds < 0) return '0:00';
-  
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = Math.floor(seconds % 60);
-  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-}
-
-// Fechar modal clicando fora
-document.getElementById('musicModal').addEventListener('click', function(e) {
-  if (e.target === this) {
-    closeMusicModal();
-  }
-});
-
-// Teclas de atalho
-document.addEventListener('keydown', function(e) {
-  const musicModal = document.getElementById('musicModal');
-  
-  if (musicModal.style.display === 'flex') {
-    if (e.code === 'Space') {
-      e.preventDefault();
-      togglePlayPause();
-    } else if (e.code === 'Escape') {
-      closeMusicModal();
+  togglePlayPause() {
+    if (this.audio.paused) {
+      this.audio.play();
+      this.playPauseBtn.innerHTML = '<svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+      this.isPlaying = true;
+    } else {
+      this.audio.pause();
+      this.playPauseBtn.innerHTML = '<svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+      this.isPlaying = false;
     }
   }
-});
+  
+  previousTrack() {
+    this.currentIndex = (this.currentIndex - 1 + this.playlist.length) % this.playlist.length;
+    this.loadCurrentTrack();
+    if (this.isPlaying) this.audio.play();
+  }
+  
+  nextTrack() {
+    this.currentIndex = (this.currentIndex + 1) % this.playlist.length;
+    this.loadCurrentTrack();
+    if (this.isPlaying) this.audio.play();
+  }
+  
+  showPlayer() {
+    this.player.classList.remove('hidden');
+    document.body.classList.add('player-active');
+  }
+  
+  closePlayer() {
+    this.audio.pause();
+    this.player.classList.add('hidden');
+    document.body.classList.remove('player-active');
+    this.isPlaying = false;
+    this.playPauseBtn.innerHTML = '<svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+  }
+  
+  formatTime(seconds) {
+    if (isNaN(seconds) || seconds < 0) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  }
+}
+
+// Inicializar o player
+const musicPlayer = new MusicPlayer();
+
+// Função para tocar uma música individual
+function playMusic(id, titulo, artista, arquivo, cover) {
+  const track = {
+    id: id,
+    titulo: titulo,
+    nome: titulo,
+    artista: artista,
+    arquivo: arquivo,
+    link: arquivo,
+    cover: cover,
+    imagem: cover
+  };
+  
+  musicPlayer.loadPlaylist([track], 0);
+}
 </script>
