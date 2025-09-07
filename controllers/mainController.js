@@ -3,6 +3,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 // Arquivo para persistir dados
 const dataDir = path.join(__dirname, '..', 'data');
@@ -1041,5 +1042,150 @@ function getCorPorCategoria(categoria) {
   
   return cores[categoria.toLowerCase()] || '#8b5cf6';
 }
+
+// ====== SISTEMA DE AUTENTICAÇÃO ======
+
+// Arquivo para persistir usuários
+const usuariosFile = path.join(dataDir, 'usuarios.json');
+
+// Sistema de sessões em memória
+let sessoes = new Map();
+
+// Função para hashear senhas
+function hashPassword(password) {
+  return crypto.createHash('sha256').update(password + 'vib_music_salt').digest('hex');
+}
+
+// Função para carregar usuários do arquivo
+function loadUsuarios() {
+  ensureDataDir();
+  try {
+    if (fs.existsSync(usuariosFile)) {
+      const data = fs.readFileSync(usuariosFile, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('Erro ao carregar usuários:', error);
+  }
+  return [];
+}
+
+// Função para salvar usuários no arquivo
+function saveUsuarios(usuarios) {
+  ensureDataDir();
+  try {
+    fs.writeFileSync(usuariosFile, JSON.stringify(usuarios, null, 2));
+    return true;
+  } catch (error) {
+    console.error('Erro ao salvar usuários:', error);
+    return false;
+  }
+}
+
+// Carregar usuários ou criar usuários padrão
+let usuariosGlobal = loadUsuarios();
+
+// Se não há usuários, criar alguns usuários exemplo
+if (usuariosGlobal.length === 0) {
+  usuariosGlobal = [
+    {
+      id: 1,
+      nome: 'João Silva',
+      email: 'joao@vib.com',
+      senha: hashPassword('123456'),
+      dataCriacao: new Date().toISOString(),
+      artistasFavoritos: [],
+      musicasCurtidas: []
+    },
+    {
+      id: 2,
+      nome: 'Maria Santos',
+      email: 'maria@vib.com',
+      senha: hashPassword('senha123'),
+      dataCriacao: new Date().toISOString(),
+      artistasFavoritos: [],
+      musicasCurtidas: []
+    },
+    {
+      id: 3,
+      nome: 'Admin VIB',
+      email: 'admin@vib.com',
+      senha: hashPassword('admin123'),
+      dataCriacao: new Date().toISOString(),
+      artistasFavoritos: [],
+      musicasCurtidas: []
+    }
+  ];
+  saveUsuarios(usuariosGlobal);
+  console.log('=== USUÁRIOS CRIADOS ===');
+  console.log('joao@vib.com - senha: 123456');
+  console.log('maria@vib.com - senha: senha123');
+  console.log('admin@vib.com - senha: admin123');
+}
+
+// Função para gerar token de sessão
+function gerarTokenSessao() {
+  return crypto.randomBytes(32).toString('hex');
+}
+
+// Função de login
+module.exports.loginUser = function(req, res) {
+  console.log('=== TENTATIVA DE LOGIN ===');
+  
+  const { email, password } = req.body;
+  
+  if (!email || !password) {
+    return res.status(400).json({
+      success: false,
+      message: 'Email e senha são obrigatórios'
+    });
+  }
+  
+  console.log('Email recebido:', email);
+  
+  // Buscar usuário por email
+  const usuario = usuariosGlobal.find(u => u.email.toLowerCase() === email.toLowerCase());
+  
+  if (!usuario) {
+    console.log('Usuário não encontrado');
+    return res.status(401).json({
+      success: false,
+      message: 'Email ou senha incorretos'
+    });
+  }
+  
+  // Verificar senha
+  const senhaHash = hashPassword(password);
+  if (usuario.senha !== senhaHash) {
+    console.log('Senha incorreta');
+    return res.status(401).json({
+      success: false,
+      message: 'Email ou senha incorretos'
+    });
+  }
+  
+  // Criar sessão
+  const tokenSessao = gerarTokenSessao();
+  sessoes.set(tokenSessao, {
+    usuarioId: usuario.id,
+    email: usuario.email,
+    nome: usuario.nome,
+    loginTime: new Date().toISOString()
+  });
+  
+  console.log('Login realizado com sucesso:', usuario.email);
+  
+  // Retornar sucesso com dados do usuário
+  res.json({
+    success: true,
+    message: 'Login realizado com sucesso!',
+    usuario: {
+      id: usuario.id,
+      nome: usuario.nome,
+      email: usuario.email
+    },
+    token: tokenSessao
+  });
+};
 
 

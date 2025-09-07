@@ -35,4 +35,7 @@ router.post('/follow-category/:categoria', mainController.followCategory);
 router.post('/unfollow-category/:categoria', mainController.unfollowCategory);
 router.post('/play-artist/:artista', mainController.playArtist);
 
+// Rota de autenticação
+router.post('/login', mainController.loginUser);
+
 module.exports = router;
