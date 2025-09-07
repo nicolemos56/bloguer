@@ -158,64 +158,6 @@
   </div>
 </section>
 
-<!-- Seção de Artistas em Destaque -->
-<section class="featured-artists-section">
-  <div class="container">
-    <div class="section-header">
-      <h2 class="section-title">Artistas em Destaque</h2>
-      <p class="section-subtitle">Conheça os principais artistas do momento baseado no engajamento dos fãs</p>
-    </div>
-    
-    <div class="artists-grid">
-      <% if (artistasEmDestaque && artistasEmDestaque.length > 0) { %>
-        <% artistasEmDestaque.forEach((artista) => { %>
-          <article class="artist-card">
-            <div class="artist-card-image">
-              <a href="/artista/<%= encodeURIComponent(artista.nome) %>">
-                <img src="<%= artista.imagem %>" alt="<%= artista.nome %>" loading="lazy">
-              </a>
-            </div>
-            
-            <div class="artist-card-content">
-              <div class="artist-info">
-                <h3 class="artist-name">
-                  <a href="/artista/<%= encodeURIComponent(artista.nome) %>"><%= artista.nome %></a>
-                </h3>
-                <p class="artist-category"><%= artista.categoria %></p>
-                
-                <div class="artist-stats">
-                  <div class="stat">
-                    <span class="stat-number"><%= artista.seguidores || 0 %></span>
-                    <span class="stat-label">Seguidores</span>
-                  </div>
-                  <div class="stat">
-                    <span class="stat-number"><%= artista.totalLikes || 0 %></span>
-                    <span class="stat-label">Curtidas</span>
-                  </div>
-                  <div class="stat">
-                    <span class="stat-number"><%= artista.totalMusicas || 0 %></span>
-                    <span class="stat-label">Músicas</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="artist-actions">
-                <button class="btn btn-primary follow-btn" data-artist="<%= artista.nome %>">
-                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                  </svg>
-                  Seguir
-                </button>
-              </div>
-            </div>
-          </article>
-        <% }) %>
-      <% } else { %>
-        <p class="no-content">Nenhum artista em destaque no momento.</p>
-      <% } %>
-    </div>
-  </div>
-</section>
 
 <!-- Modal de Login -->
 <div id="loginModal" class="modal-overlay" style="display: none;">
