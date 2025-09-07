@@ -25,6 +25,23 @@
         </li>
       </ul>
 
+      <!-- Auth Section -->
+      <div class="navbar-auth">
+        <% if (isLoggedIn) { %>
+          <div class="user-menu">
+            <span class="user-greeting">Olá, <%= user.nome.split(' ')[0] %>!</span>
+            <form action="/auth/logout" method="POST" style="display: inline;">
+              <button type="submit" class="auth-btn logout-btn">Sair</button>
+            </form>
+          </div>
+        <% } else { %>
+          <div class="auth-buttons">
+            <a href="/auth/login" class="auth-btn login-btn">Entrar</a>
+            <a href="/auth/register" class="auth-btn register-btn">Criar Conta</a>
+          </div>
+        <% } %>
+      </div>
+
       <!-- Mobile Menu Button -->
       <button class="navbar-toggle" id="navbarToggle" aria-label="Toggle navigation">
         <span class="toggle-bar"></span>

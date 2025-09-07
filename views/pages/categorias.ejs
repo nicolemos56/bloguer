@@ -98,7 +98,11 @@
             </div>
           </a>
           <div class="artist-actions">
-            <button class="btn btn-secondary btn-small follow-btn" data-artist="<%= artista.nome %>">Seguir</button>
+            <% if (isLoggedIn) { %>
+              <button class="btn btn-secondary btn-small follow-btn" data-artist="<%= artista.nome %>">Seguir</button>
+            <% } else { %>
+              <button class="btn btn-secondary btn-small follow-btn-login" data-artist="<%= artista.nome %>">Seguir</button>
+            <% } %>
             <a href="/artista/<%= encodeURIComponent(artista.nome) %>" class="btn btn-ghost btn-small">Ver perfil</a>
           </div>
         </article>
