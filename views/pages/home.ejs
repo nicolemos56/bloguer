@@ -34,7 +34,7 @@
       const musicasRec = (typeof musicasRecentes !== 'undefined') ? musicasRecentes : []; %>
       
       <% musicasRec.forEach(musica => { %>
-        <article class="artist-card">
+        <article class="artist-card" onclick="window.location.href='/musica/<%= musica.id %>'">
           <div class="artist-image">
             <img src="<%= musica.imagem || '/assets/imagens/imagens_musicas/default.jpg' %>" alt="<%= musica.titulo %>">
           </div>
@@ -43,11 +43,11 @@
             <p class="artist-description"><%= musica.titulo %> <%= musica.ano %></p>
             <div class="artist-actions">
               <% if (musica.arquivo || musica.link) { %>
-                <button class="btn btn-secondary" onclick="playMusic('<%= musica.id %>', '<%= musica.titulo %>', '<%= musica.artista %>', '<%= musica.arquivo || musica.link %>', '<%= musica.imagem || musica.cover %>')">Ouvir agora</button>
-                <a href="/download/<%= musica.id %>" class="btn btn-accent">Baixar agora</a>
+                <button class="btn btn-secondary" onclick="event.stopPropagation(); playMusic('<%= musica.id %>', '<%= musica.titulo %>', '<%= musica.artista %>', '<%= musica.arquivo || musica.link %>', '<%= musica.imagem || musica.cover %>')">Ouvir agora</button>
+                <a href="/download/<%= musica.id %>" class="btn btn-accent" onclick="event.stopPropagation();">Baixar agora</a>
               <% } else { %>
-                <button class="btn btn-secondary" disabled>Ouvir agora</button>
-                <button class="btn btn-accent" disabled>Baixar agora</button>
+                <button class="btn btn-secondary" disabled onclick="event.stopPropagation();">Ouvir agora</button>
+                <button class="btn btn-accent" disabled onclick="event.stopPropagation();">Baixar agora</button>
               <% } %>
             </div>
           </div>
@@ -70,7 +70,7 @@
       const musicasPopulares = (typeof musicasEmDestaque !== 'undefined') ? musicasEmDestaque : []; %>
       
       <% musicasPopulares.forEach((musica, index) => { %>
-        <article class="popular-track-card" data-rank="<%= index + 1 %>">
+        <article class="popular-track-card" data-rank="<%= index + 1 %>" onclick="window.location.href='/musica/<%= musica.id %>'">
           <div class="track-rank">
             <span class="rank-number">#<%= index + 1 %></span>
           </div>
@@ -79,15 +79,15 @@
             <img src="<%= musica.cover || '/assets/imagens/imagens_artistas/' + (musica.imagem || 'default.jpg') %>" alt="<%= musica.titulo %>">
             <div class="track-overlay">
               <% if (musica.arquivo || musica.link) { %>
-                <button class="track-play-btn" title="Reproduzir" onclick="playMusic('<%= musica.id %>', '<%= musica.titulo %>', '<%= musica.artista %>', '<%= musica.arquivo || musica.link %>', '<%= musica.cover || musica.imagem %>')">
+                <button class="track-play-btn" title="Reproduzir" onclick="event.stopPropagation(); playMusic('<%= musica.id %>', '<%= musica.titulo %>', '<%= musica.artista %>', '<%= musica.arquivo || musica.link %>', '<%= musica.cover || musica.imagem %>')">
               <% } else { %>
-                <button class="track-play-btn" title="Reproduzir" disabled>
+                <button class="track-play-btn" title="Reproduzir" disabled onclick="event.stopPropagation();">
               <% } %>
                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z"/>
                 </svg>
               </button>
-              <a href="/download/<%= musica.id %>" class="track-download-btn" title="Download">
+              <a href="/download/<%= musica.id %>" class="track-download-btn" title="Download" onclick="event.stopPropagation();">
                 <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
                 </svg>
@@ -124,18 +124,18 @@
               </div>
               
               <div class="track-actions">
-                <button class="action-btn-small like-btn" data-music-id="<%= musica.id %>" title="Curtir música">
+                <button class="action-btn-small like-btn" data-music-id="<%= musica.id %>" title="Curtir música" onclick="event.stopPropagation();">
                   <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                   </svg>
                   <span class="like-count"><%= musica.likes || 0 %></span>
                 </button>
-                <button class="action-btn-small" title="Compartilhar">
+                <button class="action-btn-small" title="Compartilhar" onclick="event.stopPropagation();">
                   <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.50-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
                   </svg>
                 </button>
-                <button class="action-btn-small" title="Mais opções">
+                <button class="action-btn-small" title="Mais opções" onclick="event.stopPropagation();">
                   <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
                   </svg>
