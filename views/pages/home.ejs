@@ -23,40 +23,25 @@
 </section>
 
 <!-- Recent Music Section -->
-<section class="recent-music-section">
+<section class="artists-section">
   <div class="container">
     <div class="section-header">
       <h2 class="section-title">Músicas recentes</h2>
     </div>
     
-    <div class="recent-music-grid">
+    <div class="artists-grid">
       <% // Usando dados de músicas recentes do controller
       const musicasRec = (typeof musicasRecentes !== 'undefined') ? musicasRecentes : []; %>
       
       <% musicasRec.forEach(musica => { %>
-        <article class="recent-music-card">
-          <div class="music-image">
+        <article class="artist-card">
+          <div class="artist-image">
             <img src="<%= musica.imagem || '/assets/imagens/imagens_musicas/default.jpg' %>" alt="<%= musica.titulo %>">
-            <div class="music-overlay">
-              <% if (musica.arquivo) { %>
-                <a href="<%= musica.arquivo %>" class="music-play-btn" title="Reproduzir" target="_blank">
-              <% } else { %>
-                <button class="music-play-btn" title="Reproduzir">
-              <% } %>
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-              <% if (musica.arquivo) { %>
-                </a>
-              <% } else { %>
-                </button>
-              <% } %>
-            </div>
           </div>
-          <div class="music-info">
-            <h3 class="music-artist"><%= musica.artista %></h3>
-            <p class="music-title-year"><%= musica.titulo %> <%= musica.ano %></p>
-            <div class="music-actions">
+          <div class="artist-info">
+            <h3 class="artist-name"><%= musica.artista %></h3>
+            <p class="artist-description"><%= musica.titulo %> <%= musica.ano %></p>
+            <div class="artist-actions">
               <% if (musica.arquivo) { %>
                 <a href="<%= musica.arquivo %>" class="btn btn-secondary" target="_blank">Ouvir agora</a>
                 <a href="/download/<%= musica.id %>" class="btn btn-accent">Baixar agora</a>
