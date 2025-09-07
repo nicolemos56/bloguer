@@ -14,5 +14,13 @@
     "biografia": "Nascido a 05 de Maio de 1986, na cidade de Lucapa, em Lunda-Norte. Dji ganhou o gosto pela música hip hop nos anos 1998, quando tinha 12 anos.",
     "imagem": "/uploads/artistImage-1757260043019-525201379.jpg",
     "seguidores": 2
+  },
+  {
+    "id": 7,
+    "nome": "Wander",
+    "categoria": "Rap",
+    "biografia": "Wander é um jovem talentoso, menino de Malanje...",
+    "imagem": "/uploads/artistImage-1757271712393-656582528.jpg",
+    "seguidores": 1
   }
 ]
