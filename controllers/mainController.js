@@ -1858,4 +1858,50 @@ function adicionarMusicaAoSistema(pedido) {
   }
 }
 
+// Página de detalhes da música
+module.exports.musicaDetalhes = function(req, res) {
+  try {
+    const musicaId = parseInt(req.params.id);
+    
+    // Buscar música pelo ID
+    const musica = musicasGlobal.find(m => m.id === musicaId);
+    
+    if (!musica) {
+      return res.status(404).render('error', { 
+        title: 'Música não encontrada',
+        message: 'A música solicitada não foi encontrada.'
+      });
+    }
+    
+    // Buscar outras músicas do mesmo artista
+    const musicasDoArtista = musicasGlobal
+      .filter(m => m.artista === musica.artista && m.id !== musicaId)
+      .slice(0, 6); // Limitar a 6 músicas
+    
+    // Buscar músicas relacionadas (mesmo gênero)
+    const musicasRelacionadas = musicasGlobal
+      .filter(m => m.categoria === musica.categoria && m.id !== musicaId)
+      .slice(0, 8); // Limitar a 8 músicas
+    
+    console.log(`=== DETALHES DA MÚSICA ===`);
+    console.log(`Música: "${musica.nome}" por ${musica.artista}`);
+    console.log(`Categoria: ${musica.categoria} | Plays: ${musica.plays} | Likes: ${musica.likes}`);
+    
+    res.render('pages/musica-detalhes', {
+      title: `${musica.nome} - ${musica.artista}`,
+      musica: musica,
+      musicasDoArtista: musicasDoArtista,
+      musicasRelacionadas: musicasRelacionadas,
+      totalArtistas: artistasGlobal.length,
+      totalMusicas: musicasGlobal.length
+    });
+    
+  } catch (error) {
+    console.error('Erro ao carregar detalhes da música:', error);
+    res.status(500).render('error', { 
+      title: 'Erro interno',
+      message: 'Ocorreu um erro ao carregar os detalhes da música.'
+    });
+  }
+};
 

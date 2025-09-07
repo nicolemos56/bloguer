@@ -68,4 +68,7 @@ router.post('/api/comprovante-pagamento', upload.single('paymentReceipt'), mainC
 // Endpoint para aprovar/rejeitar pedidos
 router.post('/api/pedido/status', upload.none(), mainController.alterarStatusPedido);
 
+// Rota para página de detalhes da música
+router.get('/musica/:id', mainController.musicaDetalhes);
+
 module.exports = router;
