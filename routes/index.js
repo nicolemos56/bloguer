@@ -35,17 +35,4 @@ router.post('/follow-category/:categoria', mainController.followCategory);
 router.post('/unfollow-category/:categoria', mainController.unfollowCategory);
 router.post('/play-artist/:artista', mainController.playArtist);
 
-// ==================== ROTAS DE AUTENTICAÇÃO ====================
-// Páginas de autenticação
-router.get('/auth/login', mainController.loginPage);
-router.get('/auth/register', mainController.registerPage);
-
-// Processamento de autenticação
-router.post('/auth/login', mainController.processLogin);
-router.post('/auth/register', mainController.processRegister);
-router.post('/auth/logout', mainController.logout);
-
-// Funcionalidades que requerem login
-router.post('/api/follow-artist', mainController.followArtist);
-
 module.exports = router;

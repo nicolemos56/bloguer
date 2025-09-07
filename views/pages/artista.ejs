@@ -892,38 +892,24 @@ document.getElementById('followArtistBtn')?.addEventListener('click', async func
   const isFollowing = this.classList.contains('following');
   
   try {
-    const response = await fetch('/api/follow-artist', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ artistaNome: artist })
-    });
+    const action = isFollowing ? 'unfollow' : 'follow';
+    const response = await fetch(`/${action}/${encodeURIComponent(artist)}`, { method: 'POST' });
     const data = await response.json();
     
     if (data.needLogin) {
-      if (confirm(data.message + '\n\nDeseja fazer login agora?')) {
-        window.location.href = '/auth/login?redirect=' + encodeURIComponent(window.location.pathname);
-      }
+      alert(data.message);
     } else if (data.success) {
-      if (data.following) {
-        btnText.textContent = 'Seguindo';
-        this.classList.add('following');
-        this.classList.remove('btn-secondary');
-        this.classList.add('btn-accent');
-      } else {
+      if (isFollowing) {
         btnText.textContent = 'Seguir';
         this.classList.remove('following');
         this.classList.remove('btn-accent');
         this.classList.add('btn-secondary');
+      } else {
+        btnText.textContent = 'Seguindo';
+        this.classList.add('following');
+        this.classList.remove('btn-secondary');
+        this.classList.add('btn-accent');
       }
-      
-      // Mostrar mensagem de feedback temporária
-      const originalText = btnText.textContent;
-      btnText.textContent = data.message;
-      setTimeout(() => {
-        btnText.textContent = originalText;
-      }, 2000);
     } else {
       alert(data.message || 'Erro ao processar solicitação');
     }
@@ -943,9 +929,7 @@ document.querySelectorAll('.like-btn').forEach(btn => {
       const data = await response.json();
       
       if (data.needLogin) {
-        if (confirm('Precisa fazer login para curtir músicas!\n\nDeseja fazer login agora?')) {
-          window.location.href = '/auth/login?redirect=' + encodeURIComponent(window.location.pathname);
-        }
+        alert(data.message);
       } else if (data.success) {
         const likeCount = this.querySelector('.like-count');
         likeCount.textContent = parseInt(likeCount.textContent) + 1;
