@@ -1538,8 +1538,6 @@ module.exports.registerUser = function(req, res) {
 };
 
 // Sistema de armazenamento de pedidos
-const fs = require('fs');
-const path = require('path');
 
 const pedidosFile = path.join(__dirname, '../data/pedidos.json');
 

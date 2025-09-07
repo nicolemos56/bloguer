@@ -1,0 +1,15 @@
+[
+  {
+    "id": 1,
+    "artistName": "João Silva",
+    "email": "joao@email.com",
+    "phone": "+244 924 123 456",
+    "songTitle": "Minha Nova Música",
+    "releaseDate": "2025-01-15",
+    "genre": "kuduro",
+    "biography": "Sou um artista angolano apaixonado pela música desde criança. Influenciado pelos grandes nomes do kuduro, busco trazer algo novo ao cenário musical.",
+    "dataPedido": "2025-01-07",
+    "status": "pendente",
+    "comprovante": "/uploads/comprovantes/comprovante1.jpg"
+  }
+]
