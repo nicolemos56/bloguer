@@ -201,7 +201,7 @@ module.exports = {
         .slice(0, 4);
     }
     
-    // Músicas recentes (4 cards) - as 4 músicas mais recentes do sistema
+    // Músicas recentes (6 cards em 2x3) - as 6 músicas mais recentes do sistema
     let musicasRecentes = [...musicasGlobal]
       .sort((a, b) => {
         // Ordenar por data de adição ou ID se não houver data
@@ -210,7 +210,7 @@ module.exports = {
         }
         return b.id - a.id;
       })
-      .slice(0, 4)
+      .slice(0, 6)
       .map(musica => ({
         id: musica.id,
         titulo: musica.nome || musica.titulo,
