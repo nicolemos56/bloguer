@@ -540,16 +540,34 @@ module.exports = {
     const artistaId = parseInt(req.params.id);
     const index = artistasGlobal.findIndex(a => a.id === artistaId);
     
+    console.log('=== TENTANDO REMOVER ARTISTA ===');
+    console.log('ID do artista:', artistaId);
+    console.log('Índice encontrado:', index);
+    console.log('Total antes da remoção:', artistasGlobal.length);
+    
     if (index === -1) {
+      console.log('Artista não encontrado!');
       return res.status(404).json({ 
         success: false, 
         message: 'Artista não encontrado!' 
       });
     }
     
-    artistasGlobal.splice(index, 1);
-    console.log('Artista removido:', artistaId);
-    res.json({ success: true, message: 'Artista removido com sucesso!' });
+    // Remover do array
+    const artistaRemovido = artistasGlobal.splice(index, 1)[0];
+    
+    // Salvar no arquivo
+    const saved = saveArtistas(artistasGlobal);
+    
+    console.log('Artista removido:', artistaRemovido.nome);
+    console.log('Total após remoção:', artistasGlobal.length);
+    console.log('Salvo no arquivo:', saved);
+    
+    if (saved) {
+      res.json({ success: true, message: 'Artista removido com sucesso!' });
+    } else {
+      res.status(500).json({ success: false, message: 'Erro ao salvar mudanças!' });
+    }
   },
   
   adminCategorias: (req, res) => {
@@ -658,11 +676,6 @@ module.exports = {
     }
   },
   
-  deleteArtista: (req, res) => {
-    const artistaId = req.params.id;
-    console.log('Artista removido:', artistaId);
-    res.json({ success: true, message: 'Artista removido com sucesso!' });
-  },
 
   downloadMusica: (req, res) => {
     const musicaId = parseInt(req.params.id);

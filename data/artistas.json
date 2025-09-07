@@ -1,13 +1,5 @@
 [
   {
-    "id": 1,
-    "nome": "Anselmo Ralph",
-    "categoria": "Kizomba",
-    "biografia": "Cantor angolano de Kizomba e R&B",
-    "imagem": "/assets/imagens/imagens_artistas/anselmo-ralph.jpg",
-    "seguidores": 1250
-  },
-  {
     "id": 2,
     "nome": "Puto Português",
     "categoria": "Kuduro",
