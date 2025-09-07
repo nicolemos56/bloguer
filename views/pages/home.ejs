@@ -22,28 +22,48 @@
   </div>
 </section>
 
-<!-- Artists Section -->
-<section class="artists-section">
+<!-- Recent Music Section -->
+<section class="recent-music-section">
   <div class="container">
     <div class="section-header">
-      <h2 class="section-title">Artistas do mês</h2>
+      <h2 class="section-title">Músicas recentes</h2>
     </div>
     
-    <div class="artists-grid">
-      <% // Usando APENAS dados dinâmicos do controller - SEM fallback estático
-      const artistas = (typeof artistasDoMes !== 'undefined') ? artistasDoMes : []; %>
+    <div class="recent-music-grid">
+      <% // Usando dados de músicas recentes do controller
+      const musicasRec = (typeof musicasRecentes !== 'undefined') ? musicasRecentes : []; %>
       
-      <% artistas.forEach(artista => { %>
-        <article class="artist-card">
-          <div class="artist-image">
-            <img src="<%= artista.imagem || '/assets/imagens/imagens_artistas/default.jpg' %>" alt="<%= artista.nome %>">
+      <% musicasRec.forEach(musica => { %>
+        <article class="recent-music-card">
+          <div class="music-image">
+            <img src="<%= musica.imagem || '/assets/imagens/imagens_musicas/default.jpg' %>" alt="<%= musica.titulo %>">
+            <div class="music-overlay">
+              <% if (musica.arquivo) { %>
+                <a href="<%= musica.arquivo %>" class="music-play-btn" title="Reproduzir" target="_blank">
+              <% } else { %>
+                <button class="music-play-btn" title="Reproduzir">
+              <% } %>
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              <% if (musica.arquivo) { %>
+                </a>
+              <% } else { %>
+                </button>
+              <% } %>
+            </div>
           </div>
-          <div class="artist-info">
-            <h3 class="artist-name"><%= artista.nome %></h3>
-            <p class="artist-description"><%= artista.musicas %> músicas • <%= artista.categoria %></p>
-            <div class="artist-actions">
-              <button class="btn btn-secondary play-artist-btn" data-artist="<%= artista.nome %>">Ouvir agora</button>
-              <button class="btn btn-accent follow-btn" data-artist="<%= artista.nome %>">Seguir</button>
+          <div class="music-info">
+            <h3 class="music-artist"><%= musica.artista %></h3>
+            <p class="music-title-year"><%= musica.titulo %> <%= musica.ano %></p>
+            <div class="music-actions">
+              <% if (musica.arquivo) { %>
+                <a href="<%= musica.arquivo %>" class="btn btn-secondary" target="_blank">Ouvir agora</a>
+                <a href="/download/<%= musica.id %>" class="btn btn-accent">Baixar agora</a>
+              <% } else { %>
+                <button class="btn btn-secondary">Ouvir agora</button>
+                <button class="btn btn-accent">Baixar agora</button>
+              <% } %>
             </div>
           </div>
         </article>

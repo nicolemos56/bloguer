@@ -201,42 +201,37 @@ module.exports = {
         .slice(0, 4);
     }
     
-    // Artistas em destaque (4 cards) - diretamente do painel admin
-    // Ordena por número de seguidores e pega os 4 primeiros
-    let artistasDoMes = [...artistasGlobal]
-      .sort((a, b) => (b.seguidores || 0) - (a.seguidores || 0))
+    // Músicas recentes (4 cards) - as 4 músicas mais recentes do sistema
+    let musicasRecentes = [...musicasGlobal]
+      .sort((a, b) => {
+        // Ordenar por data de adição ou ID se não houver data
+        if (a.dataAdicao && b.dataAdicao) {
+          return new Date(b.dataAdicao) - new Date(a.dataAdicao);
+        }
+        return b.id - a.id;
+      })
       .slice(0, 4)
-      .map(artista => {
-        // Contar quantas músicas este artista tem no sistema
-        const quantidadeMusicas = musicasGlobal.filter(m => m.artista === artista.nome).length;
-        // Calcular engajamento das músicas do artista
-        const engajamento = musicasGlobal
-          .filter(m => m.artista === artista.nome)
-          .reduce((total, musica) => total + calcularScore(musica), 0);
-        
-        return {
-          nome: artista.nome,
-          musicas: quantidadeMusicas,
-          categoria: artista.categoria,
-          imagem: artista.imagem,
-          engajamento: engajamento,
-          seguidas: artista.seguidores || 0
-        };
-      });
-    
-    // Se há menos de 4 artistas, mostra todos os disponíveis
-    if (artistasDoMes.length === 0) {
-      artistasDoMes = [];
-    }
+      .map(musica => ({
+        id: musica.id,
+        titulo: musica.nome || musica.titulo,
+        artista: musica.artista,
+        ano: musica.ano || new Date().getFullYear(),
+        imagem: musica.imagem || musica.cover || '/assets/imagens/imagens_musicas/default.jpg',
+        categoria: musica.categoria,
+        arquivo: musica.arquivo || musica.link,
+        plays: musica.plays || 0,
+        likes: musica.likes || 0,
+        downloads: musica.downloads || 0
+      }));
     
     console.log('Músicas em destaque:', musicasEmDestaque.length);
-    console.log('Artistas do mês:', artistasDoMes.length);
+    console.log('Músicas recentes:', musicasRecentes.length);
     console.log('Total artistas no sistema:', artistasGlobal.length);
     
     res.render('pages/home', { 
       title: 'VIB Music - Página Inicial',
       musicasEmDestaque: musicasEmDestaque || [],
-      artistasDoMes: artistasDoMes || [],
+      musicasRecentes: musicasRecentes || [],
       musicasPorCategoria: []
     });
   },
@@ -290,9 +285,41 @@ module.exports = {
       }
     ];
     
+    // Artistas do mês - baseado em critérios de destaque
+    // 1º critério: ordem de adição (ID menor = adicionado primeiro)
+    // 2º critério: engajamento (seguidores + engajamento das músicas)
+    const calcularScoreArtista = (artista) => {
+      const musicasDoArtista = musicasGlobal.filter(m => m.artista === artista.nome);
+      const engajamentoMusicas = musicasDoArtista.reduce((total, musica) => {
+        return total + (musica.likes || 0) * 3 + (musica.downloads || 0) * 2 + (musica.plays || 0);
+      }, 0);
+      return (artista.seguidores || 0) * 5 + engajamentoMusicas;
+    };
+    
+    let artistasDoMes = [...artistasGlobal]
+      .map(artista => {
+        const quantidadeMusicas = musicasGlobal.filter(m => m.artista === artista.nome).length;
+        const scoreEngajamento = calcularScoreArtista(artista);
+        
+        return {
+          ...artista,
+          quantidadeMusicas,
+          scoreEngajamento,
+          // Combinar critérios: ordem de adição (peso maior) + engajamento
+          scoreTotal: (1000 - artista.id) * 100 + scoreEngajamento
+        };
+      })
+      .sort((a, b) => b.scoreTotal - a.scoreTotal)
+      .slice(0, 4);
+    
+    console.log('=== ARTISTAS DO MÊS (CATEGORIAS) ===');
+    console.log('Total artistas disponíveis:', artistasGlobal.length);
+    console.log('Artistas do mês selecionados:', artistasDoMes.length);
+    
     res.render('pages/categorias', { 
       title: 'Categorias Musicais',
-      categorias: categorias
+      categorias: categorias,
+      artistasDoMes: artistasDoMes
     });
   },
   
@@ -319,11 +346,12 @@ module.exports = {
         descricaoLonga: 'O Kuduro é um género musical e dança que surgiu em Angola na década de 1990. Caracteriza-se pelos seus ritmos acelerados, batidas electrónicas e movimentos de dança energéticos. É uma expressão cultural única que combina influências tradicionais angolanas com elementos modernos.',
         imagem: 'pessoas_dancando.jpg',
         cor: '#e17d18',
-        artistas: [
-          { nome: 'Puto Português', imagem: 'baixar.png', musicas: 15 },
-          { nome: 'Titica', imagem: 'emana.jpg', musicas: 23 },
-          { nome: 'Cabo Snoop', imagem: '12furos.jpg', musicas: 18 }
-        ],
+        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('kuduro')).map(artista => ({
+          nome: artista.nome,
+          imagem: artista.imagem.replace('/assets/imagens/imagens_artistas/', ''),
+          musicas: musicasGlobal.filter(m => m.artista === artista.nome).length,
+          seguidores: artista.seguidores || 0
+        })),
         musicasPopulares: filtrarMusicasPorCategoria('Kuduro')
       },
       'rap': {
@@ -333,11 +361,12 @@ module.exports = {
         descricaoLonga: 'O Rap angolano cresceu significativamente nas últimas décadas, tornando-se uma voz poderosa da juventude urbana. Com letras que abordam questões sociais, políticas e do quotidiano, o hip-hop angolano conquistou um lugar de destaque na música nacional.',
         imagem: 'pesso_com_micro.jpg',
         cor: '#ff0000',
-        artistas: [
-          { nome: 'MCK', imagem: 'preto_show.jpg', musicas: 28 },
-          { nome: 'Prodígio', imagem: 'IMG-20250209-WA0010.jpg', musicas: 34 },
-          { nome: 'Boss AC', imagem: 'paulelson.jpg', musicas: 21 }
-        ],
+        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('rap')).map(artista => ({
+          nome: artista.nome,
+          imagem: artista.imagem.replace('/assets/imagens/imagens_artistas/', ''),
+          musicas: musicasGlobal.filter(m => m.artista === artista.nome).length,
+          seguidores: artista.seguidores || 0
+        })),
         musicasPopulares: filtrarMusicasPorCategoria('Rap')
       },
       'afrohouse': {
@@ -347,11 +376,12 @@ module.exports = {
         descricaoLonga: 'O Afro House combina a energia da música house electrónica com os ritmos tradicionais africanos, criando uma fusão única que faz dançar. Este género tem ganhado popularidade internacional, com Angola na vanguarda da produção.',
         imagem: 'forca_suprema.jpg',
         cor: '#0051ff',
-        artistas: [
-          { nome: 'Djeff', imagem: 'xuxu.jpg', musicas: 19 },
-          { nome: 'Dj Vado Poster', imagem: '12furos.jpg', musicas: 26 },
-          { nome: 'Kelson Most Wanted', imagem: 'IMG-20250209-WA0012.jpg', musicas: 17 }
-        ],
+        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('afro')).map(artista => ({
+          nome: artista.nome,
+          imagem: artista.imagem.replace('/assets/imagens/imagens_artistas/', ''),
+          musicas: musicasGlobal.filter(m => m.artista === artista.nome).length,
+          seguidores: artista.seguidores || 0
+        })),
         musicasPopulares: filtrarMusicasPorCategoria('Afro House')
       },
       'semba': {
@@ -361,11 +391,12 @@ module.exports = {
         descricaoLonga: 'O Semba é um género musical tradicional de Angola, considerado o precursor da samba brasileira. Com ritmos cadenciados e letras que contam histórias do povo angolano, o semba é uma expressão cultural fundamental da identidade nacional.',
         imagem: 'pessoas_com_roupa_vermelha.jpg',
         cor: '#ff8900',
-        artistas: [
-          { nome: 'Bonga', imagem: 'paulelson.jpg', musicas: 45 },
-          { nome: 'Paulo Flores', imagem: 'emana.jpg', musicas: 38 },
-          { nome: 'Waldemar Bastos', imagem: 'preto_show.jpg', musicas: 42 }
-        ],
+        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('semba')).map(artista => ({
+          nome: artista.nome,
+          imagem: artista.imagem.replace('/assets/imagens/imagens_artistas/', ''),
+          musicas: musicasGlobal.filter(m => m.artista === artista.nome).length,
+          seguidores: artista.seguidores || 0
+        })),
         musicasPopulares: filtrarMusicasPorCategoria('Semba')
       },
       'kizomba': {
@@ -375,11 +406,12 @@ module.exports = {
         descricaoLonga: 'A Kizomba é um género musical e dança que nasceu em Angola na década de 1980. Com influências do semba angolano e do zouk das Antilhas, a kizomba conquistou o mundo com seus ritmos suaves e românticos, perfeitos para dançar a dois.',
         imagem: 'plutonio.jpg',
         cor: '#8b5cf6',
-        artistas: [
-          { nome: 'C4 Pedro', imagem: 'IMG-20250209-WA0014.jpg', musicas: 31 },
-          { nome: 'Anselmo Ralph', imagem: 'baixar.png', musicas: 29 },
-          { nome: 'Maya Cool', imagem: 'xuxu.jpg', musicas: 22 }
-        ],
+        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('kizomba')).map(artista => ({
+          nome: artista.nome,
+          imagem: artista.imagem.replace('/assets/imagens/imagens_artistas/', ''),
+          musicas: musicasGlobal.filter(m => m.artista === artista.nome).length,
+          seguidores: artista.seguidores || 0
+        })),
         musicasPopulares: filtrarMusicasPorCategoria('Kizomba')
       },
       'gheto-zouk': {
@@ -389,11 +421,12 @@ module.exports = {
         descricaoLonga: 'O Gheto Zouk é uma evolução moderna do zouk tradicional, incorporando elementos urbanos e contemporâneos. Este género representa a nova geração da música angolana, combinando tradição com inovação.',
         imagem: 'ouvindo_musica.png',
         cor: '#10b981',
-        artistas: [
-          { nome: 'Yola Semedo', imagem: 'emana.jpg', musicas: 25 },
-          { nome: 'Gama', imagem: '12furos.jpg', musicas: 19 },
-          { nome: 'Pérola', imagem: 'IMG-20250209-WA0010.jpg', musicas: 33 }
-        ],
+        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('zouk')).map(artista => ({
+          nome: artista.nome,
+          imagem: artista.imagem.replace('/assets/imagens/imagens_artistas/', ''),
+          musicas: musicasGlobal.filter(m => m.artista === artista.nome).length,
+          seguidores: artista.seguidores || 0
+        })),
         musicasPopulares: filtrarMusicasPorCategoria('Gheto Zouk')
       }
     };

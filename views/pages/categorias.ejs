@@ -70,62 +70,41 @@
   </div>
 </section>
 
-<!-- Featured Playlists Section -->
-<section class="featured-playlists">
+<!-- Featured Artists Section -->
+<section class="featured-artists-month">
   <div class="container">
     <div class="section-header">
-      <h2 class="section-title">Playlists em Destaque</h2>
-      <p class="section-subtitle">Playlists curadas com o melhor de cada categoria</p>
+      <h2 class="section-title">Artistas do mês</h2>
+      <p class="section-subtitle">Os artistas em destaque desta plataforma</p>
     </div>
     
-    <div class="playlists-grid">
-      <div class="playlist-card">
-        <div class="playlist-image">
-          <img src="/assets/imagens/imagen_categorias/pessoas_dancando.jpg" alt="Kuduro Hits">
-          <div class="play-button">
-            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z"/>
-            </svg>
+    <div class="artists-month-grid">
+      <% (artistasDoMes || []).forEach(artista => { %>
+        <article class="artist-month-card">
+          <div class="artist-month-image">
+            <img src="<%= artista.imagem || '/assets/imagens/imagens_artistas/default.jpg' %>" alt="<%= artista.nome %>">
+            <div class="artist-month-overlay">
+              <button class="artist-month-play-btn">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </button>
+            </div>
           </div>
-        </div>
-        <div class="playlist-info">
-          <h3>Kuduro Hits</h3>
-          <p>As melhores do kuduro angolano</p>
-          <span class="playlist-count">32 músicas</span>
-        </div>
-      </div>
-      
-      <div class="playlist-card">
-        <div class="playlist-image">
-          <img src="/assets/imagens/imagen_categorias/pesso_com_micro.jpg" alt="Rap Nacional">
-          <div class="play-button">
-            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z"/>
-            </svg>
+          <div class="artist-month-info">
+            <h3 class="artist-month-name"><%= artista.nome %></h3>
+            <p class="artist-month-category"><%= artista.categoria %></p>
+            <div class="artist-month-stats">
+              <span class="artist-month-followers"><%= artista.seguidores || 0 %> seguidores</span>
+              <span class="artist-month-songs"><%= artista.quantidadeMusicas || 0 %> músicas</span>
+            </div>
+            <div class="artist-month-actions">
+              <button class="btn btn-secondary btn-small play-artist-btn" data-artist="<%= artista.nome %>">Ouvir</button>
+              <button class="btn btn-accent btn-small follow-btn" data-artist="<%= artista.nome %>">Seguir</button>
+            </div>
           </div>
-        </div>
-        <div class="playlist-info">
-          <h3>Rap Nacional</h3>
-          <p>O melhor do hip-hop angolano</p>
-          <span class="playlist-count">28 músicas</span>
-        </div>
-      </div>
-      
-      <div class="playlist-card">
-        <div class="playlist-image">
-          <img src="/assets/imagens/imagen_categorias/plutonio.jpg" alt="Kizomba Love">
-          <div class="play-button">
-            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z"/>
-            </svg>
-          </div>
-        </div>
-        <div class="playlist-info">
-          <h3>Kizomba Love</h3>
-          <p>Românticas para dançar</p>
-          <span class="playlist-count">45 músicas</span>
-        </div>
-      </div>
+        </article>
+      <% }) %>
     </div>
   </div>
 </section>
