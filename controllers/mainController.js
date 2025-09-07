@@ -811,13 +811,59 @@ module.exports = {
       });
     }
     
-    // Por enquanto, simula que precisa login
-    // Futuramente aqui verificaria se o usuário está logado
-    return res.json({ 
-      success: false, 
-      needLogin: true, 
-      message: 'Precisa fazer login para curtir músicas!' 
-    });
+    // Verificar se usuário está logado
+    const usuario = verificarUsuarioLogado(req);
+    
+    if (!usuario) {
+      return res.json({ 
+        success: false, 
+        needLogin: true, 
+        message: 'Precisa fazer login para curtir músicas!' 
+      });
+    }
+    
+    // Verificar se o usuário já curtiu esta música
+    if (!usuario.musicasCurtidas) {
+      usuario.musicasCurtidas = [];
+    }
+    
+    const jaCurtiu = usuario.musicasCurtidas.includes(musicaId);
+    
+    if (jaCurtiu) {
+      // Descurtir
+      usuario.musicasCurtidas = usuario.musicasCurtidas.filter(id => id !== musicaId);
+      musica.likes = Math.max((musica.likes || 0) - 1, 0);
+      
+      // Salvar mudanças
+      saveUsuarios(usuariosGlobal);
+      saveMusicas(musicasGlobal);
+      
+      console.log(`${usuario.nome} descurtiu "${musica.titulo}"`);
+      
+      return res.json({ 
+        success: true, 
+        liked: false,
+        message: 'Música descurtida!', 
+        totalLikes: musica.likes 
+      });
+    } else {
+      // Curtir
+      usuario.musicasCurtidas.push(musicaId);
+      musica.likes = (musica.likes || 0) + 1;
+      
+      // Salvar mudanças
+      saveUsuarios(usuariosGlobal);
+      saveMusicas(musicasGlobal);
+      
+      console.log(`${usuario.nome} curtiu "${musica.titulo}" - Total: ${musica.likes}`);
+      
+      return res.json({ 
+        success: true, 
+        liked: true,
+        message: 'Música curtida!', 
+        totalLikes: musica.likes 
+      });
+    }
   },
 
   // Contador de reproduções
@@ -845,15 +891,71 @@ module.exports = {
 
   // Sistema de seguir artista
   followArtista: (req, res) => {
-    const artista = req.params.artista;
+    const nomeArtista = decodeURIComponent(req.params.artista);
     
-    // Por enquanto, simula que precisa login
-    // Futuramente aqui verificaria se o usuário está logado
-    return res.json({ 
-      success: false, 
-      needLogin: true, 
-      message: `Precisa fazer login para seguir ${artista}!` 
-    });
+    // Verificar se usuário está logado
+    const usuario = verificarUsuarioLogado(req);
+    
+    if (!usuario) {
+      return res.json({ 
+        success: false, 
+        needLogin: true, 
+        message: `Precisa fazer login para seguir ${nomeArtista}!` 
+      });
+    }
+    
+    // Buscar artista na base de dados
+    const artista = artistasGlobal.find(a => a.nome.toLowerCase() === nomeArtista.toLowerCase());
+    
+    if (!artista) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Artista não encontrado!' 
+      });
+    }
+    
+    // Verificar se o usuário já segue este artista
+    if (!usuario.artistasFavoritos) {
+      usuario.artistasFavoritos = [];
+    }
+    
+    const jaSegue = usuario.artistasFavoritos.includes(artista.id);
+    
+    if (jaSegue) {
+      // Parar de seguir
+      usuario.artistasFavoritos = usuario.artistasFavoritos.filter(id => id !== artista.id);
+      artista.seguidores = Math.max((artista.seguidores || 0) - 1, 0);
+      
+      // Salvar mudanças
+      saveUsuarios(usuariosGlobal);
+      saveArtistas(artistasGlobal);
+      
+      console.log(`${usuario.nome} parou de seguir ${artista.nome}`);
+      
+      return res.json({ 
+        success: true, 
+        following: false,
+        message: `Você parou de seguir ${artista.nome}!`, 
+        totalSeguidores: artista.seguidores 
+      });
+    } else {
+      // Seguir
+      usuario.artistasFavoritos.push(artista.id);
+      artista.seguidores = (artista.seguidores || 0) + 1;
+      
+      // Salvar mudanças
+      saveUsuarios(usuariosGlobal);
+      saveArtistas(artistasGlobal);
+      
+      console.log(`${usuario.nome} agora segue ${artista.nome} - Total: ${artista.seguidores}`);
+      
+      return res.json({ 
+        success: true, 
+        following: true,
+        message: `Você agora segue ${artista.nome}!`, 
+        totalSeguidores: artista.seguidores 
+      });
+    }
   },
 
   // Reproduzir todas as músicas de uma categoria
@@ -1126,6 +1228,25 @@ if (usuariosGlobal.length === 0) {
 // Função para gerar token de sessão
 function gerarTokenSessao() {
   return crypto.randomBytes(32).toString('hex');
+}
+
+// Função para verificar se usuário está logado
+function verificarUsuarioLogado(req) {
+  const token = req.headers.authorization || req.body.token || req.query.token;
+  
+  if (!token) {
+    return null;
+  }
+  
+  // Verificar se o token existe nas sessões
+  const sessao = sessoes.get(token);
+  if (!sessao) {
+    return null;
+  }
+  
+  // Buscar dados completos do usuário
+  const usuario = usuariosGlobal.find(u => u.id === sessao.usuarioId);
+  return usuario;
 }
 
 // Função de login
