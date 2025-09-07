@@ -914,7 +914,7 @@ async function verificarEstadoUsuario() {
         if (allArtistsResponse.ok) {
           const allArtists = await allArtistsResponse.json();
           
-          document.querySelectorAll('[data-artist]').forEach(btn => {
+          document.querySelectorAll('#followArtistBtn[data-artist]').forEach(btn => {
             const artistName = btn.dataset.artist;
             const foundArtist = allArtists.find(a => a.nome === artistName);
             
