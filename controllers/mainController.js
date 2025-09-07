@@ -1537,4 +1537,84 @@ module.exports.registerUser = function(req, res) {
   }
 };
 
+// Admin Pedidos
+module.exports.adminPedidos = function(req, res) {
+  console.log('=== ADMIN PEDIDOS ===');
+  
+  // Dados simulados de pedidos de divulgação
+  const pedidosSimulados = [
+    {
+      artistName: "João Silva",
+      email: "joao@email.com",
+      phone: "+244 924 123 456",
+      songTitle: "Minha Nova Música",
+      releaseDate: "2025-01-15",
+      genre: "kuduro",
+      biography: "Sou um artista angolano apaixonado pela música desde criança. Influenciado pelos grandes nomes do kuduro, busco trazer algo novo ao cenário musical.",
+      dataPedido: "2025-01-07",
+      status: "pendente",
+      comprovante: "/uploads/comprovantes/comprovante1.jpg"
+    },
+    {
+      artistName: "Maria Santos",
+      email: "maria@email.com",
+      phone: "+244 923 987 654",
+      songTitle: "Semba do Coração",
+      releaseDate: "2025-01-20",
+      genre: "semba",
+      biography: "Cantora e compositora com 10 anos de experiência. Minha música reflete as tradições angolanas com toque moderno.",
+      dataPedido: "2025-01-06",
+      status: "aprovado",
+      comprovante: "/uploads/comprovantes/comprovante2.jpg"
+    },
+    {
+      artistName: "Pedro Costa",
+      email: "pedro@email.com",
+      phone: "+244 925 555 777",
+      songTitle: "Afrobeat Moderno",
+      releaseDate: "2025-02-01",
+      genre: "afrohouse",
+      biography: "DJ e produtor especializado em afrohouse. Trabalho há 8 anos criando batidas que fazem a galera dançar.",
+      dataPedido: "2025-01-05",
+      status: "rejeitado",
+      comprovante: null
+    },
+    {
+      artistName: "Ana Ferreira",
+      email: "ana@email.com",
+      phone: "+244 926 333 888",
+      songTitle: "Kizomba Romântica",
+      releaseDate: "2025-01-25",
+      genre: "kizomba",
+      biography: "Artista dedicada à kizomba romântica. Minhas canções falam sobre amor e relacionamentos com melodias suaves.",
+      dataPedido: "2025-01-04",
+      status: "pendente",
+      comprovante: "/uploads/comprovantes/comprovante4.jpg"
+    }
+  ];
+
+  // Calcular estatísticas
+  const stats = {
+    total: pedidosSimulados.length,
+    pendentes: pedidosSimulados.filter(p => p.status === 'pendente').length,
+    aprovados: pedidosSimulados.filter(p => p.status === 'aprovado').length,
+    rejeitados: pedidosSimulados.filter(p => p.status === 'rejeitado').length
+  };
+
+  const dadosPedidos = {
+    lista: pedidosSimulados,
+    total: stats.total,
+    pendentes: stats.pendentes,
+    aprovados: stats.aprovados,
+    rejeitados: stats.rejeitados
+  };
+
+  console.log('Estatísticas dos pedidos:', stats);
+
+  res.render('admin/pedidos', {
+    title: 'Pedidos de Divulgação',
+    pedidos: dadosPedidos
+  });
+};
+
 
