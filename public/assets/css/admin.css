@@ -32,12 +32,10 @@
 }
 
 .admin-logo {
-  font-family: 'Dancing Script', cursive;
-  font-size: 3.2rem;
-  font-weight: 700;
+  font-size: 2.4rem;
+  font-weight: var(--font-weight-bold);
   color: var(--accent-primary);
   margin: 0;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .admin-badge {

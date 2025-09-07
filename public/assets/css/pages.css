@@ -44,13 +44,11 @@
 }
 
 .hero-title {
-  font-family: 'Dancing Script', cursive;
-  font-size: clamp(4.2rem, 6vw, 7.4rem);
-  font-weight: 700;
+  font-size: clamp(3.2rem, 5vw, 5.4rem);
+  font-weight: var(--font-weight-bold);
   color: var(--accent-primary);
   margin-bottom: var(--space-md);
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
-  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .hero-subtitle {

@@ -44,11 +44,9 @@
 }
 
 .brand-text {
-  font-family: 'Dancing Script', cursive;
-  font-size: 2.8rem;
-  font-weight: 700;
+  font-size: 2rem;
+  font-weight: var(--font-weight-bold);
   color: var(--accent-primary);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .navbar-menu {
@@ -135,12 +133,10 @@
 }
 
 .footer-title {
-  font-family: 'Dancing Script', cursive;
-  font-size: 3.2rem;
-  font-weight: 700;
+  font-size: 2.4rem;
+  font-weight: var(--font-weight-bold);
   color: var(--accent-primary);
   margin-bottom: var(--space-md);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .footer-description {
