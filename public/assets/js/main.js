@@ -1,4 +1,4 @@
-// Modern JavaScript for e Nessa Bamda Mekié
+// Modern JavaScript for e Nessa Banda Mekié
 
 class VibMusic {
   constructor() {

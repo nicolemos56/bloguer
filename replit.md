@@ -1,6 +1,6 @@
 # Overview
 
-e Nessa Bamda Mekié is a Node.js web application built with Express.js that serves as a music platform. The application uses EJS templating with layouts for server-side rendering and provides a clean, responsive interface for content management and presentation. The project follows an MVC (Model-View-Controller) architectural pattern with separate routing, controller logic, and view templates.
+e Nessa Banda Mekié is a Node.js web application built with Express.js that serves as a music platform. The application uses EJS templating with layouts for server-side rendering and provides a clean, responsive interface for content management and presentation. The project follows an MVC (Model-View-Controller) architectural pattern with separate routing, controller logic, and view templates.
 
 # User Preferences
 
