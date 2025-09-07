@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/assets/css/variables.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body class="admin-body">
+  
+  <!-- Admin Sidebar -->
+  <nav class="admin-sidebar">
+    <div class="admin-sidebar-header">
+      <h2 class="admin-logo">e Nessa Banda Mekié</h2>
+      <span class="admin-badge">Admin</span>
+    </div>
+    
+    <ul class="admin-nav">
+      <li><a href="/admin" class="admin-nav-link">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+        </svg>
+        Dashboard
+      </a></li>
+      <li><a href="/admin/musicas" class="admin-nav-link">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+        Músicas
+      </a></li>
+      <li><a href="/admin/artistas" class="admin-nav-link">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A3 3 0 0 0 16.76 6h-2.52A3 3 0 0 0 11.04 8.37L8.5 16H11v6h9z"/>
+        </svg>
+        Artistas
+      </a></li>
+      <li><a href="/admin/categorias" class="admin-nav-link">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+        Categorias
+      </a></li>
+      <li><a href="/admin/pedidos" class="admin-nav-link active">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+        </svg>
+        Pedidos
+      </a></li>
+    </ul>
+    
+    <div class="admin-sidebar-footer">
+      <a href="/" class="admin-nav-link">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+        </svg>
+        Voltar ao site
+      </a>
+    </div>
+  </nav>
+
+  <!-- Admin Main Content -->
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1 class="admin-title">Pedidos de Divulgação</h1>
+      <div class="admin-user">
+        <span>Bem-vindo, Admin</span>
+        <div class="admin-user-avatar">A</div>
+      </div>
+    </header>
+
+    <!-- Filter Tabs -->
+    <div class="admin-tabs">
+      <button class="admin-tab-btn active" data-status="todos">Todos (<%= pedidos.total %>)</button>
+      <button class="admin-tab-btn" data-status="pendente">Pendentes (<%= pedidos.pendentes %>)</button>
+      <button class="admin-tab-btn" data-status="aprovado">Aprovados (<%= pedidos.aprovados %>)</button>
+      <button class="admin-tab-btn" data-status="rejeitado">Rejeitados (<%= pedidos.rejeitados %>)</button>
+    </div>
+
+    <!-- Pedidos List -->
+    <section class="admin-section">
+      <div class="admin-table-container">
+        <table class="admin-table" id="pedidosTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Artista</th>
+              <th>Música</th>
+              <th>Género</th>
+              <th>Data Pedido</th>
+              <th>Status</th>
+              <th>Comprovante</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% pedidos.lista.forEach(function(pedido, index) { %>
+            <tr data-status="<%= pedido.status %>">
+              <td>#<%= String(index + 1).padStart(3, '0') %></td>
+              <td class="artista-info">
+                <div class="artista-name"><%= pedido.artistName %></div>
+                <div class="artista-email"><%= pedido.email %></div>
+                <div class="artista-phone"><%= pedido.phone %></div>
+              </td>
+              <td class="musica-info">
+                <div class="musica-title"><%= pedido.songTitle %></div>
+                <div class="musica-date">Lançamento: <%= pedido.releaseDate %></div>
+              </td>
+              <td><span class="genre-badge genre-<%= pedido.genre %>"><%= pedido.genre %></span></td>
+              <td><%= pedido.dataPedido %></td>
+              <td>
+                <span class="status-badge status-<%= pedido.status %>">
+                  <%= pedido.status.charAt(0).toUpperCase() + pedido.status.slice(1) %>
+                </span>
+              </td>
+              <td>
+                <% if(pedido.comprovante) { %>
+                  <button class="btn btn-sm btn-secondary" onclick="viewReceipt('<%= pedido.comprovante %>')">
+                    Ver Comprovante
+                  </button>
+                <% } else { %>
+                  <span class="text-muted">Não enviado</span>
+                <% } %>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button class="action-btn view-btn" onclick="viewPedido('<%= index %>')" title="Visualizar">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                    </svg>
+                  </button>
+                  <% if(pedido.status === 'pendente') { %>
+                  <button class="action-btn approve-btn" onclick="changePedidoStatus('<%= index %>', 'aprovado')" title="Aprovar">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                    </svg>
+                  </button>
+                  <button class="action-btn reject-btn" onclick="changePedidoStatus('<%= index %>', 'rejeitado')" title="Rejeitar">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                  </button>
+                  <% } %>
+                </div>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+
+        <% if(pedidos.lista.length === 0) { %>
+        <div class="empty-state">
+          <svg width="64" height="64" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+          </svg>
+          <h3>Nenhum pedido encontrado</h3>
+          <p>Os pedidos de divulgação aparecerão aqui quando forem enviados.</p>
+        </div>
+        <% } %>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal de Visualização -->
+  <div id="pedidoModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content pedido-modal">
+      <div class="modal-header">
+        <h3>Detalhes do Pedido</h3>
+        <button class="modal-close" onclick="closePedidoModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="pedidoModalContent">
+        <!-- Conteúdo será preenchido via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Comprovante -->
+  <div id="receiptModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content receipt-modal">
+      <div class="modal-header">
+        <h3>Comprovante de Pagamento</h3>
+        <button class="modal-close" onclick="closeReceiptModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img id="receiptImage" src="" alt="Comprovante" style="max-width: 100%; height: auto;">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const pedidosData = <%- JSON.stringify(pedidos.lista) %>;
+    
+    // Filter by status
+    document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const status = this.dataset.status;
+        
+        // Update active tab
+        document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Filter table rows
+        const rows = document.querySelectorAll('#pedidosTable tbody tr');
+        rows.forEach(row => {
+          if (status === 'todos' || row.dataset.status === status) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    function viewPedido(index) {
+      const pedido = pedidosData[index];
+      const modal = document.getElementById('pedidoModal');
+      const content = document.getElementById('pedidoModalContent');
+      
+      content.innerHTML = `
+        <div class="pedido-details">
+          <div class="detail-section">
+            <h4>Informações do Artista</h4>
+            <p><strong>Nome Artístico:</strong> ${pedido.artistName}</p>
+            <p><strong>Email:</strong> ${pedido.email}</p>
+            <p><strong>Telefone:</strong> ${pedido.phone}</p>
+          </div>
+          
+          <div class="detail-section">
+            <h4>Informações da Música</h4>
+            <p><strong>Título:</strong> ${pedido.songTitle}</p>
+            <p><strong>Género:</strong> ${pedido.genre}</p>
+            <p><strong>Data de Lançamento:</strong> ${pedido.releaseDate}</p>
+          </div>
+          
+          <div class="detail-section">
+            <h4>Biografia</h4>
+            <p>${pedido.biography}</p>
+          </div>
+          
+          <div class="detail-section">
+            <h4>Status do Pedido</h4>
+            <p><strong>Data do Pedido:</strong> ${pedido.dataPedido}</p>
+            <p><strong>Status Atual:</strong> <span class="status-badge status-${pedido.status}">${pedido.status.charAt(0).toUpperCase() + pedido.status.slice(1)}</span></p>
+          </div>
+        </div>
+      `;
+      
+      modal.style.display = 'flex';
+    }
+
+    function viewReceipt(receiptPath) {
+      const modal = document.getElementById('receiptModal');
+      const img = document.getElementById('receiptImage');
+      img.src = receiptPath;
+      modal.style.display = 'flex';
+    }
+
+    function changePedidoStatus(index, newStatus) {
+      if (confirm(`Tem certeza que deseja ${newStatus === 'aprovado' ? 'aprovar' : 'rejeitar'} este pedido?`)) {
+        // Aqui você implementaria a lógica para alterar o status
+        alert(`Pedido ${newStatus === 'aprovado' ? 'aprovado' : 'rejeitado'} com sucesso!`);
+        // Recarregar a página ou atualizar via AJAX
+        location.reload();
+      }
+    }
+
+    function closePedidoModal() {
+      document.getElementById('pedidoModal').style.display = 'none';
+    }
+
+    function closeReceiptModal() {
+      document.getElementById('receiptModal').style.display = 'none';
+    }
+
+    // Close modals when clicking outside
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+      modal.addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.style.display = 'none';
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

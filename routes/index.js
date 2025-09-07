@@ -18,6 +18,7 @@ router.get('/admin', mainController.adminDashboard);
 router.get('/admin/musicas', mainController.adminMusicas);
 router.get('/admin/artistas', mainController.adminArtistas);
 router.get('/admin/categorias', mainController.adminCategorias);
+router.get('/admin/pedidos', mainController.adminPedidos);
 router.post('/admin/musicas/add', mainController.addMusica);
 router.post('/admin/artistas/add', mainController.addArtista);
 router.delete('/admin/musicas/:id', mainController.deleteMusica);
