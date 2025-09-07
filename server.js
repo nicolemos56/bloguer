@@ -2,6 +2,7 @@
 const express = require('express');
 const path = require('path');
 const multer = require('multer');
+const session = require('express-session');
 const app = express();
 const expressLayouts = require('express-ejs-layouts');
 
@@ -28,6 +29,24 @@ app.use(expressLayouts);
 app.set('view engine', 'ejs');
 app.set('layout', './layout');
 app.set('views', path.join(__dirname, 'views'));
+
+// Configuração de sessões
+app.use(session({
+  secret: 'vib-music-secret-key-2024',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { 
+    secure: false, // true apenas para HTTPS
+    maxAge: 24 * 60 * 60 * 1000 // 24 horas
+  }
+}));
+
+// Middleware para tornar usuário disponível em todas as views
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null;
+  res.locals.isLoggedIn = !!req.session.user;
+  next();
+});
 
 // Middleware para parsing de formulários
 app.use(express.json());

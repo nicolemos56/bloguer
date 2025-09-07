@@ -3,11 +3,13 @@
 
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcrypt');
 
 // Arquivo para persistir dados
 const dataDir = path.join(__dirname, '..', 'data');
 const artistasFile = path.join(dataDir, 'artistas.json');
 const musicasFile = path.join(dataDir, 'musicas.json');
+const usersFile = path.join(dataDir, 'users.json');
 
 // Função para garantir que o diretório data existe
 function ensureDataDir() {
@@ -139,6 +141,31 @@ if (musicasGlobal.length === 0) {
   saveMusicas(musicasGlobal);
 }
 
+// Funções para carregar e salvar usuários
+function loadUsers() {
+  ensureDataDir();
+  try {
+    if (fs.existsSync(usersFile)) {
+      const data = fs.readFileSync(usersFile, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('Erro ao carregar usuários:', error);
+  }
+  return [];
+}
+
+function saveUsers(users) {
+  ensureDataDir();
+  try {
+    fs.writeFileSync(usersFile, JSON.stringify(users, null, 2));
+    return true;
+  } catch (error) {
+    console.error('Erro ao salvar usuários:', error);
+    return false;
+  }
+}
+
 if (artistasGlobal.length === 0) {
   artistasGlobal = [
     {
@@ -179,6 +206,14 @@ if (artistasGlobal.length === 0) {
 
 console.log('=== CONTROLLER INICIALIZADO ===');
 console.log('Array de artistas inicializado:', artistasGlobal.length);
+
+// Middleware de autenticação
+const requireAuth = (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect('/auth/login?redirect=' + encodeURIComponent(req.originalUrl));
+  }
+  next();
+};
 
 module.exports = {
   home: (req, res) => {
@@ -1026,7 +1061,185 @@ module.exports = {
       message: `Reproduzindo ${musicasDoArtista.length} músicas de ${nomeArtista}`,
       musicasCount: musicasDoArtista.length
     });
-  }
+  },
+
+  // ==================== AUTENTICAÇÃO ====================
+
+  // Página de login
+  loginPage: (req, res) => {
+    res.render('auth/login', { 
+      title: 'Login - VIB Music',
+      layout: false,
+      error: req.session.error || null,
+      success: req.session.success || null
+    });
+    // Limpar mensagens da sessão
+    delete req.session.error;
+    delete req.session.success;
+  },
+
+  // Página de registro
+  registerPage: (req, res) => {
+    res.render('auth/register', { 
+      title: 'Criar Conta - VIB Music',
+      layout: false,
+      error: req.session.error || null,
+      success: req.session.success || null
+    });
+    // Limpar mensagens da sessão
+    delete req.session.error;
+    delete req.session.success;
+  },
+
+  // Processar login
+  processLogin: async (req, res) => {
+    try {
+      const { email, password, redirect } = req.body;
+      const users = loadUsers();
+
+      // Verificar se o usuário existe
+      const user = users.find(u => u.email === email);
+      if (!user) {
+        req.session.error = 'Email ou palavra-passe incorretos!';
+        return res.redirect('/auth/login');
+      }
+
+      // Verificar senha
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (!isValidPassword) {
+        req.session.error = 'Email ou palavra-passe incorretos!';
+        return res.redirect('/auth/login');
+      }
+
+      // Login bem-sucedido
+      req.session.user = {
+        id: user.id,
+        nome: user.nome,
+        email: user.email
+      };
+
+      // Redirecionar para página original ou home
+      const redirectUrl = redirect || '/';
+      res.redirect(redirectUrl);
+
+    } catch (error) {
+      console.error('Erro no login:', error);
+      req.session.error = 'Erro interno. Tente novamente.';
+      res.redirect('/auth/login');
+    }
+  },
+
+  // Processar registro
+  processRegister: async (req, res) => {
+    try {
+      const { nome, email, password, confirmPassword } = req.body;
+
+      // Validações básicas
+      if (!nome || !email || !password || !confirmPassword) {
+        req.session.error = 'Todos os campos são obrigatórios!';
+        return res.redirect('/auth/register');
+      }
+
+      if (password !== confirmPassword) {
+        req.session.error = 'As palavras-passe não coincidem!';
+        return res.redirect('/auth/register');
+      }
+
+      if (password.length < 6) {
+        req.session.error = 'A palavra-passe deve ter pelo menos 6 caracteres!';
+        return res.redirect('/auth/register');
+      }
+
+      const users = loadUsers();
+
+      // Verificar se email já existe
+      if (users.find(u => u.email === email)) {
+        req.session.error = 'Este email já está registado!';
+        return res.redirect('/auth/register');
+      }
+
+      // Hash da senha
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Criar novo usuário
+      const newUser = {
+        id: Math.max(...users.map(u => u.id), 0) + 1,
+        nome: nome.trim(),
+        email: email.toLowerCase().trim(),
+        password: hashedPassword,
+        dataRegistro: new Date().toISOString(),
+        artistasSeguidos: []
+      };
+
+      users.push(newUser);
+      saveUsers(users);
+
+      req.session.success = 'Conta criada com sucesso! Faça login para continuar.';
+      res.redirect('/auth/login');
+
+    } catch (error) {
+      console.error('Erro no registro:', error);
+      req.session.error = 'Erro interno. Tente novamente.';
+      res.redirect('/auth/register');
+    }
+  },
+
+  // Logout
+  logout: (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Erro ao fazer logout:', err);
+      }
+      res.redirect('/');
+    });
+  },
+
+  // Seguir/Desseguir artista (requer autenticação)
+  followArtist: (req, res) => {
+    if (!req.session.user) {
+      return res.json({ 
+        success: false, 
+        needLogin: true,
+        message: 'Precisa fazer login para seguir artistas!' 
+      });
+    }
+
+    try {
+      const { artistaNome } = req.body;
+      const users = loadUsers();
+      const userIndex = users.findIndex(u => u.id === req.session.user.id);
+
+      if (userIndex === -1) {
+        return res.json({ success: false, message: 'Usuário não encontrado!' });
+      }
+
+      const user = users[userIndex];
+      if (!user.artistasSeguidos) {
+        user.artistasSeguidos = [];
+      }
+
+      const isFollowing = user.artistasSeguidos.includes(artistaNome);
+      
+      if (isFollowing) {
+        // Desseguir
+        user.artistasSeguidos = user.artistasSeguidos.filter(a => a !== artistaNome);
+        saveUsers(users);
+        res.json({ success: true, following: false, message: `Deixou de seguir ${artistaNome}` });
+      } else {
+        // Seguir
+        user.artistasSeguidos.push(artistaNome);
+        saveUsers(users);
+        res.json({ success: true, following: true, message: `Agora segue ${artistaNome}` });
+      }
+
+    } catch (error) {
+      console.error('Erro ao seguir artista:', error);
+      res.json({ success: false, message: 'Erro interno. Tente novamente.' });
+    }
+  },
+
+  // Middleware de autenticação (exportar para uso nas rotas)
+  requireAuth
 };
 
 // Função auxiliar para obter cor por categoria
