@@ -201,40 +201,37 @@ module.exports = {
         .slice(0, 4);
     }
     
-    // Artistas do mês (4 cards) - baseado em engajamento + quantidade
-    const contagemArtistas = {};
-    const engajamentoArtistas = {};
-    
-    musicasGlobal.forEach(musica => {
-      contagemArtistas[musica.artista] = (contagemArtistas[musica.artista] || 0) + 1;
-      engajamentoArtistas[musica.artista] = (engajamentoArtistas[musica.artista] || 0) + calcularScore(musica);
-    });
-    
-    let artistasDoMes = Object.entries(contagemArtistas)
-      .map(([artista, quantidade]) => {
-        const musicaArtista = musicasGlobal.find(m => m.artista === artista);
-        const engajamento = engajamentoArtistas[artista] || 0;
-        // Buscar dados do artista se existir no array de artistas
-        const artistaDados = artistasGlobal.find(a => a.nome === artista);
+    // Artistas em destaque (4 cards) - diretamente do painel admin
+    // Ordena por número de seguidores e pega os 4 primeiros
+    let artistasDoMes = [...artistasGlobal]
+      .sort((a, b) => (b.seguidores || 0) - (a.seguidores || 0))
+      .slice(0, 4)
+      .map(artista => {
+        // Contar quantas músicas este artista tem no sistema
+        const quantidadeMusicas = musicasGlobal.filter(m => m.artista === artista.nome).length;
+        // Calcular engajamento das músicas do artista
+        const engajamento = musicasGlobal
+          .filter(m => m.artista === artista.nome)
+          .reduce((total, musica) => total + calcularScore(musica), 0);
+        
         return {
-          nome: artista,
-          musicas: quantidade,
-          categoria: artistaDados?.categoria || musicaArtista?.categoria || 'Vários',
-          imagem: artistaDados?.imagem || musicaArtista?.cover || '/assets/images/default-artist.jpg',
+          nome: artista.nome,
+          musicas: quantidadeMusicas,
+          categoria: artista.categoria,
+          imagem: artista.imagem,
           engajamento: engajamento,
-          seguidas: artistaDados?.seguidores || 0
+          seguidas: artista.seguidores || 0
         };
-      })
-      .sort((a, b) => b.engajamento - a.engajamento || b.musicas - a.musicas)
-      .slice(0, 4);
+      });
     
-    // Se não há engajamento, ordena aleatoriamente
-    if (artistasDoMes.every(a => a.engajamento === 0)) {
-      artistasDoMes = artistasDoMes.sort(() => Math.random() - 0.5);
+    // Se há menos de 4 artistas, mostra todos os disponíveis
+    if (artistasDoMes.length === 0) {
+      artistasDoMes = [];
     }
     
     console.log('Músicas em destaque:', musicasEmDestaque.length);
     console.log('Artistas do mês:', artistasDoMes.length);
+    console.log('Total artistas no sistema:', artistasGlobal.length);
     
     res.render('pages/home', { 
       title: 'VIB Music - Página Inicial',
@@ -418,17 +415,40 @@ module.exports = {
   
   // Admin Controllers
   adminDashboard: (req, res) => {
+    // Calcular total de plays
+    const totalPlays = musicasGlobal.reduce((total, musica) => total + (musica.plays || 0), 0);
+    
+    // Obter as 5 músicas mais recentes (ordenadas por data de adição ou ID)
+    const musicasRecentes = [...musicasGlobal]
+      .sort((a, b) => {
+        if (a.dataAdicao && b.dataAdicao) {
+          return new Date(b.dataAdicao) - new Date(a.dataAdicao);
+        }
+        return b.id - a.id; // Se não há dataAdicao, ordena por ID
+      })
+      .slice(0, 5)
+      .map(musica => ({
+        titulo: musica.nome,
+        artista: musica.artista,
+        data: musica.dataAdicao ? new Date(musica.dataAdicao).toLocaleDateString('pt-AO') : 'N/A',
+        plays: musica.plays || 0
+      }));
+    
+    // Contar categorias únicas
+    const categoriasUnicas = [...new Set(musicasGlobal.map(m => m.categoria))];
+    
     const stats = {
-      totalMusicas: 156,
-      totalArtistas: 48,
-      totalCategorias: 6,
-      totalPlays: '2.4M',
-      musicasRecentes: [
-        { titulo: 'Bem Estar', artista: 'MCK', data: '2025-01-15', plays: '125K' },
-        { titulo: 'African Beauty', artista: 'C4 Pedro', data: '2025-01-12', plays: '98K' },
-        { titulo: 'Kuduro Dance', artista: 'Puto Português', data: '2025-01-10', plays: '87K' }
-      ]
+      totalMusicas: musicasGlobal.length,
+      totalArtistas: artistasGlobal.length,
+      totalCategorias: categoriasUnicas.length,
+      totalPlays: totalPlays > 1000 ? `${Math.round(totalPlays / 1000)}K` : totalPlays.toString(),
+      musicasRecentes: musicasRecentes
     };
+    
+    console.log('=== DASHBOARD STATS ===');
+    console.log('Total Músicas:', stats.totalMusicas);
+    console.log('Total Artistas:', stats.totalArtistas);
+    console.log('Músicas Recentes:', musicasRecentes.length);
     
     res.render('admin/dashboard', {
       title: 'Painel Admin - VIB Music',

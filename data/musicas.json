@@ -58,5 +58,22 @@
     "plays": 1800,
     "likes": 67,
     "downloads": 123
+  },
+  {
+    "id": 6,
+    "titulo": "Teste Nova Musica",
+    "artista": "Paulo Flores",
+    "categoria": "Semba",
+    "duracao": "3:45",
+    "album": "Teste Album",
+    "ano": "2025",
+    "link": "/uploads/musicFile-1757252507104-920306172",
+    "cover": "/assets/images/default-cover.jpg",
+    "nomeOriginal": "null",
+    "nomeArquivo": "musicFile-1757252507104-920306172",
+    "likes": 0,
+    "downloads": 0,
+    "plays": 0,
+    "dataAdicao": "2025-09-07T13:41:47.106Z"
   }
 ]
