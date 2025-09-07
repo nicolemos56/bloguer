@@ -1188,4 +1188,122 @@ module.exports.loginUser = function(req, res) {
   });
 };
 
+// Função para validar email
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+// Função para validar senha forte
+function isValidPassword(password) {
+  // Mínimo 6 caracteres
+  return password && password.length >= 6;
+}
+
+// Função de cadastro
+module.exports.registerUser = function(req, res) {
+  console.log('=== TENTATIVA DE CADASTRO ===');
+  
+  const { nome, email, password, confirmPassword } = req.body;
+  
+  // Validar campos obrigatórios
+  if (!nome || !email || !password || !confirmPassword) {
+    return res.status(400).json({
+      success: false,
+      message: 'Todos os campos são obrigatórios'
+    });
+  }
+  
+  // Validar nome (mínimo 2 caracteres)
+  if (nome.trim().length < 2) {
+    return res.status(400).json({
+      success: false,
+      message: 'Nome deve ter pelo menos 2 caracteres'
+    });
+  }
+  
+  // Validar email
+  if (!isValidEmail(email)) {
+    return res.status(400).json({
+      success: false,
+      message: 'Por favor, insira um email válido'
+    });
+  }
+  
+  // Validar senha
+  if (!isValidPassword(password)) {
+    return res.status(400).json({
+      success: false,
+      message: 'Senha deve ter pelo menos 6 caracteres'
+    });
+  }
+  
+  // Confirmar senha
+  if (password !== confirmPassword) {
+    return res.status(400).json({
+      success: false,
+      message: 'As senhas não coincidem'
+    });
+  }
+  
+  console.log('Dados recebidos:', { nome: nome.trim(), email: email.toLowerCase() });
+  
+  // Verificar se email já existe
+  const emailExiste = usuariosGlobal.find(u => u.email.toLowerCase() === email.toLowerCase());
+  if (emailExiste) {
+    console.log('Email já cadastrado:', email);
+    return res.status(409).json({
+      success: false,
+      message: 'Este email já está cadastrado'
+    });
+  }
+  
+  // Criar novo usuário
+  const novoId = Math.max(...usuariosGlobal.map(u => u.id), 0) + 1;
+  const novoUsuario = {
+    id: novoId,
+    nome: nome.trim(),
+    email: email.toLowerCase(),
+    senha: hashPassword(password),
+    dataCriacao: new Date().toISOString(),
+    artistasFavoritos: [],
+    musicasCurtidas: []
+  };
+  
+  // Adicionar à lista global
+  usuariosGlobal.push(novoUsuario);
+  
+  // Salvar no arquivo
+  if (saveUsuarios(usuariosGlobal)) {
+    console.log('Usuário cadastrado com sucesso:', novoUsuario.email);
+    
+    // Criar sessão automaticamente
+    const tokenSessao = gerarTokenSessao();
+    sessoes.set(tokenSessao, {
+      usuarioId: novoUsuario.id,
+      email: novoUsuario.email,
+      nome: novoUsuario.nome,
+      loginTime: new Date().toISOString()
+    });
+    
+    // Retornar sucesso
+    res.json({
+      success: true,
+      message: 'Cadastro realizado com sucesso!',
+      usuario: {
+        id: novoUsuario.id,
+        nome: novoUsuario.nome,
+        email: novoUsuario.email
+      },
+      token: tokenSessao
+    });
+  } else {
+    console.error('Erro ao salvar usuário');
+    res.status(500).json({
+      success: false,
+      message: 'Erro interno do servidor. Tente novamente.'
+    });
+  }
+};
+
 
