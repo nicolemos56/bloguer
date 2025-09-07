@@ -1,4 +1,4 @@
-// Modern JavaScript for VIB Music
+// Modern JavaScript for e Nessa Bamda Mekié
 
 class VibMusic {
   constructor() {
