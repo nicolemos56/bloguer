@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "nome": "João Silva",
+    "email": "joao@vib.com",
+    "senha": "19a4c4002aff4db97d5c6978585ae9f27fea400cab6165fb3c829c8a1a717794",
+    "dataCriacao": "2025-09-07T16:34:14.147Z",
+    "artistasFavoritos": [],
+    "musicasCurtidas": []
+  },
+  {
+    "id": 2,
+    "nome": "Maria Santos",
+    "email": "maria@vib.com",
+    "senha": "5af7b8c5901470f713c8345198fc53d74801cf39d2cc5ddb70720b667c5fc9e5",
+    "dataCriacao": "2025-09-07T16:34:14.148Z",
+    "artistasFavoritos": [],
+    "musicasCurtidas": []
+  },
+  {
+    "id": 3,
+    "nome": "Admin VIB",
+    "email": "admin@vib.com",
+    "senha": "c82f53597ea20f5549b60a7c4493b6eac077f83cf639a43cbd16caf9919ff9e5",
+    "dataCriacao": "2025-09-07T16:34:14.148Z",
+    "artistasFavoritos": [],
+    "musicasCurtidas": []
+  }
+]

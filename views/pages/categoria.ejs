@@ -793,16 +793,53 @@ function showForgotModal() {
 document.addEventListener('DOMContentLoaded', function() {
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
-    loginForm.addEventListener('submit', function(e) {
+    loginForm.addEventListener('submit', async function(e) {
       e.preventDefault();
       
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
+      const submitBtn = this.querySelector('.login-btn');
       
       if (email && password) {
-        // Simular processo de login
-        alert('Funcionalidade de login será implementada em breve!\nEmail: ' + email);
-        closeLoginModal();
+        // Mostrar loading
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Entrando...';
+        submitBtn.disabled = true;
+        
+        try {
+          const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+          });
+          
+          const data = await response.json();
+          
+          if (data.success) {
+            // Salvar token na sessão
+            localStorage.setItem('vibToken', data.token);
+            localStorage.setItem('vibUser', JSON.stringify(data.usuario));
+            
+            // Mostrar sucesso
+            alert(`Bem-vindo, ${data.usuario.nome}! Login realizado com sucesso.`);
+            closeLoginModal();
+            
+            // Recarregar para atualizar interface
+            window.location.reload();
+          } else {
+            // Mostrar erro
+            alert(data.message || 'Erro no login. Tente novamente.');
+          }
+        } catch (error) {
+          console.error('Erro ao fazer login:', error);
+          alert('Erro de conexão. Tente novamente.');
+        } finally {
+          // Restaurar botão
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+        }
       }
     });
   }
