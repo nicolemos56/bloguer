@@ -420,7 +420,7 @@ module.exports = {
           };
         }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
         totalSeguidores: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('kuduro')).reduce((total, artista) => total + (artista.seguidores || 0), 0),
-        musicasPopulares: filtrarMusicasPorCategoria('Kuduro')
+        musicasPopulares: filtrarMusicasPorCategoria('kuduro')
       },
       'rap': {
         id: 'rap',
@@ -442,7 +442,7 @@ module.exports = {
           };
         }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
         totalSeguidores: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('rap')).reduce((total, artista) => total + (artista.seguidores || 0), 0),
-        musicasPopulares: filtrarMusicasPorCategoria('Rap')
+        musicasPopulares: filtrarMusicasPorCategoria('rap')
       },
       'afrohouse': {
         id: 'afrohouse',
@@ -464,7 +464,7 @@ module.exports = {
           };
         }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
         totalSeguidores: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('afro')).reduce((total, artista) => total + (artista.seguidores || 0), 0),
-        musicasPopulares: filtrarMusicasPorCategoria('Afro House')
+        musicasPopulares: filtrarMusicasPorCategoria('afrohouse')
       },
       'semba': {
         id: 'semba',
@@ -486,7 +486,7 @@ module.exports = {
           };
         }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
         totalSeguidores: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('semba')).reduce((total, artista) => total + (artista.seguidores || 0), 0),
-        musicasPopulares: filtrarMusicasPorCategoria('Semba')
+        musicasPopulares: filtrarMusicasPorCategoria('semba')
       },
       'kizomba': {
         id: 'kizomba',
@@ -508,7 +508,7 @@ module.exports = {
           };
         }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
         totalSeguidores: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('kizomba')).reduce((total, artista) => total + (artista.seguidores || 0), 0),
-        musicasPopulares: filtrarMusicasPorCategoria('Kizomba')
+        musicasPopulares: filtrarMusicasPorCategoria('kizomba')
       },
       'gheto-zouk': {
         id: 'gheto-zouk',
@@ -530,7 +530,7 @@ module.exports = {
           };
         }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
         totalSeguidores: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('zouk')).reduce((total, artista) => total + (artista.seguidores || 0), 0),
-        musicasPopulares: filtrarMusicasPorCategoria('Gheto Zouk')
+        musicasPopulares: filtrarMusicasPorCategoria('ghetozouk')
       }
     };
     
