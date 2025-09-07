@@ -801,8 +801,9 @@ function showLoginFromRegister() {
   document.getElementById('loginModal').style.display = 'flex';
 }
 
-// Lidar com submissão do formulário de login
+// Lidar com submissão dos formulários
 document.addEventListener('DOMContentLoaded', function() {
+  // Formulário de Login
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
     loginForm.addEventListener('submit', async function(e) {
@@ -846,6 +847,62 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         } catch (error) {
           console.error('Erro ao fazer login:', error);
+          alert('Erro de conexão. Tente novamente.');
+        } finally {
+          // Restaurar botão
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+        }
+      }
+    });
+  }
+  
+  // Formulário de Cadastro
+  const registerForm = document.getElementById('registerForm');
+  if (registerForm) {
+    registerForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const nome = document.getElementById('registerNome').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      const confirmPassword = document.getElementById('registerConfirmPassword').value;
+      const submitBtn = this.querySelector('.login-btn');
+      
+      if (nome && email && password && confirmPassword) {
+        // Mostrar loading
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Criando...';
+        submitBtn.disabled = true;
+        
+        try {
+          const response = await fetch('/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ nome, email, password, confirmPassword })
+          });
+          
+          const data = await response.json();
+          
+          if (data.success) {
+            // Salvar token na sessão (login automático)
+            localStorage.setItem('vibToken', data.token);
+            localStorage.setItem('vibUser', JSON.stringify(data.usuario));
+            
+            // Mostrar sucesso
+            alert(`Bem-vindo, ${data.usuario.nome}! Sua conta foi criada com sucesso.`);
+            closeRegisterModal();
+            
+            // Recarregar para atualizar interface
+            window.location.reload();
+          } else {
+            // Mostrar erro
+            alert(data.message || 'Erro no cadastro. Tente novamente.');
+          }
+        } catch (error) {
+          console.error('Erro ao fazer cadastro:', error);
           alert('Erro de conexão. Tente novamente.');
         } finally {
           // Restaurar botão
