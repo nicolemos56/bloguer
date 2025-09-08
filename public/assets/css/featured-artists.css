@@ -171,7 +171,7 @@
 .stat-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   color: #cccccc;
   font-size: 0.9rem;
 }

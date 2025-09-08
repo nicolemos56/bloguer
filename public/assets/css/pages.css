@@ -789,17 +789,21 @@
 .stat-item {
   text-align: center;
   flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .stat-number {
-  display: block;
+  display: inline;
   font-size: 2rem;
   font-weight: var(--font-weight-bold);
   color: var(--accent-primary);
-  margin-bottom: var(--space-xs);
 }
 
 .stat-label {
+  display: inline;
   font-size: 1.2rem;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -1778,8 +1782,9 @@
 
 .stat-item {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  gap: 4px;
   padding: 12px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
