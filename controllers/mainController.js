@@ -663,16 +663,8 @@ module.exports = {
       });
     }
     
-    // Buscar a categoria do artista nas músicas existentes
-    const musicaDoArtista = musicasGlobal.find(musica => musica.artista === nome);
-    if (!musicaDoArtista) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Artista não encontrado nas músicas!' 
-      });
-    }
-    
-    const categoria = musicaDoArtista.categoria;
+    // A categoria será definida pelo usuário no formulário ou padrão
+    const categoria = req.body.categoria || 'Geral';
     console.log('Categoria encontrada:', categoria);
     
     // Verificar se o artista já existe

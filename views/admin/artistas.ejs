@@ -161,19 +161,25 @@
         <div class="admin-form-row">
           <div class="admin-form-group">
             <label>Nome do Artista</label>
-            <select name="nome" required>
-              <option value="">Selecionar artista das músicas</option>
-              <% if (artistasUnicos && artistasUnicos.length > 0) { %>
-                <% artistasUnicos.forEach(artista => { %>
-                  <option value="<%= artista.nome %>"><%= artista.nome %></option>
-                <% }) %>
-              <% } else { %>
-                <option value="" disabled>Nenhuma música encontrada</option>
-              <% } %>
-            </select>
+            <input type="text" name="nome" placeholder="Nome do artista" required>
+            <small style="color: #666; display: block; margin-top: 5px;">
+              Digite o nome do artista que você deseja adicionar ao sistema
+            </small>
           </div>
         </div>
         
+        <div class="admin-form-group">
+          <label>Categoria</label>
+          <select name="categoria" required>
+            <option value="">Selecionar categoria</option>
+            <option value="Kuduro">Kuduro</option>
+            <option value="Rap">Rap</option>
+            <option value="Kizomba">Kizomba</option>
+            <option value="Afro House">Afro House</option>
+            <option value="Semba">Semba</option>
+            <option value="Gheto Zouk">Gheto Zouk</option>
+          </select>
+        </div>
         
         <div class="admin-form-group">
           <label>Biografia</label>
