@@ -939,6 +939,11 @@ module.exports = {
     
     const jaCurtiu = usuario.musicasCurtidas.includes(musicaId);
     
+    console.log(`DEBUG LIKE - Usuario: ${usuario.nome} (ID: ${usuario.id})`);
+    console.log(`DEBUG LIKE - musicaId: ${musicaId} (tipo: ${typeof musicaId})`);
+    console.log(`DEBUG LIKE - musicasCurtidas: [${usuario.musicasCurtidas}]`);
+    console.log(`DEBUG LIKE - jaCurtiu: ${jaCurtiu}`);
+    
     if (jaCurtiu) {
       // Descurtir
       usuario.musicasCurtidas = usuario.musicasCurtidas.filter(id => id !== musicaId);
@@ -1030,6 +1035,11 @@ module.exports = {
     }
     
     const jaSegue = usuario.artistasFavoritos.includes(artista.id);
+    
+    console.log(`DEBUG FOLLOW - Usuario: ${usuario.nome} (ID: ${usuario.id})`);
+    console.log(`DEBUG FOLLOW - artista.id: ${artista.id} (tipo: ${typeof artista.id})`);
+    console.log(`DEBUG FOLLOW - artistasFavoritos: [${usuario.artistasFavoritos}]`);
+    console.log(`DEBUG FOLLOW - jaSegue: ${jaSegue}`);
     
     if (jaSegue) {
       // Parar de seguir
