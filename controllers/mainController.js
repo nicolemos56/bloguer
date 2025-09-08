@@ -939,11 +939,6 @@ module.exports = {
     
     const jaCurtiu = usuario.musicasCurtidas.includes(musicaId);
     
-    console.log(`✅ SYNC - Dados do usuário recarregados do arquivo`);
-    console.log(`DEBUG LIKE - Usuario: ${usuario.nome} (ID: ${usuario.id})`);
-    console.log(`DEBUG LIKE - musicaId: ${musicaId} (tipo: ${typeof musicaId})`);
-    console.log(`DEBUG LIKE - musicasCurtidas: [${usuario.musicasCurtidas}]`);
-    console.log(`DEBUG LIKE - jaCurtiu: ${jaCurtiu}`);
     
     if (jaCurtiu) {
       // Descurtir
@@ -1037,11 +1032,6 @@ module.exports = {
     
     const jaSegue = usuario.artistasFavoritos.includes(artista.id);
     
-    console.log(`✅ SYNC - Dados do usuário recarregados do arquivo`);
-    console.log(`DEBUG FOLLOW - Usuario: ${usuario.nome} (ID: ${usuario.id})`);
-    console.log(`DEBUG FOLLOW - artista.id: ${artista.id} (tipo: ${typeof artista.id})`);
-    console.log(`DEBUG FOLLOW - artistasFavoritos: [${usuario.artistasFavoritos}]`);
-    console.log(`DEBUG FOLLOW - jaSegue: ${jaSegue}`);
     
     if (jaSegue) {
       // Parar de seguir
@@ -1874,6 +1864,48 @@ function adicionarMusicaAoSistema(pedido) {
 }
 
 // Página de detalhes da música
+// API para sincronização de dados em tempo real
+module.exports.syncData = function(req, res) {
+  try {
+    // Recarregar todos os dados mais recentes
+    const musicasAtualizadas = loadMusicas();
+    const artistasAtualizados = loadArtistas();
+    
+    // Criar mapa de dados essenciais para sincronização
+    const syncData = {
+      musicas: musicasAtualizadas.reduce((map, musica) => {
+        map[musica.id] = {
+          id: musica.id,
+          likes: musica.likes || 0,
+          plays: musica.plays || 0,
+          downloads: musica.downloads || 0
+        };
+        return map;
+      }, {}),
+      artistas: artistasAtualizados.reduce((map, artista) => {
+        map[artista.id] = {
+          id: artista.id,
+          seguidores: artista.seguidores || 0
+        };
+        return map;
+      }, {}),
+      timestamp: Date.now()
+    };
+    
+    res.json({
+      success: true,
+      data: syncData
+    });
+    
+  } catch (error) {
+    console.error('Erro na sincronização:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erro na sincronização'
+    });
+  }
+};
+
 module.exports.musicaDetalhes = function(req, res) {
   try {
     const musicaId = parseInt(req.params.id);

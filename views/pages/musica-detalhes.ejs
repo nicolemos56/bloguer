@@ -91,11 +91,11 @@
             <h4>Estatísticas</h4>
             <div class="stat-item">
               <span class="stat-label">Reproduções</span>
-              <span class="stat-value"><%= musica.plays || 0 %></span>
+              <span class="stat-value" data-plays="<%= musica.id %>"><%= musica.plays || 0 %></span>
             </div>
             <div class="stat-item">
               <span class="stat-label">Curtidas</span>
-              <span class="stat-value"><%= musica.likes || 0 %></span>
+              <span class="stat-value" data-likes="<%= musica.id %>"><%= musica.likes || 0 %></span>
             </div>
             <div class="stat-item">
               <span class="stat-label">Downloads</span>
