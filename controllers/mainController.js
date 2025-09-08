@@ -939,6 +939,7 @@ module.exports = {
     
     const jaCurtiu = usuario.musicasCurtidas.includes(musicaId);
     
+    console.log(`✅ SYNC - Dados do usuário recarregados do arquivo`);
     console.log(`DEBUG LIKE - Usuario: ${usuario.nome} (ID: ${usuario.id})`);
     console.log(`DEBUG LIKE - musicaId: ${musicaId} (tipo: ${typeof musicaId})`);
     console.log(`DEBUG LIKE - musicasCurtidas: [${usuario.musicasCurtidas}]`);
@@ -1036,6 +1037,7 @@ module.exports = {
     
     const jaSegue = usuario.artistasFavoritos.includes(artista.id);
     
+    console.log(`✅ SYNC - Dados do usuário recarregados do arquivo`);
     console.log(`DEBUG FOLLOW - Usuario: ${usuario.nome} (ID: ${usuario.id})`);
     console.log(`DEBUG FOLLOW - artista.id: ${artista.id} (tipo: ${typeof artista.id})`);
     console.log(`DEBUG FOLLOW - artistasFavoritos: [${usuario.artistasFavoritos}]`);
@@ -1364,7 +1366,10 @@ function verificarUsuarioLogado(req) {
     return null;
   }
   
-  // Buscar dados completos do usuário
+  // RECARREGAR dados atualizados do arquivo antes de retornar
+  usuariosGlobal = loadUsuarios();
+  
+  // Buscar dados completos do usuário com dados atualizados
   const usuario = usuariosGlobal.find(u => u.id === sessao.usuarioId);
   return usuario;
 }
