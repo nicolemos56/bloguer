@@ -63,156 +63,229 @@
   <!-- Admin Main Content -->
   <main class="admin-main">
     <header class="admin-header">
-      <h1 class="admin-title">Dashboard</h1>
-      <div class="admin-user">
-        <span>Bem-vindo, Admin</span>
-        <div class="admin-user-avatar">A</div>
+      <div class="admin-header-content">
+        <div class="admin-title-section">
+          <h1 class="admin-title">Dashboard</h1>
+          <p class="admin-subtitle">Painel de controle e gestão da plataforma</p>
+        </div>
+        <div class="admin-user">
+          <span>Bem-vindo, Admin</span>
+          <div class="admin-user-avatar">A</div>
+        </div>
       </div>
     </header>
 
-    <!-- Stats Cards -->
-    <section class="admin-stats">
-      <div class="admin-stat-card">
-        <div class="admin-stat-icon">
-          <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-          </svg>
+    <!-- Overview Stats -->
+    <section class="dashboard-overview">
+      <div class="overview-grid">
+        <div class="stat-card music-card">
+          <div class="stat-header">
+            <div class="stat-icon music-icon">
+              <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+              </svg>
+            </div>
+            <div class="stat-trend">+12%</div>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number"><%= stats.totalMusicas %></h3>
+            <p class="stat-label">Total de Músicas</p>
+            <span class="stat-subtext">Biblioteca completa</span>
+          </div>
         </div>
-        <div class="admin-stat-info">
-          <h3><%= stats.totalMusicas %></h3>
-          <p>Total de Músicas</p>
+        
+        <div class="stat-card artists-card">
+          <div class="stat-header">
+            <div class="stat-icon artists-icon">
+              <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A3 3 0 0 0 16.76 6h-2.52A3 3 0 0 0 11.04 8.37L8.5 16H11v6h9z"/>
+              </svg>
+            </div>
+            <div class="stat-trend">+5%</div>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number"><%= stats.totalArtistas %></h3>
+            <p class="stat-label">Artistas Registados</p>
+            <span class="stat-subtext">Talentos na plataforma</span>
+          </div>
         </div>
-      </div>
-      
-      <div class="admin-stat-card">
-        <div class="admin-stat-icon">
-          <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A3 3 0 0 0 16.76 6h-2.52A3 3 0 0 0 11.04 8.37L8.5 16H11v6h9z"/>
-          </svg>
+        
+        <div class="stat-card plays-card">
+          <div class="stat-header">
+            <div class="stat-icon plays-icon">
+              <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            </div>
+            <div class="stat-trend">+28%</div>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number"><%= stats.totalPlays %></h3>
+            <p class="stat-label">Total de Reproduções</p>
+            <span class="stat-subtext">Engagement dos usuários</span>
+          </div>
         </div>
-        <div class="admin-stat-info">
-          <h3><%= stats.totalArtistas %></h3>
-          <p>Total de Artistas</p>
-        </div>
-      </div>
-      
-      <div class="admin-stat-card">
-        <div class="admin-stat-icon">
-          <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-          </svg>
-        </div>
-        <div class="admin-stat-info">
-          <h3><%= stats.totalCategorias %></h3>
-          <p>Categorias Musicais</p>
-        </div>
-      </div>
-      
-      <div class="admin-stat-card">
-        <div class="admin-stat-icon">
-          <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M8 5v14l11-7z"/>
-          </svg>
-        </div>
-        <div class="admin-stat-info">
-          <h3><%= stats.totalPlays %></h3>
-          <p>Total de Reproduções</p>
+        
+        <div class="stat-card categories-card">
+          <div class="stat-header">
+            <div class="stat-icon categories-icon">
+              <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            </div>
+            <div class="stat-trend">+2%</div>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number"><%= stats.totalCategorias %></h3>
+            <p class="stat-label">Categorias Musicais</p>
+            <span class="stat-subtext">Géneros disponíveis</span>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Recent Activity -->
-    <section class="admin-content">
-      <div class="admin-card">
-        <div class="admin-card-header">
-          <h2>Músicas Recentes</h2>
-          <a href="/admin/musicas" class="btn btn-primary btn-small">Ver todas</a>
+    <!-- Dashboard Content Grid -->
+    <div class="dashboard-grid">
+      <!-- Left Column -->
+      <div class="dashboard-left">
+        <!-- Recent Activity -->
+        <div class="dashboard-card recent-activity">
+          <div class="card-header">
+            <h2>Atividade Recente</h2>
+            <a href="/admin/musicas" class="btn btn-primary btn-small">Ver todas</a>
+          </div>
+          
+          <div class="recent-items">
+            <% stats.musicasRecentes.forEach(musica => { %>
+              <div class="recent-item">
+                <div class="recent-icon">
+                  <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                  </svg>
+                </div>
+                <div class="recent-content">
+                  <h4><%= musica.titulo %></h4>
+                  <p><%= musica.artista %> • <%= musica.data %></p>
+                </div>
+                <div class="recent-stats">
+                  <span class="plays-count"><%= musica.plays %> reproduções</span>
+                </div>
+              </div>
+            <% }) %>
+          </div>
         </div>
         
-        <div class="admin-table-container">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Título</th>
-                <th>Artista</th>
-                <th>Data</th>
-                <th>Reproduções</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% stats.musicasRecentes.forEach(musica => { %>
-                <tr>
-                  <td><%= musica.titulo %></td>
-                  <td><%= musica.artista %></td>
-                  <td><%= musica.data %></td>
-                  <td><%= musica.plays %></td>
-                  <td>
-                    <div class="admin-action-buttons">
-                      <button class="admin-btn-small admin-btn-edit" title="Editar">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-                        </svg>
-                      </button>
-                      <button class="admin-btn-small admin-btn-delete" title="Remover">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              <% }) %>
-            </tbody>
-          </table>
+        <!-- Quick Actions -->
+        <div class="dashboard-card quick-actions">
+          <div class="card-header">
+            <h2>Ações Rápidas</h2>
+          </div>
+          
+          <div class="actions-grid">
+            <a href="/admin/musicas" class="action-item add-music">
+              <div class="action-icon">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                </svg>
+              </div>
+              <div class="action-content">
+                <h4>Adicionar Música</h4>
+                <p>Subir nova música</p>
+              </div>
+            </a>
+            
+            <a href="/admin/artistas" class="action-item add-artist">
+              <div class="action-icon">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+              </div>
+              <div class="action-content">
+                <h4>Adicionar Artista</h4>
+                <p>Registar novo artista</p>
+              </div>
+            </a>
+            
+            <a href="/admin/categorias" class="action-item manage-categories">
+              <div class="action-icon">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              </div>
+              <div class="action-content">
+                <h4>Gerir Categorias</h4>
+                <p>Organizar géneros</p>
+              </div>
+            </a>
+            
+            <a href="/admin/pedidos" class="action-item view-requests">
+              <div class="action-icon">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                </svg>
+              </div>
+              <div class="action-content">
+                <h4>Ver Pedidos</h4>
+                <p>Gerir promoções</p>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
       
-      <!-- Quick Actions -->
-      <div class="admin-card">
-        <div class="admin-card-header">
-          <h2>Ações Rápidas</h2>
+      <!-- Right Column -->
+      <div class="dashboard-right">
+        <!-- System Status -->
+        <div class="dashboard-card system-status">
+          <div class="card-header">
+            <h2>Estado do Sistema</h2>
+          </div>
+          
+          <div class="status-items">
+            <div class="status-item">
+              <div class="status-indicator online"></div>
+              <span>Servidor Online</span>
+            </div>
+            <div class="status-item">
+              <div class="status-indicator online"></div>
+              <span>Base de Dados</span>
+            </div>
+            <div class="status-item">
+              <div class="status-indicator warning"></div>
+              <span>Armazenamento (85%)</span>
+            </div>
+          </div>
         </div>
         
-        <div class="admin-quick-actions">
-          <a href="/admin/musicas" class="admin-quick-action">
-            <div class="admin-quick-icon">
-              <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-              </svg>
-            </div>
-            <span>Adicionar Música</span>
-          </a>
+        <!-- Quick Links -->
+        <div class="dashboard-card quick-links">
+          <div class="card-header">
+            <h2>Links Rápidos</h2>
+          </div>
           
-          <a href="/admin/artistas" class="admin-quick-action">
-            <div class="admin-quick-icon">
-              <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          <div class="links-list">
+            <a href="/" class="quick-link">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
               </svg>
-            </div>
-            <span>Adicionar Artista</span>
-          </a>
-          
-          <a href="/admin/categorias" class="admin-quick-action">
-            <div class="admin-quick-icon">
-              <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              <span>Ver Website</span>
+            </a>
+            <a href="/admin/musicas" class="quick-link">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
               </svg>
-            </div>
-            <span>Gerir Categorias</span>
-          </a>
-          
-          <a href="/" class="admin-quick-action">
-            <div class="admin-quick-icon">
-              <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.82,11.69,4.82,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+              <span>Gerir Músicas</span>
+            </a>
+            <a href="/admin/artistas" class="quick-link">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A3 3 0 0 0 16.76 6h-2.52A3 3 0 0 0 11.04 8.37L8.5 16H11v6h9z"/>
               </svg>
-            </div>
-            <span>Ver Website</span>
-          </a>
+              <span>Gerir Artistas</span>
+            </a>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   </main>
 
   <!-- Admin Footer -->
