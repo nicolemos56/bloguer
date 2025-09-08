@@ -1096,6 +1096,9 @@ document.querySelectorAll('.track-row').forEach((row, index) => {
   const playBtn = row.querySelector('.play-btn');
   if (playBtn) {
     playBtn.addEventListener('click', function(e) {
+      // Feedback visual
+      updateButtonPlayState(this, true);
+      
       if (this.href) {
         e.preventDefault();
         
