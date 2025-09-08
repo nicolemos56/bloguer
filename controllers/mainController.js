@@ -1870,6 +1870,9 @@ module.exports.musicaDetalhes = function(req, res) {
       return res.status(404).redirect('/');
     }
     
+    // Buscar dados do artista (biografia, seguidores, etc.)
+    const perfilArtista = artistasGlobal.find(a => a.nome === musica.artista);
+    
     // Buscar outras músicas do mesmo artista
     const musicasDoArtista = musicasGlobal
       .filter(m => m.artista === musica.artista && m.id !== musicaId)
@@ -1881,12 +1884,13 @@ module.exports.musicaDetalhes = function(req, res) {
       .slice(0, 8); // Limitar a 8 músicas
     
     console.log(`=== DETALHES DA MÚSICA ===`);
-    console.log(`Música: "${musica.nome}" por ${musica.artista}`);
+    console.log(`Música: "${musica.titulo || musica.nome}" por ${musica.artista}`);
     console.log(`Categoria: ${musica.categoria} | Plays: ${musica.plays} | Likes: ${musica.likes}`);
     
     res.render('pages/musica-detalhes', {
-      title: `${musica.nome} - ${musica.artista}`,
+      title: `${musica.titulo || musica.nome} - ${musica.artista}`,
       musica: musica,
+      perfilArtista: perfilArtista, // Dados do artista incluindo biografia
       musicasDoArtista: musicasDoArtista,
       musicasRelacionadas: musicasRelacionadas,
       totalArtistas: artistasGlobal.length,
