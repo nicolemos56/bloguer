@@ -11,16 +11,16 @@
       <p class="category-hero-description"><%= categoria.descricao %></p>
       <div class="category-hero-stats">
         <div class="stat-item">
+          <span class="stat-label">Artistas:</span>
           <span class="stat-number"><%= categoria.artistas.length %></span>
-          <span class="stat-label">Artistas</span>
         </div>
         <div class="stat-item">
+          <span class="stat-label">Músicas:</span>
           <span class="stat-number"><%= categoria.musicasPopulares.length %></span>
-          <span class="stat-label">Músicas</span>
         </div>
         <div class="stat-item">
+          <span class="stat-label">Seguidores:</span>
           <span class="stat-number"><%= categoria.totalSeguidores >= 1000 ? (categoria.totalSeguidores / 1000).toFixed(1) + 'K' : categoria.totalSeguidores %></span>
-          <span class="stat-label">Seguidores</span>
         </div>
       </div>
       <div class="category-hero-actions">
