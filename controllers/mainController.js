@@ -464,7 +464,7 @@ module.exports = {
           };
         }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
         totalSeguidores: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('afro')).reduce((total, artista) => total + (artista.seguidores || 0), 0),
-        musicasPopulares: filtrarMusicasPorCategoria('afro house')
+        musicasPopulares: filtrarMusicasPorCategoria('afrohouse')
       },
       'semba': {
         id: 'semba',
