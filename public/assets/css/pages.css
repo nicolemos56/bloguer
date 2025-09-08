@@ -1482,16 +1482,16 @@
 }
 
 .plano-card.popular {
-  border-color: var(--accent-primary);
-  background: linear-gradient(135deg, rgba(221, 152, 38, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
+  border-color: #ff8900;
+  background: #1a1a1a;
 }
 
 .plano-badge {
   position: absolute;
   top: -8px;
   right: 15px;
-  background: var(--accent-primary);
-  color: var(--text-dark);
+  background: #ff8900;
+  color: #000000;
   padding: 4px 12px;
   font-size: 1.2rem;
   font-weight: 600;
@@ -1545,6 +1545,11 @@
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
+}
+
+.plano-card .btn:hover {
+  background: #ffb347;
+  transform: translateY(-2px);
 }
 
 .btn-outline {
