@@ -1003,6 +1003,33 @@
   }
 }
 
+/* Admin Footer */
+.admin-footer {
+  margin-left: 280px;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  padding: var(--space-lg) 0;
+  margin-top: auto;
+}
+
+.admin-footer-content {
+  padding: 0 var(--space-2xl);
+  text-align: center;
+}
+
+.admin-footer p {
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+/* Responsive admin footer */
+@media (max-width: 768px) {
+  .admin-footer {
+    margin-left: 0;
+  }
+}
+
 /* Justificação de texto para conteúdo descritivo do admin */
 .admin-content p,
 .admin-card-body p,
