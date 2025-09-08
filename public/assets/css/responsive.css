@@ -46,6 +46,9 @@
     opacity: 0;
     visibility: hidden;
     transition: all var(--transition-base);
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    z-index: 999;
   }
   
   .navbar-menu.active {
@@ -63,6 +66,14 @@
     padding: var(--space-md);
     text-align: center;
     border-bottom: 1px solid var(--border-color);
+    font-size: 1.8rem;
+    transition: all var(--transition-base);
+  }
+  
+  .navbar-link:hover,
+  .navbar-link:focus {
+    background-color: var(--accent-primary);
+    color: var(--text-dark);
   }
   
   .navbar-link::after {
@@ -71,6 +82,9 @@
   
   .navbar-toggle {
     display: flex;
+    min-height: 44px;
+    min-width: 44px;
+    padding: var(--space-sm);
   }
   
   .navbar-toggle.active .toggle-bar:nth-child(1) {
@@ -124,8 +138,22 @@
     padding: 0 var(--space-md);
   }
   
+  .navbar-menu {
+    padding: var(--space-md);
+  }
+  
+  .navbar-link {
+    padding: var(--space-lg) var(--space-md);
+    font-size: 2rem;
+  }
+  
   .brand-text {
     display: none;
+  }
+  
+  .brand-logo {
+    width: 3.2rem;
+    height: 3.2rem;
   }
   
   .hero {
