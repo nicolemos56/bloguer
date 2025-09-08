@@ -294,7 +294,7 @@
 }
 
 /* Estados de reprodução */
-.track-play-btn.playing, .btn-play-large.playing, .card-play-btn.playing {
+.track-play-btn.playing, .btn-play-large.playing, .card-play-btn.playing, .btn-secondary.playing {
   background: var(--accent-primary) !important;
   animation: pulse 2s infinite;
   transform: scale(1.05);
