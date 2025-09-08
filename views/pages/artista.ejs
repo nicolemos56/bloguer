@@ -862,20 +862,30 @@ async function registrarPlay(musicId) {
 
 // Função para atualizar estado visual do botão
 function updateButtonPlayState(button, isPlaying) {
-  if (!button) return;
-  
-  // Reset all play buttons first
-  document.querySelectorAll('.play-btn, .btn').forEach(btn => {
-    if (btn.title === 'Reproduzir' || btn.innerHTML.includes('Reproduzir') || btn.innerHTML.includes('Pausar')) {
-      btn.innerHTML = btn.innerHTML.replace('Pausar', 'Reproduzir');
-      btn.title = 'Reproduzir';
-      btn.classList.remove('playing');
-      const svg = btn.querySelector('svg path');
-      if (svg) svg.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
-    }
-  });
+  // Se button é null, resetar todos os botões
+  if (!button) {
+    document.querySelectorAll('.play-btn, .btn').forEach(btn => {
+      if (btn.title === 'Reproduzir' || btn.title === 'Pausar') {
+        btn.title = 'Reproduzir';
+        btn.classList.remove('playing');
+        const svg = btn.querySelector('svg path');
+        if (svg) svg.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
+      }
+    });
+    return;
+  }
   
   if (isPlaying) {
+    // Reset outros botões primeiro
+    document.querySelectorAll('.play-btn, .btn').forEach(btn => {
+      if (btn !== button && (btn.title === 'Reproduzir' || btn.title === 'Pausar')) {
+        btn.title = 'Reproduzir';
+        btn.classList.remove('playing');
+        const svg = btn.querySelector('svg path');
+        if (svg) svg.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
+      }
+    });
+    
     button.classList.add('playing');
     button.title = 'Pausar';
     
@@ -883,6 +893,15 @@ function updateButtonPlayState(button, isPlaying) {
     const svg = button.querySelector('svg path');
     if (svg) {
       svg.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z'); // Pause icon
+    }
+  } else {
+    button.classList.remove('playing');
+    button.title = 'Reproduzir';
+    
+    // Change to play icon
+    const svg = button.querySelector('svg path');
+    if (svg) {
+      svg.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
     }
   }
 }
@@ -1091,13 +1110,39 @@ async function tentarCurtirMusica(musicId, btnElement) {
   }
 }
 
+// Variáveis de controle do player
+let currentlyPlayingButton = null;
+let currentAudio = null;
+
 // Reproduzir música individual
 document.querySelectorAll('.track-row').forEach((row, index) => {
   const playBtn = row.querySelector('.play-btn');
   if (playBtn) {
     playBtn.addEventListener('click', function(e) {
+      // Se o botão clicado é o mesmo que está tocando, pausar/resumir
+      if (currentlyPlayingButton === this) {
+        if (currentAudio && !currentAudio.paused) {
+          currentAudio.pause();
+          updateButtonPlayState(this, false);
+        } else if (currentAudio) {
+          currentAudio.play();
+          updateButtonPlayState(this, true);
+        }
+        return;
+      }
+      
+      // Parar música atual se houver
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+      
+      // Resetar todos os botões
+      updateButtonPlayState(null, false);
+      
       // Feedback visual
       updateButtonPlayState(this, true);
+      currentlyPlayingButton = this;
       
       if (this.href) {
         e.preventDefault();
