@@ -422,6 +422,8 @@ section.good div.card_good a img{
   height: 70px;
   margin: 6px;
   border-radius: 4px;
+  object-fit: cover;
+  object-position: center;
 }
 section.good div.card_good div h3{
 color: white;
@@ -853,6 +855,8 @@ div.search_music_one div.children img{
  margin-left: 5px;
  margin-top: 5px;
  border-radius: 10px;
+ object-fit: cover;
+ object-position: center;
 }
 
 
@@ -882,6 +886,8 @@ flex-direction: row;
  margin-left: 5px;
  margin-top: 5px;
  border-radius: 10px;
+ object-fit: cover;
+ object-position: center;
 }
 
 
