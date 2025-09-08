@@ -28,7 +28,7 @@
     "cover": "/uploads/coverImage-1757258111374-891371799.jpg",
     "nomeOriginal": "ToryBreeza-nosso momento.mp3",
     "nomeArquivo": "musicFile-1757258079943-544421022.mp3",
-    "likes": 4,
+    "likes": 5,
     "downloads": 0,
     "plays": 4,
     "dataAdicao": "2025-09-07T15:15:17.798Z"
@@ -45,7 +45,7 @@
     "cover": "/uploads/coverImage-1757265974823-12060260.jpg",
     "nomeOriginal": "dji_tafinha_imperfeito_mp3_56979.mp3",
     "nomeArquivo": "musicFile-1757265943892-176698221.mp3",
-    "likes": 2,
+    "likes": 3,
     "downloads": 0,
     "plays": 2,
     "dataAdicao": "2025-09-07T17:26:14.827Z"
@@ -113,9 +113,9 @@
     "cover": "/uploads/coverImage-1757271514641-466559474.png",
     "nomeOriginal": "afro_boogie_mercy_beaucoup_video_oficial_mp3_63147.mp3",
     "nomeArquivo": "musicFile-1757271489856-682331856.mp3",
-    "likes": 0,
+    "likes": 1,
     "downloads": 0,
-    "plays": 0,
+    "plays": 3,
     "dataAdicao": "2025-09-07T18:58:37.078Z"
   },
   {
@@ -132,7 +132,7 @@
     "nomeArquivo": "test1.mp3",
     "likes": 5,
     "downloads": 0,
-    "plays": 3,
+    "plays": 6,
     "dataAdicao": "2025-09-07T19:00:00.000Z"
   },
   {
@@ -149,7 +149,7 @@
     "nomeArquivo": "test2.mp3",
     "likes": 8,
     "downloads": 0,
-    "plays": 6,
+    "plays": 9,
     "dataAdicao": "2025-09-07T19:01:00.000Z"
   },
   {
@@ -166,7 +166,7 @@
     "nomeArquivo": "test3.mp3",
     "likes": 12,
     "downloads": 0,
-    "plays": 9,
+    "plays": 13,
     "dataAdicao": "2025-09-07T19:02:00.000Z"
   },
   {
@@ -183,7 +183,7 @@
     "nomeArquivo": "test4.mp3",
     "likes": 6,
     "downloads": 0,
-    "plays": 4,
+    "plays": 7,
     "dataAdicao": "2025-09-07T19:03:00.000Z"
   },
   {
@@ -200,7 +200,7 @@
     "nomeArquivo": "test5.mp3",
     "likes": 10,
     "downloads": 0,
-    "plays": 7,
+    "plays": 10,
     "dataAdicao": "2025-09-07T19:04:00.000Z"
   },
   {
@@ -217,7 +217,7 @@
     "nomeArquivo": "test6.mp3",
     "likes": 15,
     "downloads": 0,
-    "plays": 12,
+    "plays": 15,
     "dataAdicao": "2025-09-07T19:05:00.000Z"
   },
   {
@@ -234,7 +234,7 @@
     "nomeArquivo": "test7.mp3",
     "likes": 9,
     "downloads": 0,
-    "plays": 5,
+    "plays": 8,
     "dataAdicao": "2025-09-07T19:06:00.000Z"
   },
   {
@@ -251,7 +251,7 @@
     "nomeArquivo": "test8.mp3",
     "likes": 7,
     "downloads": 0,
-    "plays": 3,
+    "plays": 6,
     "dataAdicao": "2025-09-07T19:07:00.000Z"
   },
   {
@@ -268,7 +268,7 @@
     "nomeArquivo": "test9.mp3",
     "likes": 11,
     "downloads": 0,
-    "plays": 8,
+    "plays": 11,
     "dataAdicao": "2025-09-07T19:08:00.000Z"
   },
   {
@@ -285,7 +285,7 @@
     "nomeArquivo": "test10.mp3",
     "likes": 13,
     "downloads": 0,
-    "plays": 10,
+    "plays": 13,
     "dataAdicao": "2025-09-07T19:09:00.000Z"
   },
   {
@@ -302,7 +302,7 @@
     "nomeArquivo": "test11.mp3",
     "likes": 8,
     "downloads": 0,
-    "plays": 6,
+    "plays": 9,
     "dataAdicao": "2025-09-07T19:10:00.000Z"
   },
   {
@@ -317,9 +317,9 @@
     "cover": "/uploads/coverImage-1757283598145-158088746.jpg",
     "nomeOriginal": "videoplayback.m4a",
     "nomeArquivo": "musicFile-1757283572510-644167740.m4a",
-    "likes": 0,
+    "likes": 1,
     "downloads": 0,
-    "plays": 0,
+    "plays": 4,
     "dataAdicao": "2025-09-07T22:19:58.360Z"
   }
 ]
