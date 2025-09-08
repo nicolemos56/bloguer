@@ -677,20 +677,15 @@ function playMusic(id, titulo, artista, arquivo, cover, buttonElement) {
   // Registrar reprodução no backend
   registrarPlay(id);
   
-  // Usar o player interno ou criar um simples
-  if (typeof musicPlayer !== 'undefined') {
-    musicPlayer.loadPlaylist([track], 0);
-  } else {
-    // Player simples para fallback
-    currentAudio = new Audio(arquivo);
-    currentAudio.play();
-    
-    currentAudio.addEventListener('ended', () => {
-      updateButtonPlayState(button, false);
-      currentlyPlayingButton = null;
-      currentAudio = null;
-    });
-  }
+  // Player simples sem modal
+  currentAudio = new Audio(arquivo);
+  currentAudio.play();
+  
+  currentAudio.addEventListener('ended', () => {
+    updateButtonPlayState(button, false);
+    currentlyPlayingButton = null;
+    currentAudio = null;
+  });
 }
 
 // Função para alternar entre play e pause
