@@ -293,6 +293,55 @@
   box-shadow: var(--shadow-lg);
 }
 
+/* Estados de reprodução */
+.track-play-btn.playing, .btn-play-large.playing, .card-play-btn.playing {
+  background: #ff4757 !important;
+  animation: pulse 2s infinite;
+  transform: scale(1.05);
+}
+
+.btn.playing {
+  background: #ff4757 !important;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 71, 87, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
+  }
+}
+
+/* Estado de carregamento */
+.btn.loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.btn.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
 .track-category-badge {
   position: absolute;
   top: var(--space-sm);
