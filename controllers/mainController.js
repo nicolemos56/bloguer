@@ -1084,6 +1084,31 @@ module.exports = {
   },
 
   // Reproduzir todas as músicas de uma categoria
+  // Novo método para retornar músicas por categoria via API
+  getCategoriaMusicas: (req, res) => {
+    const categoriaId = req.params.categoria;
+    
+    console.log(`API: Buscando músicas da categoria: ${categoriaId}`);
+    
+    // Filtrar músicas por categoria
+    const musicasDaCategoria = musicasGlobal.filter(musica => {
+      const musicaCategoria = musica.categoria.toLowerCase().replace(/[^a-z]/g, '');
+      const targetCategoria = categoriaId.toLowerCase().replace(/[^a-z]/g, '');
+      return musicaCategoria === targetCategoria || 
+             musicaCategoria.includes(targetCategoria) ||
+             targetCategoria.includes(musicaCategoria);
+    });
+
+    console.log(`Encontradas ${musicasDaCategoria.length} músicas na categoria ${categoriaId}`);
+    
+    res.json({
+      success: true,
+      categoria: categoriaId,
+      total: musicasDaCategoria.length,
+      musicas: musicasDaCategoria
+    });
+  },
+
   playCategoryAll: (req, res) => {
     const categoriaId = req.params.categoria;
     
