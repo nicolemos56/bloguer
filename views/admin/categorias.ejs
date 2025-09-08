@@ -60,120 +60,293 @@
       <h1 class="admin-title">Gerir Categorias</h1>
     </header>
 
-    <!-- Categories Grid -->
+    <!-- Categories Management -->
     <section class="admin-content">
-      <div class="admin-categories-grid">
-        <% categorias.forEach(categoria => { %>
-          <div class="admin-category-card">
-            <div class="admin-category-header" style="background-color: <%= categoria.cor %>;">
-              <h3><%= categoria.nome %></h3>
-              <div class="admin-category-actions">
-                <button class="admin-category-btn" onclick="editCategory(<%= categoria.id %>)" title="Editar">
-                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-                  </svg>
-                </button>
-                <button class="admin-category-btn" onclick="viewCategory('<%= categoria.id %>')" title="Ver categoria">
-                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-            
-            <div class="admin-category-body">
-              <div class="admin-category-stats">
-                <div class="admin-category-stat">
-                  <span class="stat-number"><%= categoria.musicas %></span>
-                  <span class="stat-label">Músicas</span>
-                </div>
-                <div class="admin-category-stat">
-                  <span class="stat-number"><%= categoria.artistas %></span>
-                  <span class="stat-label">Artistas</span>
-                </div>
-              </div>
-              
-              <div class="admin-category-info">
-                <div class="admin-category-status">
-                  <span class="admin-status-badge admin-status-<%= categoria.status.toLowerCase() %>">
-                    <%= categoria.status %>
-                  </span>
-                </div>
-                <div class="admin-category-color-preview">
-                  <span>Cor:</span>
-                  <div class="color-circle" style="background-color: <%= categoria.cor %>;"></div>
-                  <code><%= categoria.cor %></code>
-                </div>
-              </div>
-            </div>
-          </div>
-        <% }) %>
-      </div>
-      
-      <!-- Category Management Tools -->
-      <div class="admin-card admin-category-tools">
+      <div class="admin-card">
         <div class="admin-card-header">
-          <h2>Ferramentas de Categoria</h2>
+          <h2>Gestão de Categorias</h2>
+          <button class="btn btn-primary btn-small" onclick="openAddModal()">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+            Adicionar Categoria
+          </button>
         </div>
         
-        <div class="admin-tools-grid">
-          <div class="admin-tool-item">
-            <div class="admin-tool-icon">
-              <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-              </svg>
-            </div>
-            <h4>Criar Nova Categoria</h4>
-            <p>Adicione uma nova categoria musical à plataforma</p>
-            <button class="btn btn-primary btn-small" onclick="createCategory()">Criar Categoria</button>
-          </div>
-          
-          <div class="admin-tool-item">
-            <div class="admin-tool-icon">
-              <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-              </svg>
-            </div>
-            <h4>Reordenar Categorias</h4>
-            <p>Altere a ordem de exibição das categorias</p>
-            <button class="btn btn-secondary btn-small" onclick="reorderCategories()">Reordenar</button>
-          </div>
-          
-          <div class="admin-tool-item">
-            <div class="admin-tool-icon">
-              <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
-              </svg>
-            </div>
-            <h4>Configurações Globais</h4>
-            <p>Configure as definições gerais das categorias</p>
-            <button class="btn btn-accent btn-small" onclick="categorySettings()">Configurar</button>
-          </div>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Cor</th>
+                <th>Músicas</th>
+                <th>Artistas</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% categorias.forEach((categoria, index) => { %>
+                <tr>
+                  <td>
+                    <div class="category-name">
+                      <strong><%= categoria.nome %></strong>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="category-color">
+                      <div class="color-preview" style="background-color: <%= categoria.cor %>;"></div>
+                      <code><%= categoria.cor %></code>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="stat-badge"><%= categoria.musicas %></span>
+                  </td>
+                  <td>
+                    <span class="stat-badge"><%= categoria.artistas %></span>
+                  </td>
+                  <td>
+                    <span class="status-badge status-<%= categoria.status.toLowerCase() %>">
+                      <%= categoria.status %>
+                    </span>
+                  </td>
+                  <td>
+                    <div class="admin-action-buttons">
+                      <button class="admin-btn-small admin-btn-edit" onclick="editCategory(<%= index %>)" title="Editar">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                        </svg>
+                      </button>
+                      <button class="admin-btn-small admin-btn-view" onclick="viewCategory('<%= categoria.id %>')" title="Ver categoria">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                        </svg>
+                      </button>
+                      <button class="admin-btn-small admin-btn-delete" onclick="deleteCategory(<%= index %>, '<%= categoria.nome %>')" title="Excluir">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
+    
+    <!-- Add Category Modal -->
+    <div id="addCategoryModal" class="admin-modal" style="display: none;">
+      <div class="admin-modal-content">
+        <div class="admin-modal-header">
+          <h2>Adicionar Nova Categoria</h2>
+          <button type="button" class="admin-modal-close" onclick="closeAddModal()">&times;</button>
+        </div>
+        
+        <form id="addCategoryForm" class="admin-form">
+          <div class="admin-form-group">
+            <label>Nome da Categoria</label>
+            <input type="text" name="nome" required placeholder="Ex: Kizomba">
+          </div>
+          
+          <div class="admin-form-group">
+            <label>Cor da Categoria</label>
+            <div class="color-input-group">
+              <input type="color" name="cor" value="#ff6b35" required>
+              <input type="text" name="corHex" value="#ff6b35" placeholder="#ff6b35" required>
+            </div>
+          </div>
+          
+          <div class="admin-form-group">
+            <label>Status</label>
+            <select name="status" required>
+              <option value="Ativo">Ativo</option>
+              <option value="Inativo">Inativo</option>
+            </select>
+          </div>
+          
+          <div class="admin-form-actions">
+            <button type="button" class="btn btn-secondary" onclick="closeAddModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Adicionar Categoria</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Edit Category Modal -->
+    <div id="editCategoryModal" class="admin-modal" style="display: none;">
+      <div class="admin-modal-content">
+        <div class="admin-modal-header">
+          <h2>Editar Categoria</h2>
+          <button type="button" class="admin-modal-close" onclick="closeEditModal()">&times;</button>
+        </div>
+        
+        <form id="editCategoryForm" class="admin-form">
+          <input type="hidden" name="categoryIndex" id="editCategoryIndex">
+          
+          <div class="admin-form-group">
+            <label>Nome da Categoria</label>
+            <input type="text" name="nome" id="editNome" required>
+          </div>
+          
+          <div class="admin-form-group">
+            <label>Cor da Categoria</label>
+            <div class="color-input-group">
+              <input type="color" name="cor" id="editCor" required>
+              <input type="text" name="corHex" id="editCorHex" required>
+            </div>
+          </div>
+          
+          <div class="admin-form-group">
+            <label>Status</label>
+            <select name="status" id="editStatus" required>
+              <option value="Ativo">Ativo</option>
+              <option value="Inativo">Inativo</option>
+            </select>
+          </div>
+          
+          <div class="admin-form-actions">
+            <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </main>
 
   <script>
-    function editCategory(id) {
-      alert('Funcionalidade de edição será implementada para categoria ID: ' + id);
+    // Data das categorias para JavaScript
+    const categorias = <%- JSON.stringify(categorias) %>;
+    
+    // Modals
+    function openAddModal() {
+      document.getElementById('addCategoryModal').style.display = 'flex';
+    }
+    
+    function closeAddModal() {
+      document.getElementById('addCategoryModal').style.display = 'none';
+      document.getElementById('addCategoryForm').reset();
+    }
+    
+    function openEditModal(index) {
+      const categoria = categorias[index];
+      document.getElementById('editCategoryIndex').value = index;
+      document.getElementById('editNome').value = categoria.nome;
+      document.getElementById('editCor').value = categoria.cor;
+      document.getElementById('editCorHex').value = categoria.cor;
+      document.getElementById('editStatus').value = categoria.status;
+      document.getElementById('editCategoryModal').style.display = 'flex';
+    }
+    
+    function closeEditModal() {
+      document.getElementById('editCategoryModal').style.display = 'none';
+    }
+    
+    // Category Actions
+    function editCategory(index) {
+      openEditModal(index);
     }
     
     function viewCategory(id) {
       window.open('/categoria/' + id, '_blank');
     }
     
-    function createCategory() {
-      alert('Modal de criação de categoria será implementado');
+    function deleteCategory(index, nome) {
+      if (confirm(`Tem certeza que deseja excluir a categoria "${nome}"?\n\nEsta ação não pode ser desfeita e pode afetar músicas associadas.`)) {
+        // Implementar exclusão via AJAX
+        alert('Funcionalidade de exclusão será implementada via backend');
+        // fetch('/admin/categorias/' + index, { method: 'DELETE' })
+        // .then(() => location.reload());
+      }
     }
     
-    function reorderCategories() {
-      alert('Interface de reordenação será implementada');
-    }
+    // Color input sync
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add modal color sync
+      const addColorInput = document.querySelector('#addCategoryForm input[type="color"]');
+      const addColorHex = document.querySelector('#addCategoryForm input[name="corHex"]');
+      
+      addColorInput.addEventListener('change', function() {
+        addColorHex.value = this.value;
+      });
+      
+      addColorHex.addEventListener('input', function() {
+        if (this.value.match(/^#[0-9A-F]{6}$/i)) {
+          addColorInput.value = this.value;
+        }
+      });
+      
+      // Edit modal color sync
+      const editColorInput = document.querySelector('#editCategoryForm input[type="color"]');
+      const editColorHex = document.querySelector('#editCategoryForm input[name="corHex"]');
+      
+      editColorInput.addEventListener('change', function() {
+        editColorHex.value = this.value;
+      });
+      
+      editColorHex.addEventListener('input', function() {
+        if (this.value.match(/^#[0-9A-F]{6}$/i)) {
+          editColorInput.value = this.value;
+        }
+      });
+    });
     
-    function categorySettings() {
-      alert('Página de configurações será implementada');
-    }
+    // Form submissions
+    document.getElementById('addCategoryForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const categoriaData = {
+        nome: formData.get('nome'),
+        cor: formData.get('cor'),
+        status: formData.get('status')
+      };
+      
+      // Implementar via backend
+      console.log('Nova categoria:', categoriaData);
+      alert('Categoria adicionada com sucesso!\n\n(Funcionalidade será implementada via backend)');
+      closeAddModal();
+      
+      // fetch('/admin/categorias/add', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(categoriaData)
+      // }).then(() => location.reload());
+    });
+    
+    document.getElementById('editCategoryForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const index = formData.get('categoryIndex');
+      const categoriaData = {
+        nome: formData.get('nome'),
+        cor: formData.get('cor'),
+        status: formData.get('status')
+      };
+      
+      // Implementar via backend
+      console.log('Categoria editada:', index, categoriaData);
+      alert('Categoria atualizada com sucesso!\n\n(Funcionalidade será implementada via backend)');
+      closeEditModal();
+      
+      // fetch('/admin/categorias/' + index, {
+      //   method: 'PUT',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(categoriaData)
+      // }).then(() => location.reload());
+    });
+    
+    // Close modals when clicking outside
+    document.querySelectorAll('.admin-modal').forEach(modal => {
+      modal.addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.style.display = 'none';
+        }
+      });
+    });
   </script>
 
   <!-- Admin Footer -->
