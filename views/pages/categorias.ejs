@@ -50,15 +50,15 @@
             </div>
             
             <div class="category-actions">
-              <button class="btn btn-primary category-play-text-btn" data-category="<%= categoria.id %>" data-category-name="<%= categoria.nome %>" onclick="playAllCategory('<%= categoria.id %>', '<%= categoria.nome %>', this)">
+              <button class="btn btn-accent category-play-text-btn" data-category="<%= categoria.id %>" data-category-name="<%= categoria.nome %>" onclick="playAllCategory('<%= categoria.id %>', '<%= categoria.nome %>', this)">
                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z"/>
                 </svg>
                 Reproduzir tudo
               </button>
-              <a href="/categoria/<%= categoria.id %>" class="btn btn-secondary">
+              <a href="/categoria/<%= categoria.id %>" class="btn btn-primary">
                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M21 12l-7-7v5H5a2 2 0 000 4h9v5l7-7z"/>
+                  <path d="M8 5v14l11-7z"/>
                 </svg>
                 Explorar
               </a>
@@ -643,7 +643,7 @@ function playCurrentCategoryTrack(buttonElement, categoryName) {
 
 // Função para atualizar estado visual dos botões da categoria
 function updateCategoryButtonState(button, isPlaying, customText = null) {
-  // Se button é null, resetar todos os botões
+  // Se button é null, resetar todos os botões e cards
   if (!button) {
     document.querySelectorAll('.category-play-btn, .category-play-text-btn').forEach(btn => {
       btn.classList.remove('playing');
@@ -658,11 +658,16 @@ function updateCategoryButtonState(button, isPlaying, customText = null) {
         Reproduzir tudo`;
       }
     });
+    
+    // Remover indicação visual de todos os cards
+    document.querySelectorAll('.category-card').forEach(card => {
+      card.classList.remove('playing');
+    });
     return;
   }
 
   if (isPlaying) {
-    // Reset outros botões primeiro
+    // Reset outros botões e cards primeiro
     document.querySelectorAll('.category-play-btn, .category-play-text-btn').forEach(btn => {
       if (btn !== button) {
         btn.classList.remove('playing');
@@ -677,8 +682,19 @@ function updateCategoryButtonState(button, isPlaying, customText = null) {
         }
       }
     });
+    
+    // Remover indicação visual de outros cards
+    document.querySelectorAll('.category-card').forEach(card => {
+      card.classList.remove('playing');
+    });
 
     button.classList.add('playing');
+    
+    // Adicionar indicação visual no card atual
+    const categoryCard = button.closest('.category-card');
+    if (categoryCard) {
+      categoryCard.classList.add('playing');
+    }
     
     // Change to pause icon
     const svg = button.querySelector('svg path');
@@ -695,6 +711,12 @@ function updateCategoryButtonState(button, isPlaying, customText = null) {
     }
   } else {
     button.classList.remove('playing');
+    
+    // Remover indicação visual do card
+    const categoryCard = button.closest('.category-card');
+    if (categoryCard) {
+      categoryCard.classList.remove('playing');
+    }
     
     // Change to play icon
     const svg = button.querySelector('svg path');
