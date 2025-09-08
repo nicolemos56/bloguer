@@ -641,28 +641,9 @@ module.exports = {
     console.log('Total de artistas no array:', artistasGlobal.length);
     console.log('Artistas no array:', artistasGlobal);
     
-    // Extrair artistas únicos das músicas existentes
-    const artistasUnicos = [];
-    const artistasJaAdicionados = new Set();
-    
-    musicasGlobal.forEach(musica => {
-      if (!artistasJaAdicionados.has(musica.artista)) {
-        artistasUnicos.push({
-          nome: musica.artista,
-          categoria: musica.categoria
-        });
-        artistasJaAdicionados.add(musica.artista);
-      }
-    });
-    
-    console.log('=== ARTISTAS ÚNICOS DAS MÚSICAS ===');
-    console.log('Total artistas únicos encontrados:', artistasUnicos.length);
-    console.log('Artistas únicos:', artistasUnicos);
-    
     res.render('admin/artistas', {
       title: 'Gerir Artistas - Admin',
-      artistas: artistasGlobal,
-      artistasUnicos: artistasUnicos
+      artistas: artistasGlobal
     });
   },
 
