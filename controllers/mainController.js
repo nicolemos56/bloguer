@@ -317,7 +317,7 @@ module.exports = {
         descricao: 'Fusão de house music com ritmos africanos',
         imagem: 'forca_suprema.jpg',
         cor: '#0051ff',
-        ...calcularDadosCategoria('afro house')
+        ...calcularDadosCategoria('Afro House')
       },
       {
         id: 'semba',
