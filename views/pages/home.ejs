@@ -555,8 +555,29 @@ class MusicPlayer {
 // Inicializar o player
 const musicPlayer = new MusicPlayer();
 
+// Variáveis de controle do player
+let currentlyPlayingButton = null;
+let currentAudio = null;
+
 // Função para tocar uma música individual
 function playMusic(id, titulo, artista, arquivo, cover, buttonElement) {
+  const button = buttonElement || event.target;
+  
+  // Se o botão clicado é o mesmo que está tocando, pausar/resumir
+  if (currentlyPlayingButton === button) {
+    togglePlayPause(button);
+    return;
+  }
+  
+  // Parar música atual se houver
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+  }
+  
+  // Resetar todos os botões
+  updateButtonPlayState(null, false);
+  
   const track = {
     id: id,
     titulo: titulo,
@@ -569,29 +590,67 @@ function playMusic(id, titulo, artista, arquivo, cover, buttonElement) {
   };
   
   // Feedback visual no botão
-  updateButtonPlayState(buttonElement || event.target, true);
+  updateButtonPlayState(button, true);
+  currentlyPlayingButton = button;
   
   // Registrar reprodução no backend
   registrarPlay(id);
   
-  musicPlayer.loadPlaylist([track], 0);
+  // Usar o player interno ou criar um simples
+  if (typeof musicPlayer !== 'undefined') {
+    musicPlayer.loadPlaylist([track], 0);
+  } else {
+    // Player simples para fallback
+    currentAudio = new Audio(arquivo);
+    currentAudio.play();
+    
+    currentAudio.addEventListener('ended', () => {
+      updateButtonPlayState(button, false);
+      currentlyPlayingButton = null;
+      currentAudio = null;
+    });
+  }
+}
+
+// Função para alternar entre play e pause
+function togglePlayPause(button) {
+  if (currentAudio) {
+    if (currentAudio.paused) {
+      currentAudio.play();
+      updateButtonPlayState(button, true);
+    } else {
+      currentAudio.pause();
+      updateButtonPlayState(button, false);
+    }
+  }
 }
 
 // Função para atualizar estado visual do botão
 function updateButtonPlayState(button, isPlaying) {
-  if (!button) return;
-  
-  // Reset all play buttons first
-  document.querySelectorAll('.track-play-btn, .btn-play-large, .btn').forEach(btn => {
-    if (btn.innerHTML.includes('svg') && (btn.innerHTML.includes('Reproduzir') || btn.innerHTML.includes('Pausar'))) {
-      btn.innerHTML = btn.innerHTML.replace('Pausar', 'Reproduzir');
-      btn.classList.remove('playing');
-      const svg = btn.querySelector('svg path');
-      if (svg) svg.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
-    }
-  });
+  // Se button é null, resetar todos os botões
+  if (!button) {
+    document.querySelectorAll('.track-play-btn, .btn-play-large, .btn').forEach(btn => {
+      if (btn.innerHTML.includes('svg') && (btn.innerHTML.includes('Reproduzir') || btn.innerHTML.includes('Pausar'))) {
+        btn.innerHTML = btn.innerHTML.replace('Pausar', 'Reproduzir');
+        btn.classList.remove('playing');
+        const svg = btn.querySelector('svg path');
+        if (svg) svg.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
+      }
+    });
+    return;
+  }
   
   if (isPlaying) {
+    // Reset outros botões primeiro
+    document.querySelectorAll('.track-play-btn, .btn-play-large, .btn').forEach(btn => {
+      if (btn !== button && btn.innerHTML.includes('svg') && (btn.innerHTML.includes('Reproduzir') || btn.innerHTML.includes('Pausar'))) {
+        btn.innerHTML = btn.innerHTML.replace('Pausar', 'Reproduzir');
+        btn.classList.remove('playing');
+        const svg = btn.querySelector('svg path');
+        if (svg) svg.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
+      }
+    });
+    
     button.classList.add('playing');
     
     // Change to pause icon and text
@@ -603,6 +662,19 @@ function updateButtonPlayState(button, isPlaying) {
     // Update text if exists
     if (button.innerHTML.includes('Reproduzir')) {
       button.innerHTML = button.innerHTML.replace('Reproduzir', 'Pausar');
+    }
+  } else {
+    button.classList.remove('playing');
+    
+    // Change to play icon and text
+    const svg = button.querySelector('svg path');
+    if (svg) {
+      svg.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
+    }
+    
+    // Update text if exists
+    if (button.innerHTML.includes('Pausar')) {
+      button.innerHTML = button.innerHTML.replace('Pausar', 'Reproduzir');
     }
   }
 }

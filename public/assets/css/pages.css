@@ -295,25 +295,25 @@
 
 /* Estados de reprodução */
 .track-play-btn.playing, .btn-play-large.playing, .card-play-btn.playing {
-  background: #ff4757 !important;
+  background: var(--accent-primary) !important;
   animation: pulse 2s infinite;
   transform: scale(1.05);
 }
 
 .btn.playing {
-  background: #ff4757 !important;
+  background: var(--accent-primary) !important;
   animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+    box-shadow: 0 0 0 0 rgba(221, 152, 38, 0.7);
   }
   70% {
-    box-shadow: 0 0 0 10px rgba(255, 71, 87, 0);
+    box-shadow: 0 0 0 10px rgba(221, 152, 38, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
+    box-shadow: 0 0 0 0 rgba(221, 152, 38, 0);
   }
 }
 

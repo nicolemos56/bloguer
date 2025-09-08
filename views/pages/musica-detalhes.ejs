@@ -250,38 +250,78 @@
 <audio id="audioPlayer" preload="metadata"></audio>
 
 <script>
+// Variáveis de controle do player
+let currentlyPlayingButton = null;
+let currentAudio = null;
+
 // Função para tocar uma música individual
 function playMusic(id, titulo, artista, arquivo, cover, buttonElement) {
+  const button = buttonElement || event.target;
+  const audio = document.getElementById('audioPlayer');
+  
+  // Se o botão clicado é o mesmo que está tocando, pausar/resumir
+  if (currentlyPlayingButton === button) {
+    if (audio.paused) {
+      audio.play();
+      updateButtonPlayState(button, true);
+    } else {
+      audio.pause();
+      updateButtonPlayState(button, false);
+    }
+    return;
+  }
+  
+  // Parar música atual se houver
+  audio.pause();
+  audio.currentTime = 0;
+  
+  // Resetar todos os botões
+  updateButtonPlayState(null, false);
+  
   // Feedback visual no botão
-  updateButtonPlayState(buttonElement || event.target, true);
+  updateButtonPlayState(button, true);
+  currentlyPlayingButton = button;
+  currentAudio = audio;
   
   // Registrar reprodução no backend
   registrarPlay(id);
   
-  // Tocar a música (implementação básica)
-  const audio = document.getElementById('audioPlayer');
+  // Tocar a música
   audio.src = arquivo;
   audio.play();
   
   // Resetar botão quando música terminar
   audio.addEventListener('ended', () => {
-    updateButtonPlayState(buttonElement || event.target, false);
-  });
+    updateButtonPlayState(button, false);
+    currentlyPlayingButton = null;
+    currentAudio = null;
+  }, { once: true });
 }
 
 // Função para atualizar estado visual do botão
 function updateButtonPlayState(button, isPlaying) {
-  if (!button) return;
-  
-  // Reset all play buttons first
-  document.querySelectorAll('.btn-play-large, .card-play-btn').forEach(btn => {
-    btn.innerHTML = btn.innerHTML.replace('Pausar', 'Reproduzir');
-    btn.classList.remove('playing');
-    const svg = btn.querySelector('svg path');
-    if (svg) svg.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
-  });
+  // Se button é null, resetar todos os botões
+  if (!button) {
+    document.querySelectorAll('.btn-play-large, .card-play-btn').forEach(btn => {
+      btn.innerHTML = btn.innerHTML.replace('Pausar', 'Reproduzir');
+      btn.classList.remove('playing');
+      const svg = btn.querySelector('svg path');
+      if (svg) svg.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
+    });
+    return;
+  }
   
   if (isPlaying) {
+    // Reset outros botões primeiro
+    document.querySelectorAll('.btn-play-large, .card-play-btn').forEach(btn => {
+      if (btn !== button) {
+        btn.innerHTML = btn.innerHTML.replace('Pausar', 'Reproduzir');
+        btn.classList.remove('playing');
+        const svg = btn.querySelector('svg path');
+        if (svg) svg.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
+      }
+    });
+    
     button.classList.add('playing');
     
     // Change to pause icon and text
@@ -293,6 +333,19 @@ function updateButtonPlayState(button, isPlaying) {
     // Update text if exists
     if (button.innerHTML.includes('Reproduzir')) {
       button.innerHTML = button.innerHTML.replace('Reproduzir', 'Pausar');
+    }
+  } else {
+    button.classList.remove('playing');
+    
+    // Change to play icon and text
+    const svg = button.querySelector('svg path');
+    if (svg) {
+      svg.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
+    }
+    
+    // Update text if exists
+    if (button.innerHTML.includes('Pausar')) {
+      button.innerHTML = button.innerHTML.replace('Pausar', 'Reproduzir');
     }
   }
 }
