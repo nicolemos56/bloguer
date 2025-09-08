@@ -298,6 +298,9 @@ document.querySelectorAll('.like-btn').forEach(btn => {
 // Função para tentar curtir música
 async function tentarCurtirMusica(musicId, btnElement) {
   try {
+    // Feedback visual imediato - mostrar que está processando
+    btnElement.classList.add('processing');
+    
     const token = localStorage.getItem('vibToken');
     const response = await fetch(`/like/${musicId}`, { 
       method: 'POST',
@@ -309,6 +312,9 @@ async function tentarCurtirMusica(musicId, btnElement) {
     
     const data = await response.json();
     
+    // Remover estado de processamento
+    btnElement.classList.remove('processing');
+    
     if (data.needLogin) {
       // Armazenar ação para executar após login
       acaoPendente = {
@@ -318,20 +324,85 @@ async function tentarCurtirMusica(musicId, btnElement) {
       };
       showLoginModal(data.message);
     } else if (data.success) {
-      // Atualizar interface baseado no estado
-      const likeCount = btnElement.querySelector('.like-count');
-      if (data.liked) {
-        btnElement.classList.add('liked');
-      } else {
-        btnElement.classList.remove('liked');
-      }
-      if (likeCount) {
-        likeCount.textContent = data.totalLikes;
-      }
+      // Atualizar interface baseado no estado com animação
+      updateLikeButtonState(btnElement, data.liked, data.totalLikes);
+      
+      // Mostrar feedback textual discreto
+      showLikeFeedback(btnElement, data.liked, data.message);
+    } else {
+      // Mostrar erro se houver
+      console.error('Erro ao curtir:', data.message);
     }
   } catch (error) {
+    // Remover estado de processamento em caso de erro
+    btnElement.classList.remove('processing');
     console.error('Erro ao curtir música:', error);
   }
+}
+
+// Função para atualizar estado visual do botão curtir
+function updateLikeButtonState(btnElement, isLiked, totalLikes) {
+  if (isLiked) {
+    btnElement.classList.add('liked');
+    btnElement.title = 'Descurtir música';
+  } else {
+    btnElement.classList.remove('liked');
+    btnElement.title = 'Curtir música';
+  }
+  
+  // Atualizar contador se existir
+  const likeCount = btnElement.querySelector('.like-count');
+  if (likeCount && totalLikes !== undefined) {
+    likeCount.textContent = totalLikes;
+  }
+}
+
+// Função para mostrar feedback discreto
+function showLikeFeedback(btnElement, isLiked, message) {
+  // Criar elemento de feedback temporário
+  const feedback = document.createElement('div');
+  feedback.textContent = isLiked ? '❤️' : '💔';
+  feedback.style.cssText = `
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 1000;
+    animation: fadeInOut 2s ease forwards;
+  `;
+  
+  // Adicionar CSS de animação se não existir
+  if (!document.getElementById('feedbackStyles')) {
+    const style = document.createElement('style');
+    style.id = 'feedbackStyles';
+    style.textContent = `
+      @keyframes fadeInOut {
+        0% { opacity: 0; transform: translateX(-50%) translateY(0); }
+        20% { opacity: 1; transform: translateX(-50%) translateY(-5px); }
+        80% { opacity: 1; transform: translateX(-50%) translateY(-5px); }
+        100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  // Adicionar feedback ao elemento pai se for relativo
+  const parent = btnElement.offsetParent || btnElement.parentElement;
+  parent.style.position = 'relative';
+  parent.appendChild(feedback);
+  
+  // Remover após animação
+  setTimeout(() => {
+    if (feedback.parentElement) {
+      feedback.parentElement.removeChild(feedback);
+    }
+  }, 2000);
 }
 
 // Sistema de seguir artista
