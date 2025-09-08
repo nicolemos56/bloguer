@@ -1449,7 +1449,7 @@
 
 /* Modal de Planos */
 .planos-modal {
-  max-width: 1000px !important;
+  max-width: 900px !important;
   width: 95% !important;
 }
 
@@ -1457,16 +1457,16 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 1.5rem;
-  margin-top: 2rem;
-  max-height: 600px;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  max-height: 520px;
 }
 
 .plano-card {
   background: var(--card-bg);
   border: 2px solid transparent;
-  border-radius: 12px;
-  padding: 1.5rem;
+  border-radius: 10px;
+  padding: 1rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -1499,27 +1499,27 @@
 }
 
 .plano-header h3 {
-  font-size: 2.4rem;
+  font-size: 1.8rem;
   color: var(--text-primary);
-  margin-bottom: 1rem;
+  margin-bottom: 0.6rem;
   font-weight: 700;
 }
 
 .plano-price {
-  font-size: 2.8rem;
+  font-size: 2rem;
   font-weight: 800;
   color: var(--accent-primary);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .plano-features {
   text-align: left;
-  margin: 1.5rem 0;
+  margin: 1rem 0;
 }
 
 .feature {
-  padding: 0.6rem 0;
-  font-size: 1.3rem;
+  padding: 0.4rem 0;
+  font-size: 1.1rem;
   color: var(--text-secondary);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -1529,11 +1529,11 @@
 }
 
 .plano-card .btn {
-  margin-top: 1rem;
+  margin-top: 0.8rem;
   width: 100%;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  padding: 1rem;
+  padding: 0.8rem;
 }
 
 .btn-outline {
