@@ -47,17 +47,17 @@
                   <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z"/>
                   </svg>
-                  Ouvir agora
+                  Ouvir
                 </button>
-                <a href="/download/<%= musica.id %>" class="btn btn-accent" onclick="event.stopPropagation();">Baixar agora</a>
+                <a href="/download/<%= musica.id %>" class="btn btn-accent" onclick="event.stopPropagation();">Baixar</a>
               <% } else { %>
                 <button class="btn btn-secondary btn-play-recent" disabled onclick="event.stopPropagation();">
                   <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z"/>
                   </svg>
-                  Ouvir agora
+                  Ouvir
                 </button>
-                <button class="btn btn-accent" disabled onclick="event.stopPropagation();">Baixar agora</button>
+                <button class="btn btn-accent" disabled onclick="event.stopPropagation();">Baixar</button>
               <% } %>
             </div>
           </div>
@@ -706,8 +706,8 @@ function updateButtonPlayState(button, isPlaying) {
   // Se button é null, resetar todos os botões
   if (!button) {
     document.querySelectorAll('.track-play-btn, .btn-play-large, .btn, .btn-play-recent').forEach(btn => {
-      if (btn.innerHTML.includes('svg') && (btn.innerHTML.includes('Reproduzir') || btn.innerHTML.includes('Pausar') || btn.innerHTML.includes('Ouvir agora') || btn.innerHTML.includes('Pausar agora'))) {
-        btn.innerHTML = btn.innerHTML.replace('Pausar', 'Reproduzir').replace('Pausar agora', 'Ouvir agora');
+      if (btn.innerHTML.includes('svg') && (btn.innerHTML.includes('Reproduzir') || btn.innerHTML.includes('Pausar') || btn.innerHTML.includes('Ouvir') || btn.innerHTML.includes('Pausando'))) {
+        btn.innerHTML = btn.innerHTML.replace('Pausar', 'Reproduzir').replace('Pausando', 'Ouvir');
         btn.classList.remove('playing');
         const svg = btn.querySelector('svg path');
         if (svg) svg.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
@@ -719,8 +719,8 @@ function updateButtonPlayState(button, isPlaying) {
   if (isPlaying) {
     // Reset outros botões primeiro
     document.querySelectorAll('.track-play-btn, .btn-play-large, .btn, .btn-play-recent').forEach(btn => {
-      if (btn !== button && btn.innerHTML.includes('svg') && (btn.innerHTML.includes('Reproduzir') || btn.innerHTML.includes('Pausar') || btn.innerHTML.includes('Ouvir agora') || btn.innerHTML.includes('Pausar agora'))) {
-        btn.innerHTML = btn.innerHTML.replace('Pausar', 'Reproduzir').replace('Pausar agora', 'Ouvir agora');
+      if (btn !== button && btn.innerHTML.includes('svg') && (btn.innerHTML.includes('Reproduzir') || btn.innerHTML.includes('Pausar') || btn.innerHTML.includes('Ouvir') || btn.innerHTML.includes('Pausando'))) {
+        btn.innerHTML = btn.innerHTML.replace('Pausar', 'Reproduzir').replace('Pausando', 'Ouvir');
         btn.classList.remove('playing');
         const svg = btn.querySelector('svg path');
         if (svg) svg.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
@@ -739,8 +739,8 @@ function updateButtonPlayState(button, isPlaying) {
     if (button.innerHTML.includes('Reproduzir')) {
       button.innerHTML = button.innerHTML.replace('Reproduzir', 'Pausar');
     }
-    if (button.innerHTML.includes('Ouvir agora')) {
-      button.innerHTML = button.innerHTML.replace('Ouvir agora', 'Pausar agora');
+    if (button.innerHTML.includes('Ouvir')) {
+      button.innerHTML = button.innerHTML.replace('Ouvir', 'Pausando');
     }
   } else {
     button.classList.remove('playing');
@@ -752,8 +752,8 @@ function updateButtonPlayState(button, isPlaying) {
     }
     
     // Update text if exists
-    if (button.innerHTML.includes('Pausar agora')) {
-      button.innerHTML = button.innerHTML.replace('Pausar agora', 'Ouvir agora');
+    if (button.innerHTML.includes('Pausando')) {
+      button.innerHTML = button.innerHTML.replace('Pausando', 'Ouvir');
     }
     if (button.innerHTML.includes('Pausar')) {
       button.innerHTML = button.innerHTML.replace('Pausar', 'Reproduzir');
