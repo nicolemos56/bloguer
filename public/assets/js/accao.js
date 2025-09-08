@@ -1,17 +1,10 @@
-
-    var botao = document.querySelector("#btn")
-    var m = document.querySelector(".menu")
-    botao.addEventListener("click", function () {
-
-
-      m.classList.toggle("show");
-
-
-
-
-
-    })
-
-
-
-
+document.addEventListener('DOMContentLoaded', function() {
+    const botao = document.querySelector("#btn");
+    const m = document.querySelector(".menu");
+    
+    if (botao && m) {
+        botao.addEventListener("click", function () {
+            m.classList.toggle("show");
+        });
+    }
+});
