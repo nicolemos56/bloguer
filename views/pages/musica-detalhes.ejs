@@ -24,7 +24,7 @@
           
           <div class="music-actions-primary">
             <% if (musica.arquivo || musica.link) { %>
-              <button class="btn btn-play-large" onclick="playMusic('<%= musica.id %>', '<%= musica.nome %>', '<%= musica.artista %>', '<%= musica.arquivo || musica.link %>', '<%= musica.cover || musica.imagem %>')">
+              <button class="btn btn-play-large" onclick="playMusic('<%= musica.id %>', '<%= musica.nome %>', '<%= musica.artista %>', '<%= musica.arquivo || musica.link %>', '<%= musica.cover || musica.imagem %>', this)">
                 <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z"/>
                 </svg>
@@ -251,7 +251,10 @@
 
 <script>
 // Função para tocar uma música individual
-function playMusic(id, titulo, artista, arquivo, cover) {
+function playMusic(id, titulo, artista, arquivo, cover, buttonElement) {
+  // Feedback visual no botão
+  updateButtonPlayState(buttonElement || event.target, true);
+  
   // Registrar reprodução no backend
   registrarPlay(id);
   
@@ -259,6 +262,39 @@ function playMusic(id, titulo, artista, arquivo, cover) {
   const audio = document.getElementById('audioPlayer');
   audio.src = arquivo;
   audio.play();
+  
+  // Resetar botão quando música terminar
+  audio.addEventListener('ended', () => {
+    updateButtonPlayState(buttonElement || event.target, false);
+  });
+}
+
+// Função para atualizar estado visual do botão
+function updateButtonPlayState(button, isPlaying) {
+  if (!button) return;
+  
+  // Reset all play buttons first
+  document.querySelectorAll('.btn-play-large, .card-play-btn').forEach(btn => {
+    btn.innerHTML = btn.innerHTML.replace('Pausar', 'Reproduzir');
+    btn.classList.remove('playing');
+    const svg = btn.querySelector('svg path');
+    if (svg) svg.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
+  });
+  
+  if (isPlaying) {
+    button.classList.add('playing');
+    
+    // Change to pause icon and text
+    const svg = button.querySelector('svg path');
+    if (svg) {
+      svg.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z'); // Pause icon
+    }
+    
+    // Update text if exists
+    if (button.innerHTML.includes('Reproduzir')) {
+      button.innerHTML = button.innerHTML.replace('Reproduzir', 'Pausar');
+    }
+  }
 }
 
 // Função para registrar reprodução no backend

@@ -43,7 +43,7 @@
             <p class="artist-description"><%= musica.titulo %> <%= musica.ano %></p>
             <div class="artist-actions">
               <% if (musica.arquivo || musica.link) { %>
-                <button class="btn btn-secondary" onclick="event.stopPropagation(); playMusic('<%= musica.id %>', '<%= musica.titulo %>', '<%= musica.artista %>', '<%= musica.arquivo || musica.link %>', '<%= musica.imagem || musica.cover %>')">Ouvir agora</button>
+                <button class="btn btn-secondary" onclick="event.stopPropagation(); playMusic('<%= musica.id %>', '<%= musica.titulo %>', '<%= musica.artista %>', '<%= musica.arquivo || musica.link %>', '<%= musica.imagem || musica.cover %>', this)">Ouvir agora</button>
                 <a href="/download/<%= musica.id %>" class="btn btn-accent" onclick="event.stopPropagation();">Baixar agora</a>
               <% } else { %>
                 <button class="btn btn-secondary" disabled onclick="event.stopPropagation();">Ouvir agora</button>
@@ -79,7 +79,7 @@
             <img src="<%= musica.cover || '/assets/imagens/imagens_artistas/' + (musica.imagem || 'default.jpg') %>" alt="<%= musica.titulo %>">
             <div class="track-overlay">
               <% if (musica.arquivo || musica.link) { %>
-                <button class="track-play-btn" title="Reproduzir" onclick="event.stopPropagation(); playMusic('<%= musica.id %>', '<%= musica.titulo %>', '<%= musica.artista %>', '<%= musica.arquivo || musica.link %>', '<%= musica.cover || musica.imagem %>')">
+                <button class="track-play-btn" title="Reproduzir" onclick="event.stopPropagation(); playMusic('<%= musica.id %>', '<%= musica.titulo %>', '<%= musica.artista %>', '<%= musica.arquivo || musica.link %>', '<%= musica.cover || musica.imagem %>', this)">
               <% } else { %>
                 <button class="track-play-btn" title="Reproduzir" disabled onclick="event.stopPropagation();">
               <% } %>
@@ -556,7 +556,7 @@ class MusicPlayer {
 const musicPlayer = new MusicPlayer();
 
 // Função para tocar uma música individual
-function playMusic(id, titulo, artista, arquivo, cover) {
+function playMusic(id, titulo, artista, arquivo, cover, buttonElement) {
   const track = {
     id: id,
     titulo: titulo,
@@ -568,10 +568,43 @@ function playMusic(id, titulo, artista, arquivo, cover) {
     imagem: cover
   };
   
+  // Feedback visual no botão
+  updateButtonPlayState(buttonElement || event.target, true);
+  
   // Registrar reprodução no backend
   registrarPlay(id);
   
   musicPlayer.loadPlaylist([track], 0);
+}
+
+// Função para atualizar estado visual do botão
+function updateButtonPlayState(button, isPlaying) {
+  if (!button) return;
+  
+  // Reset all play buttons first
+  document.querySelectorAll('.track-play-btn, .btn-play-large, .btn').forEach(btn => {
+    if (btn.innerHTML.includes('svg') && (btn.innerHTML.includes('Reproduzir') || btn.innerHTML.includes('Pausar'))) {
+      btn.innerHTML = btn.innerHTML.replace('Pausar', 'Reproduzir');
+      btn.classList.remove('playing');
+      const svg = btn.querySelector('svg path');
+      if (svg) svg.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
+    }
+  });
+  
+  if (isPlaying) {
+    button.classList.add('playing');
+    
+    // Change to pause icon and text
+    const svg = button.querySelector('svg path');
+    if (svg) {
+      svg.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z'); // Pause icon
+    }
+    
+    // Update text if exists
+    if (button.innerHTML.includes('Reproduzir')) {
+      button.innerHTML = button.innerHTML.replace('Reproduzir', 'Pausar');
+    }
+  }
 }
 
 // Função para registrar reprodução no backend
