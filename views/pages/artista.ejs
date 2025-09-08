@@ -842,6 +842,24 @@ class MusicPlayer {
 // Inicializar o player
 const musicPlayer = new MusicPlayer();
 
+// Função para registrar reprodução no backend
+async function registrarPlay(musicId) {
+  try {
+    const response = await fetch(`/play/${musicId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    
+    if (response.ok) {
+      console.log(`Play registrado para música ID: ${musicId}`);
+    }
+  } catch (error) {
+    console.error('Erro ao registrar reprodução:', error);
+  }
+}
+
 // Funcionalidade Reproduzir Tudo do Artista
 document.getElementById('playAllArtistBtn')?.addEventListener('click', function() {
   const artist = this.dataset.artist;
