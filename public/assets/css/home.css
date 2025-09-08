@@ -35,6 +35,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   transition: transform 0.3s ease;
 }
 
@@ -307,7 +308,9 @@ section.music_category div.cards_artistas a img{
     width: 290px;
     height: 190px;
     border-radius: 3px;
-      transition: all 300ms ease-in-out;
+    object-fit: cover;
+    object-position: center;
+    transition: all 300ms ease-in-out;
       
 }
 
