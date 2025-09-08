@@ -18,11 +18,11 @@
             <div class="category-image">
               <img src="/assets/imagens/imagen_categorias/<%= categoria.imagem %>" alt="<%= categoria.nome %>">
               <div class="category-overlay" style="background: linear-gradient(135deg, <%= categoria.cor %>66, <%= categoria.cor %>99);">
-                <button class="category-play-btn" data-category="<%= categoria.id %>" data-category-name="<%= categoria.nome %>" onclick="event.stopPropagation(); playAllCategory('<%= categoria.id %>', '<%= categoria.nome %>', this)">
+                <div class="category-icon">
                   <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
                   </svg>
-                </button>
+                </div>
               </div>
             </div>
           </div>
@@ -50,12 +50,6 @@
             </div>
             
             <div class="category-actions">
-              <button class="btn btn-accent category-play-text-btn" data-category="<%= categoria.id %>" data-category-name="<%= categoria.nome %>" onclick="playAllCategory('<%= categoria.id %>', '<%= categoria.nome %>', this)">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-                Reproduzir tudo
-              </button>
               <a href="/categoria/<%= categoria.id %>" class="btn btn-primary">
                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z"/>
@@ -516,224 +510,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-
-// Variáveis de controle do player de categoria
-let currentlyPlayingCategoryButton = null;
-let currentCategoryAudio = null;
-let currentCategoryPlaylist = [];
-let currentCategoryIndex = 0;
-
-// Função para reproduzir todas as músicas de uma categoria
-async function playAllCategory(categoryId, categoryName, buttonElement) {
-  try {
-    // Se o mesmo botão está tocando, pausar/resumir
-    if (currentlyPlayingCategoryButton === buttonElement) {
-      if (currentCategoryAudio && !currentCategoryAudio.paused) {
-        currentCategoryAudio.pause();
-        updateCategoryButtonState(buttonElement, false, 'Reproduzir tudo');
-      } else if (currentCategoryAudio) {
-        currentCategoryAudio.play();
-        updateCategoryButtonState(buttonElement, true, 'Pausando...');
-      }
-      return;
-    }
-
-    // Parar música atual se houver
-    if (currentCategoryAudio) {
-      currentCategoryAudio.pause();
-      currentCategoryAudio.currentTime = 0;
-    }
-
-    // Resetar todos os botões
-    updateCategoryButtonState(null, false);
-
-    // Mostrar feedback visual imediato
-    updateCategoryButtonState(buttonElement, true, 'Carregando...');
-    currentlyPlayingCategoryButton = buttonElement;
-
-    // Buscar músicas da categoria
-    console.log('Buscando músicas da categoria:', categoryId);
-    const response = await fetch(`/api/categoria/${categoryId}/musicas`);
-    
-    if (!response.ok) {
-      throw new Error('Erro ao buscar músicas da categoria');
-    }
-
-    const data = await response.json();
-    
-    if (!data.success || !data.musicas || data.musicas.length === 0) {
-      alert('Nenhuma música encontrada nesta categoria');
-      updateCategoryButtonState(buttonElement, false, 'Reproduzir tudo');
-      currentlyPlayingCategoryButton = null;
-      return;
-    }
-
-    currentCategoryPlaylist = data.musicas;
-    currentCategoryIndex = 0;
-    
-    // Registrar reprodução da categoria no backend
-    fetch(`/play-category/${categoryId}`, { method: 'POST' })
-      .catch(error => console.error('Erro ao registrar reprodução da categoria:', error));
-
-    // Iniciar reprodução
-    playCurrentCategoryTrack(buttonElement, categoryName);
-
-  } catch (error) {
-    console.error('Erro ao reproduzir categoria:', error);
-    alert('Erro ao carregar músicas da categoria');
-    updateCategoryButtonState(buttonElement, false, 'Reproduzir tudo');
-    currentlyPlayingCategoryButton = null;
-  }
-}
-
-// Reproduzir música atual da playlist da categoria
-function playCurrentCategoryTrack(buttonElement, categoryName) {
-  if (currentCategoryIndex >= currentCategoryPlaylist.length) {
-    // Playlist terminou
-    updateCategoryButtonState(buttonElement, false, 'Reproduzir tudo');
-    currentlyPlayingCategoryButton = null;
-    currentCategoryAudio = null;
-    return;
-  }
-
-  const track = currentCategoryPlaylist[currentCategoryIndex];
-  
-  // Verificar se a música tem arquivo de áudio
-  if (!track.arquivo && !track.link) {
-    console.log('Música sem arquivo, pulando:', track.titulo);
-    currentCategoryIndex++;
-    playCurrentCategoryTrack(buttonElement, categoryName);
-    return;
-  }
-
-  const audioSrc = track.arquivo || track.link;
-  
-  // Registrar reprodução individual
-  fetch(`/play/${track.id}`, { method: 'POST' })
-    .catch(error => console.error('Erro ao registrar play:', error));
-
-  currentCategoryAudio = new Audio(audioSrc);
-  
-  // Atualizar botão com nome da música atual
-  updateCategoryButtonState(buttonElement, true, `♪ ${track.titulo}`);
-  
-  console.log(`Tocando: ${track.titulo} por ${track.artista}`);
-  
-  currentCategoryAudio.play().catch(error => {
-    console.error('Erro ao reproduzir áudio:', error);
-    // Pular para próxima música em caso de erro
-    currentCategoryIndex++;
-    playCurrentCategoryTrack(buttonElement, categoryName);
-    return;
-  });
-
-  // Quando a música terminar, tocar a próxima
-  currentCategoryAudio.addEventListener('ended', () => {
-    currentCategoryIndex++;
-    playCurrentCategoryTrack(buttonElement, categoryName);
-  });
-
-  // Em caso de erro no áudio, pular para próxima
-  currentCategoryAudio.addEventListener('error', () => {
-    console.error('Erro no áudio, pulando:', track.titulo);
-    currentCategoryIndex++;
-    playCurrentCategoryTrack(buttonElement, categoryName);
-  });
-}
-
-// Função para atualizar estado visual dos botões da categoria
-function updateCategoryButtonState(button, isPlaying, customText = null) {
-  // Se button é null, resetar todos os botões e cards
-  if (!button) {
-    document.querySelectorAll('.category-play-btn, .category-play-text-btn').forEach(btn => {
-      btn.classList.remove('playing');
-      const svg = btn.querySelector('svg path');
-      if (svg) svg.setAttribute('d', 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z');
-      
-      // Restaurar texto original se for botão de texto
-      if (btn.classList.contains('category-play-text-btn')) {
-        btn.innerHTML = `<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M8 5v14l11-7z"/>
-        </svg>
-        Reproduzir tudo`;
-      }
-    });
-    
-    // Remover indicação visual de todos os cards
-    document.querySelectorAll('.category-card').forEach(card => {
-      card.classList.remove('playing');
-    });
-    return;
-  }
-
-  if (isPlaying) {
-    // Reset outros botões e cards primeiro
-    document.querySelectorAll('.category-play-btn, .category-play-text-btn').forEach(btn => {
-      if (btn !== button) {
-        btn.classList.remove('playing');
-        const svg = btn.querySelector('svg path');
-        if (svg) svg.setAttribute('d', 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z');
-        
-        if (btn.classList.contains('category-play-text-btn')) {
-          btn.innerHTML = `<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M8 5v14l11-7z"/>
-          </svg>
-          Reproduzir tudo`;
-        }
-      }
-    });
-    
-    // Remover indicação visual de outros cards
-    document.querySelectorAll('.category-card').forEach(card => {
-      card.classList.remove('playing');
-    });
-
-    button.classList.add('playing');
-    
-    // Adicionar indicação visual no card atual
-    const categoryCard = button.closest('.category-card');
-    if (categoryCard) {
-      categoryCard.classList.add('playing');
-    }
-    
-    // Change to pause icon
-    const svg = button.querySelector('svg path');
-    if (svg) {
-      svg.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z'); // Pause icon
-    }
-    
-    // Atualizar texto se for botão de texto
-    if (button.classList.contains('category-play-text-btn') && customText) {
-      button.innerHTML = `<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-      </svg>
-      ${customText}`;
-    }
-  } else {
-    button.classList.remove('playing');
-    
-    // Remover indicação visual do card
-    const categoryCard = button.closest('.category-card');
-    if (categoryCard) {
-      categoryCard.classList.remove('playing');
-    }
-    
-    // Change to play icon
-    const svg = button.querySelector('svg path');
-    if (svg) {
-      svg.setAttribute('d', 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z'); // Play icon
-    }
-    
-    // Restaurar texto original se for botão de texto
-    if (button.classList.contains('category-play-text-btn')) {
-      const displayText = customText || 'Reproduzir tudo';
-      button.innerHTML = `<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M8 5v14l11-7z"/>
-      </svg>
-      ${displayText}`;
-    }
-  }
-}
 </script>
 
 <!-- Modal de Login -->

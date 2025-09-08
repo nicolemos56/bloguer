@@ -47,7 +47,6 @@ router.post('/follow/:artista', mainController.followArtista);
 
 // API de sincronização em tempo real
 router.get('/api/sync', mainController.syncData);
-router.get('/api/categoria/:categoria/musicas', mainController.getCategoriaMusicas);
 router.post('/play-category/:categoria', mainController.playCategoryAll);
 router.post('/follow-category/:categoria', mainController.followCategory);
 router.post('/unfollow-category/:categoria', mainController.unfollowCategory);
