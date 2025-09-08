@@ -40,9 +40,9 @@
     "musicasCurtidas": [
       12,
       13,
-      25,
       9,
-      7
+      7,
+      25
     ]
   },
   {
@@ -109,6 +109,28 @@
     "artistasFavoritos": [],
     "musicasCurtidas": [
       8
+    ]
+  },
+  {
+    "id": 10,
+    "nome": "Manuel",
+    "email": "teste1@gmail.com",
+    "senha": "f429fb41fd59c9d000e25fb4669ffded2d1183a12b2a870349f029c859b248dc",
+    "dataCriacao": "2025-09-08T15:44:00.963Z",
+    "artistasFavoritos": [],
+    "musicasCurtidas": [
+      25
+    ]
+  },
+  {
+    "id": 11,
+    "nome": "nico",
+    "email": "teste2@gmail.com",
+    "senha": "f429fb41fd59c9d000e25fb4669ffded2d1183a12b2a870349f029c859b248dc",
+    "dataCriacao": "2025-09-08T15:46:58.439Z",
+    "artistasFavoritos": [],
+    "musicasCurtidas": [
+      25
     ]
   }
 ]
