@@ -451,7 +451,8 @@ module.exports = {
         descricaoLonga: 'O Afro House combina a energia da música house electrónica com os ritmos tradicionais africanos, criando uma fusão única que faz dançar. Este género tem ganhado popularidade internacional, com Angola na vanguarda da produção.',
         imagem: 'forca_suprema.jpg',
         cor: '#0051ff',
-        artistas: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('afro')).map(artista => {
+        artistas: [...new Set(filtrarMusicasPorCategoria('afrohouse').map(m => m.artista))].map(nomeArtista => {
+          const artista = artistasGlobal.find(a => a.nome === nomeArtista) || { nome: nomeArtista, imagem: '', seguidores: 0, biografia: '' };
           const musicasDoArtista = musicasGlobal.filter(m => m.artista === artista.nome);
           const totalCurtidas = musicasDoArtista.reduce((total, musica) => total + (musica.likes || 0), 0);
           return {
@@ -463,7 +464,10 @@ module.exports = {
             biografia: artista.biografia
           };
         }).sort((a, b) => b.totalCurtidas - a.totalCurtidas).slice(0, 3),
-        totalSeguidores: artistasGlobal.filter(a => a.categoria.toLowerCase().includes('afro')).reduce((total, artista) => total + (artista.seguidores || 0), 0),
+        totalSeguidores: [...new Set(filtrarMusicasPorCategoria('afrohouse').map(m => m.artista))].map(nomeArtista => {
+          const artista = artistasGlobal.find(a => a.nome === nomeArtista);
+          return artista ? artista.seguidores || 0 : 0;
+        }).reduce((total, seguidores) => total + seguidores, 0),
         musicasPopulares: filtrarMusicasPorCategoria('afrohouse')
       },
       'semba': {
