@@ -1000,6 +1000,10 @@ module.exports = {
     
     // Incrementar contador de plays
     musica.plays = (musica.plays || 0) + 1;
+    
+    // Salvar mudanças no arquivo
+    saveMusicas(musicasGlobal);
+    
     console.log(`Play da música "${musica.titulo}" - Total: ${musica.plays}`);
     
     res.json({ 

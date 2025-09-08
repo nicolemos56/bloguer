@@ -248,3 +248,43 @@
 </div>
 
 <audio id="audioPlayer" preload="metadata"></audio>
+
+<script>
+// Função para tocar uma música individual
+function playMusic(id, titulo, artista, arquivo, cover) {
+  // Registrar reprodução no backend
+  registrarPlay(id);
+  
+  // Tocar a música (implementação básica)
+  const audio = document.getElementById('audioPlayer');
+  audio.src = arquivo;
+  audio.play();
+}
+
+// Função para registrar reprodução no backend
+async function registrarPlay(musicId) {
+  try {
+    const response = await fetch(`/play/${musicId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    
+    if (response.ok) {
+      console.log(`Play registrado para música ID: ${musicId}`);
+      
+      // Atualizar contador na página
+      const data = await response.json();
+      if (data.totalPlays) {
+        const playsElement = document.querySelector('.music-plays');
+        if (playsElement) {
+          playsElement.textContent = `${data.totalPlays} reproduções`;
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Erro ao registrar reprodução:', error);
+  }
+}
+</script>
