@@ -47,7 +47,7 @@
     "nomeArquivo": "musicFile-1757265943892-176698221.mp3",
     "likes": 3,
     "downloads": 0,
-    "plays": 2,
+    "plays": 4,
     "dataAdicao": "2025-09-07T17:26:14.827Z"
   },
   {
@@ -64,7 +64,7 @@
     "nomeArquivo": "musicFile-1757266666343-750587574.mp3",
     "likes": 2,
     "downloads": 0,
-    "plays": 1,
+    "plays": 7,
     "dataAdicao": "2025-09-07T17:38:01.054Z"
   },
   {
@@ -81,7 +81,7 @@
     "nomeArquivo": "musicFile-1757266734769-446668679.mp3",
     "likes": 2,
     "downloads": 0,
-    "plays": 3,
+    "plays": 5,
     "dataAdicao": "2025-09-07T17:39:19.651Z"
   },
   {
@@ -98,7 +98,47 @@
     "nomeArquivo": "musicFile-1757271326428-532321264.mp3",
     "likes": 3,
     "downloads": 0,
-    "plays": 3,
+    "plays": 7,
     "dataAdicao": "2025-09-07T18:56:02.832Z"
+  },
+  {
+    "id": 13,
+    "titulo": "Guiry 2 Good (Afro Pop)",
+    "artista": "Good Abreu",
+    "categoria": "Afro House",
+    "duracao": "2:6",
+    "album": "",
+    "ano": "2025",
+    "link": "/uploads/musicFile-1757369933357-384926438.mp3",
+    "cover": "/uploads/coverImage-1757369955945-128713879.jpg",
+    "nomeOriginal": "Niga Akio - Guiry 2 Good (Afro Pop) (2025) (1).mp3",
+    "nomeArquivo": "musicFile-1757369933357-384926438.mp3",
+    "likes": 0,
+    "downloads": 2,
+    "plays": 7,
+    "dataAdicao": "2025-09-08T22:19:16.532Z"
+  },
+  {
+    "id": 14,
+    "nome": "Gira sol",
+    "artista": "Celma Correia Calombe",
+    "categoria": "semba",
+    "ano": 2025,
+    "arquivo": "/uploads/musicFile-1757423145000-567946123.mp3",
+    "imagem": "/uploads/coverPhoto-1757423143859-439432228.jpg",
+    "plays": 2,
+    "likes": 0,
+    "downloads": 0,
+    "duracao": "",
+    "album": "",
+    "link": "/uploads/musicFile-1757423145000-567946123.mp3",
+    "cover": "/uploads/coverPhoto-1757423143859-439432228.jpg",
+    "nomeOriginal": "musicFile-1757423145000-567946123.mp3",
+    "nomeArquivo": "musicFile-1757423145000-567946123.mp3",
+    "dataAdicao": "2025-09-09T13:08:55.400Z",
+    "biografia": "jhkukh",
+    "emailArtista": "celmacalombe1@gmail.com",
+    "telefoneArtista": "+244936057827",
+    "dataAprovacao": "2025-09-09T13:08:55.400Z"
   }
 ]

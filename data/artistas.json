@@ -22,5 +22,13 @@
     "biografia": "Wander é um jovem talentoso, menino de Malanje...",
     "imagem": "/uploads/artistImage-1757271712393-656582528.jpg",
     "seguidores": 1
+  },
+  {
+    "id": 8,
+    "nome": "Good Abreu",
+    "categoria": "Afro House",
+    "biografia": "Domingos Abreu, nasceu em 23 de junho de 1998. Hoje conhecido pelo nome artístico Good Abreu, ele é um produtor de música que transforma sons simples em paisagens sonoras que contam a história de sua cidade, de seus sonhos e de suas raízes.",
+    "imagem": "/uploads/artistImage-1757370301971-634929762.jpg",
+    "seguidores": 0
   }
 ]

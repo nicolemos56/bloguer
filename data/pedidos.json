@@ -26,5 +26,21 @@
     "comprovante": "/uploads/paymentReceipt-1757285327192-791457207.pdf",
     "coverPhoto": "coverPhoto-1757285296238-187423200.jpg",
     "musicFile": "musicFile-1757285298036-654243885.mp3"
+  },
+  {
+    "id": 3,
+    "artistName": "Celma Correia Calombe",
+    "email": "celmacalombe1@gmail.com",
+    "phone": "+244936057827",
+    "songTitle": "Gira sol",
+    "releaseDate": "2025-08-18",
+    "genre": "semba",
+    "biography": "jhkukh",
+    "plano": "normal",
+    "dataPedido": "2025-09-09",
+    "status": "aprovado",
+    "comprovante": "/uploads/paymentReceipt-1757423207867-829535748.pdf",
+    "coverPhoto": "coverPhoto-1757423143859-439432228.jpg",
+    "musicFile": "musicFile-1757423145000-567946123.mp3"
   }
 ]
